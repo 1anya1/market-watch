@@ -1,6 +1,6 @@
 import { createChart, ColorType } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
-import {Box} from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react";
 
 const ChartComponent = (props: any) => {
   const {
@@ -13,27 +13,50 @@ const ChartComponent = (props: any) => {
     //   areaBottomColor = "rgba(41, 98, 255, 0.28)",
     // },
   } = props;
-  const chartContainerRef = useRef();
+  const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
-      chart.applyOptions({ width: chartContainerRef?.current?.clientWidth });
+      console.log("resizing", chartContainerRef?.current?.clientWidth);
+      chart.applyOptions({
+        width: chartContainerRef?.current?.clientWidth,
+        height: chartContainerRef?.current?.clientHeight,
+      });
+      chart.timeScale().fitContent();
     };
 
     const chart = createChart(chartContainerRef?.current, {
       layout: {
-        // background: { type: ColorType.Solid, color: backgroundColor },
+        background: { type: ColorType.Solid, color: "pink" },
         // textColor,
       },
-      width: chartContainerRef.current.clientWidth,
-      height: 300,
+      width: chartContainerRef?.current?.clientWidth,
+      height: chartContainerRef?.current?.clientHeight,
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+        horzLines: {
+          visible: false,
+        },
+      },
+      crosshair: {
+        horzLine: {
+          visible: false,
+        },
+      },
+      timeScale: {
+        // visible: false,
+        barSpacing: 20,
+        timeVisible: true,
+      },
     });
     chart.timeScale().fitContent();
 
     const newSeries = chart.addAreaSeries({
-    //   lineColor,
-    //   topColor: areaTopColor,
-    //   bottomColor: areaBottomColor,
+      //   lineColor,
+      //   topColor: areaTopColor,
+      //   bottomColor: areaBottomColor,
     });
     newSeries.setData(data);
 
@@ -44,16 +67,9 @@ const ChartComponent = (props: any) => {
 
       chart.remove();
     };
-  }, [
-    data,
-    // backgroundColor,
-    // lineColor,
-    // textColor,
-    // areaTopColor,
-    // areaBottomColor,
-  ]);
+  }, [data]);
 
-  return <Box ref={chartContainerRef} />;
+  return <Box ref={chartContainerRef} height="200px" />;
 };
 
 const initialData = [
