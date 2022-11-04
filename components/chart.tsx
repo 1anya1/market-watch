@@ -4,28 +4,34 @@ import { Box } from "@chakra-ui/react";
 
 type Props = {
   chartType: string;
-  data: any;
 };
 
 const ChartComponent = (props: Props) => {
-  const { data, chartType } = props;
+  const { chartType } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  // const [data, setData] = useState<any[]>([]);
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     let data = [];
-  //     const bitcoinData = await fetch(
-  //       "https://price-api.crypto.com/price/v2/d/bitcoin"
-  //     );
-  //     if (bitcoinData.ok) {
-  //       const resData = await bitcoinData.json();
-  //       data = resData.prices;
-  //     }
-  //     setData(data);
-  //   };
-  //   getData();
-  // });
+  const [cryptoData, setData] = useState<any[]>([]);
+  useEffect(() => {
+    const getData = async () => {
+      let crypto: any[] = [];
+      const bitcoinData = await fetch(
+        "https://price-api.crypto.com/price/v2/d/bitcoin"
+      );
+      if (bitcoinData.ok) {
+        const resData = await bitcoinData.json();
+        resData.prices.forEach((el: any) => {
+          const frame = { value: el[1], time: el[0], volume: el[2] };
+          crypto.push(frame);
+        });
+        // data = resData.prices;
+      }
+      setData(crypto);
+    };
+    getData();
+  }, []);
 
+  useEffect(() => {
+    console.log(cryptoData);
+  }, [cryptoData]);
   useEffect(() => {
     const handleResize = () => {
       console.log("resizing", chartContainerRef?.current?.clientWidth);
@@ -64,30 +70,25 @@ const ChartComponent = (props: Props) => {
     });
     chart.timeScale().fitContent();
 
-    // const newSeries = chart.addAreaSeries({
-    //   //   lineColor,
-    //   //   topColor: areaTopColor,
-    //   //   bottomColor: areaBottomColor,
-    // });
-    // newSeries.setData(data);
+    if (cryptoData.length > 0) {
+      let newSeries;
+      switch (chartType) {
+        case "Area":
+          newSeries = chart.addAreaSeries({
+            //   lineColor,
+            topColor: "purple",
+            //   bottomColor: areaBottomColor,
+          });
+          newSeries.setData(cryptoData);
+          break;
 
-    let newSeries;
-    switch (chartType) {
-      case "Area":
-        newSeries = chart.addAreaSeries({
-          //   lineColor,
-          topColor: "purple",
-          //   bottomColor: areaBottomColor,
-        });
-        newSeries.setData(data);
-        break;
-
-      case "Bar":
-        newSeries = chart.addHistogramSeries({
-          color: "green",
-        });
-        newSeries.setData(data);
-        break;
+        case "Bar":
+          newSeries = chart.addHistogramSeries({
+            color: "green",
+          });
+          newSeries.setData(cryptoData);
+          break;
+      }
     }
 
     window.addEventListener("resize", handleResize);
@@ -97,26 +98,13 @@ const ChartComponent = (props: Props) => {
 
       chart.remove();
     };
-  }, [data, chartType]);
+  }, [chartType, cryptoData]);
 
   return <Box ref={chartContainerRef} height="200px" />;
 };
 
-const initialData = [
-  { time: "2018-12-22", value: 32.51 },
-  { time: "2018-12-23", value: 31.11 },
-  { time: "2018-12-24", value: 27.02 },
-  { time: "2018-12-25", value: 27.32 },
-  { time: "2018-12-26", value: 25.17 },
-  { time: "2018-12-27", value: 28.89 },
-  { time: "2018-12-28", value: 25.46 },
-  { time: "2018-12-29", value: 23.92 },
-  { time: "2018-12-30", value: 22.68 },
-  { time: "2018-12-31", value: 22.67 },
-];
-
 const Chart = (props: any) => {
-  return <ChartComponent {...props} data={initialData}></ChartComponent>;
+  return <ChartComponent {...props}></ChartComponent>;
 };
 
 export default Chart;
