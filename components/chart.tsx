@@ -1,19 +1,30 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box } from "@chakra-ui/react";
 
-const ChartComponent = (props: any) => {
-  const {
-    data,
-    // colors: {
-    //   backgroundColor = "#fffff,
-    //   lineColor = "#2962FF",
-    //   textColor = "black",
-    //   areaTopColor = "#2962FF",
-    //   areaBottomColor = "rgba(41, 98, 255, 0.28)",
-    // },
-  } = props;
+type Props = {
+  chartType: string;
+  data: any;
+};
+
+const ChartComponent = (props: Props) => {
+  const { data, chartType } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  // const [data, setData] = useState<any[]>([]);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     let data = [];
+  //     const bitcoinData = await fetch(
+  //       "https://price-api.crypto.com/price/v2/d/bitcoin"
+  //     );
+  //     if (bitcoinData.ok) {
+  //       const resData = await bitcoinData.json();
+  //       data = resData.prices;
+  //     }
+  //     setData(data);
+  //   };
+  //   getData();
+  // });
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,12 +64,31 @@ const ChartComponent = (props: any) => {
     });
     chart.timeScale().fitContent();
 
-    const newSeries = chart.addAreaSeries({
-      //   lineColor,
-      //   topColor: areaTopColor,
-      //   bottomColor: areaBottomColor,
-    });
-    newSeries.setData(data);
+    // const newSeries = chart.addAreaSeries({
+    //   //   lineColor,
+    //   //   topColor: areaTopColor,
+    //   //   bottomColor: areaBottomColor,
+    // });
+    // newSeries.setData(data);
+
+    let newSeries;
+    switch (chartType) {
+      case "Area":
+        newSeries = chart.addAreaSeries({
+          //   lineColor,
+          topColor: "purple",
+          //   bottomColor: areaBottomColor,
+        });
+        newSeries.setData(data);
+        break;
+
+      case "Bar":
+        newSeries = chart.addHistogramSeries({
+          color: "green",
+        });
+        newSeries.setData(data);
+        break;
+    }
 
     window.addEventListener("resize", handleResize);
 
@@ -67,7 +97,7 @@ const ChartComponent = (props: any) => {
 
       chart.remove();
     };
-  }, [data]);
+  }, [data, chartType]);
 
   return <Box ref={chartContainerRef} height="200px" />;
 };
