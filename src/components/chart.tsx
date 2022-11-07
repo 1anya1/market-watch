@@ -20,6 +20,13 @@ import BitcoinLightMode from "../black/btc.svg";
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
+const colors = {
+  red: "#f13d3d",
+  green: "#039f65",
+  blue: "#4983C6",
+  gray: "#ECECEC",
+};
+
 const ChartComponent = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [cryptoData, setData] = useState<any[]>([]);
@@ -27,6 +34,8 @@ const ChartComponent = () => {
   const [timeFrame, setTimeFrame] = useState<number | string>(30);
   const [currentValue, setCurrentValue] = useState<number>(0);
   const [twentyFourHourValue, setTwentyFourHourValue] = useState(0);
+  const [timeFrameMax, setTimeFrameMax] = useState(0);
+  const [timeFrameLow, setTimeFrameLow] = useState(0);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
@@ -35,6 +44,8 @@ const ChartComponent = () => {
       // const to = Math.floor(date.getTime() / 1000);
       // const from = (date.getTime() - timeFrame * 24 * 60 * 60 * 1000) / 1000;
       let crypto: any[] = [];
+      let low = Infinity;
+      let high = 0;
       const bitcoinData = await fetch(
         // `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
         `https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=${timeFrame}`
@@ -53,7 +64,8 @@ const ChartComponent = () => {
             high: el[2],
             low: el[3],
           };
-
+          low = Math.min(low, el[3]);
+          high = Math.max(high, el[2]);
           crypto.push(frame);
         });
         // data = resData.prices;
@@ -62,14 +74,17 @@ const ChartComponent = () => {
       setCurrentValue(crypto[crypto.length - 1].open);
       console.log(crypto[0].value, crypto[1].value);
       setTwentyFourHourValue(crypto[0].open);
+      setTimeFrameMax(high);
+      setTimeFrameLow(low);
     };
     getData();
   }, [timeFrame]);
 
-  // useEffect(() => {});
+  useEffect(() => {
+    console.log(timeFrameLow, timeFrameMax);
+  }, [timeFrameLow, timeFrameMax]);
 
   useEffect(() => {
-    const colors = { red: "#f13d3d", green: "#039f65", lineColor: "#4983C6" };
     if (chartContainerRef?.current) {
       const handleResize = () => {
         if (chartContainerRef?.current?.clientWidth) {
@@ -135,7 +150,7 @@ const ChartComponent = () => {
         switch (chartType) {
           case "Line":
             newSeries = chart.addLineSeries({
-              color: colors.lineColor,
+              color: colors.blue,
               crosshairMarkerVisible: false,
               lastValueVisible: false,
               priceLineColor: "transparent",
@@ -144,7 +159,7 @@ const ChartComponent = () => {
             break;
           case "Area":
             newSeries = chart.addAreaSeries({
-              lineColor: colors.lineColor,
+              lineColor: colors.blue,
             });
             newSeries.setData(cryptoData);
             break;
@@ -264,10 +279,31 @@ const ChartComponent = () => {
         >
           <Box position="relative" zIndex="10">
             <Menu>
-              <MenuButton as={Button}>Chart Type</MenuButton>
+              <MenuButton
+                as={Button}
+                fontSize="12px"
+                lineHeight="12px"
+                height="32px"
+                fontWeight="600"
+                backgroundColor={
+                  colorMode === "light" ? colors.gray : colors.blue
+                }
+              >
+                Chart Type
+              </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
-                <MenuItem onClick={() => setChartType("Area")}>Area</MenuItem>
+                <MenuItem
+                  onClick={() => setChartType("Line")}
+                  // backgroundColor={chartType === "Line" ? "pink" : "unset"}
+                >
+                  Line
+                </MenuItem>
+                <MenuItem
+                  // backgroundColor={chartType === "Line" ? "pink" : "white"}
+                  onClick={() => setChartType("Area")}
+                >
+                  Area
+                </MenuItem>
                 <MenuItem onClick={() => setChartType("Histogram")}>
                   Histogram
                 </MenuItem>
@@ -291,7 +327,7 @@ const ChartComponent = () => {
                     : "white"
                 }
                 fontSize="14px"
-                fontWeight="medium"
+                fontWeight="bold"
               >
                 {el.value}
               </Text>

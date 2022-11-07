@@ -7,6 +7,10 @@ const config: ThemeConfig = {
 };
 const theme = extendTheme({
   config,
+  fonts: {
+    heading: `'Open Sans', sans-serif`,
+    body: `'Montserrat', sans-serif`,
+  },
   styles: {
     global: {
       // styles for the `body`
