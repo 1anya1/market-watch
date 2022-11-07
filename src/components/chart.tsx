@@ -72,15 +72,17 @@ const ChartComponent = () => {
     const colors = { red: "#f13d3d", green: "#039f65", lineColor: "#4983C6" };
     if (chartContainerRef?.current) {
       const handleResize = () => {
-        chart.applyOptions({
-          width: chartContainerRef?.current?.clientWidth,
-          height: chartContainerRef?.current?.clientHeight,
-          leftPriceScale: {
-            visible:
-              chartContainerRef?.current?.clientWidth > 480 ? true : false,
-          },
-        });
-        chart.timeScale().fitContent();
+        if (chartContainerRef?.current?.clientWidth) {
+          chart.applyOptions({
+            width: chartContainerRef?.current?.clientWidth,
+            height: chartContainerRef?.current?.clientHeight,
+            leftPriceScale: {
+              visible:
+                chartContainerRef?.current?.clientWidth > 480 ? true : false,
+            },
+          });
+          chart.timeScale().fitContent();
+        }
       };
 
       const chart = createChart(chartContainerRef?.current, {
