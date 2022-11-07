@@ -17,17 +17,13 @@ import Image from "next/image";
 import Bitcoin from "../white/btc.svg";
 import BitcoinLightMode from "../black/btc.svg";
 
-type Props = {
-  chartType: string;
-};
-
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
 const ChartComponent = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [cryptoData, setData] = useState<any[]>([]);
-  const [chartType, setChartType] = useState("Area");
+  const [chartType, setChartType] = useState("Line");
   const [timeFrame, setTimeFrame] = useState<number | string>(30);
   const [currentValue, setCurrentValue] = useState<number>(0);
   const [twentyFourHourValue, setTwentyFourHourValue] = useState(0);
@@ -73,6 +69,7 @@ const ChartComponent = () => {
   // useEffect(() => {});
 
   useEffect(() => {
+    const colors = { red: "#f13d3d", green: "#039f65", lineColor: "#4983C6" };
     if (chartContainerRef?.current) {
       const handleResize = () => {
         chart.applyOptions({
@@ -102,10 +99,20 @@ const ChartComponent = () => {
           },
         },
         crosshair: {
-          horzLine: {
-            visible: false,
-          },
+          vertLine: { visible: false },
         },
+        handleScroll: {
+          vertTouchDrag: false,
+          horzTouchDrag: false,
+          pressedMouseMove: false,
+          mouseWheel: false,
+        },
+        handleScale: {
+          pinch: false,
+          mouseWheel: false,
+          axisPressedMouseMove: false,
+        },
+
         timeScale: {
           borderVisible: false,
         },
@@ -122,10 +129,20 @@ const ChartComponent = () => {
 
       if (cryptoData.length > 0) {
         let newSeries;
+
         switch (chartType) {
+          case "Line":
+            newSeries = chart.addLineSeries({
+              color: colors.lineColor,
+              crosshairMarkerVisible: false,
+              lastValueVisible: false,
+              priceLineColor: "transparent",
+            });
+            newSeries.setData(cryptoData);
+            break;
           case "Area":
             newSeries = chart.addAreaSeries({
-              lineColor: "#4983C6",
+              lineColor: colors.lineColor,
             });
             newSeries.setData(cryptoData);
             break;
@@ -138,19 +155,19 @@ const ChartComponent = () => {
             break;
           case "Candle":
             newSeries = chart.addCandlestickSeries({
-              upColor: "#26a69a",
-              downColor: "#ef5350",
+              upColor: colors.green,
+              downColor: colors.red,
               borderVisible: false,
-              wickUpColor: "#26a69a",
-              wickDownColor: "#ef5350",
+              wickUpColor: colors.green,
+              wickDownColor: colors.red,
             });
             newSeries.setData(cryptoData);
             break;
 
           case "Bar":
             newSeries = chart.addBarSeries({
-              upColor: "#26a69a",
-              downColor: "#ef5350",
+              upColor: colors.green,
+              downColor: colors.red,
             });
             newSeries.setData(cryptoData);
             break;
@@ -183,7 +200,7 @@ const ChartComponent = () => {
         padding=" 10px 14px 40px 14px"
         backgroundColor={colorMode === "light" ? "white" : "#133364"}
         position="relative"
-        boxShadow='md'
+        boxShadow="md"
       >
         <HStack>
           <Box>
@@ -210,9 +227,9 @@ const ChartComponent = () => {
           </Box>
           <HStack margin="0 !important">
             {currentValue > twentyFourHourValue ? (
-              <AiFillCaretUp fill="green" size={16} />
+              <AiFillCaretUp fill="var(--green)" size={16} />
             ) : (
-              <AiFillCaretDown fill="red" size={16} />
+              <AiFillCaretDown fill="var(--red)" size={16} />
             )}
             <HStack margin="0 !important">
               <Text
@@ -247,6 +264,7 @@ const ChartComponent = () => {
             <Menu>
               <MenuButton as={Button}>Chart Type</MenuButton>
               <MenuList>
+                <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
                 <MenuItem onClick={() => setChartType("Area")}>Area</MenuItem>
                 <MenuItem onClick={() => setChartType("Histogram")}>
                   Histogram

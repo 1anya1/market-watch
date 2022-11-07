@@ -24,6 +24,7 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   --background-color: #081c3b;
   --text-color: "white";
+
   /* --link-color: #828fff; */
 }
 .chakra-ui-dark {
@@ -33,4 +34,9 @@ html[data-theme="dark"] {
 .chakra-ui-light {
   background-color: #f5f6f9;
   color: "black";
+}
+
+:root {
+  --green: #039f65;
+  --red: #f13d3d;
 }

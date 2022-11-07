@@ -21,5 +21,15 @@ const theme = extendTheme({
       },
     },
   },
+  colors: {
+    green: "#039F65",
+    red: "#F13D3D",
+  },
+
+  components: {
+    //     Box: (props: StyleFunctionProps) => ({
+    //       boxShadow: props.colorMode === "dark" ? "green" : "pink",
+    //     }),
+  },
 });
 export default theme;
