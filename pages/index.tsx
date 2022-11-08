@@ -4,12 +4,12 @@ import dynamic from "next/dynamic";
 import { Box, Button, HStack, useColorMode } from "@chakra-ui/react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import DataTable from "../src/components/table";
-import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
-import { NumericFormat } from "react-number-format";
+
 
 const Chart = dynamic(() => import("../src/components/chart"), {
   ssr: false,
 });
+
 
 const Home: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
