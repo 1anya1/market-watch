@@ -92,12 +92,14 @@ const DataTable = () => {
     return (
       <TableContainer>
         <Table>
-          <TableCaption fontSize='10px' textAlign='right'>Powered by CoinGecko API</TableCaption>
+          <TableCaption fontSize="10px" textAlign="right">
+            Powered by CoinGecko API
+          </TableCaption>
           <Thead>
             <Tr bg={colorMode === "light" ? "#ececec" : "#133364"}>
               <Th
                 position="sticky"
-                left="0"
+                left="-1"
                 zIndex="2"
                 bg={colorMode === "light" ? "#ececec" : "#133364"}
               >
@@ -120,10 +122,16 @@ const DataTable = () => {
                   <Tr key={coin.id}>
                     <Td
                       position="sticky"
-                      left="0"
+                      left="-1"
                       zIndex="2"
-                      bg={colorMode === "light" ? "#f5f6f9" : "#081c3b"}
-                      padding="5px 10px"
+                      bg={
+                        colorMode === "light"
+                          ? "linear-gradient(to left , rgba(245,246,249, 0) 3%, rgba(245,246,249, 1) 14%)"
+                          : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
+                      }
+                      padding="5px 30px 5px 10px"
+                  
+                     
                     >
                       <HStack>
                         <Box
