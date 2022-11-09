@@ -16,9 +16,7 @@ const NewsFeed = () => {
     const getLocalStorageNews = localStorage.getItem("news");
     if (!getLocalStorageNews) {
       console.log("call is made");
-      fetch(
-        `https://newsdata.io/api/1/news?apikey=${process.env.NEWS_KEY}=crypto&language=en`
-      )
+      fetch(`${window.location.origin}/api/hello`)
         .then((data) => {
           return data.json();
         })
