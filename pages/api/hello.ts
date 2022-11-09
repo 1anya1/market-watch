@@ -11,3 +11,12 @@ export default function handler(
 ) {
   res.status(200).json({ name: 'John Doe' })
 }
+
+
+// export default async function handler(req, res) {
+//   const data = await fetch(
+//     `https://www.test.com/api/hello?apiKey=${process.env.API_KEY}`
+//   ).then((response) => response.json());
+
+//   res.json(data);
+// }
