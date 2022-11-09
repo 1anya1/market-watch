@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import { Box, Button, HStack, useColorMode } from "@chakra-ui/react";
+import { Box, HStack, useColorMode } from "@chakra-ui/react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import DataTable from "../src/components/table";
-
+import NewsFeed from "../src/components/news-feed";
 
 const Chart = dynamic(() => import("../src/components/chart"), {
   ssr: false,
 });
 
-
 const Home: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  console.log(process.env.NEWS_KEY);
   return (
     <Box>
       <HStack pt="20px" justifyContent="flex-end">
@@ -31,6 +31,7 @@ const Home: NextPage = () => {
 
       <Chart />
       <DataTable />
+      <NewsFeed />
     </Box>
   );
 };

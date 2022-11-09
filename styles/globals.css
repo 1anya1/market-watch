@@ -40,3 +40,7 @@ html[data-theme="dark"] {
   --green: #039f65;
   --red: #f13d3d;
 }
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}

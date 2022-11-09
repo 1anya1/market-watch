@@ -1,6 +1,7 @@
 import { createChart, ColorType } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
 import {
   Box,
@@ -285,11 +286,16 @@ const ChartComponent = () => {
                 lineHeight="12px"
                 height="32px"
                 fontWeight="600"
-                backgroundColor={
-                  colorMode === "light" ? colors.gray : colors.blue
-                }
+                padding="0 !important"
+                background="unset !important"
+                // backgroundColor={
+                //   colorMode === "light" ? colors.gray : colors.white
+                // }
               >
-                Chart Type
+                <RiSettings3Fill
+                  fill={colorMode === "light" ? colors.gray : colors.blue}
+                  size={20}
+                />
               </MenuButton>
               <MenuList>
                 <MenuItem

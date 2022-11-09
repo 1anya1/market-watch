@@ -130,8 +130,6 @@ const DataTable = () => {
                           : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
                       }
                       padding="5px 30px 5px 10px"
-                  
-                     
                     >
                       <HStack>
                         <Box
