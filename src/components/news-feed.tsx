@@ -54,7 +54,7 @@ const NewsFeed = () => {
               w="100%"
             >
               <Box
-                backgroundImage={el.urlToImage}
+                backgroundImage={`url("${el.urlToImage}")`}
                 backgroundSize="cover"
                 h={{ base: "260px", lg: "240px" }}
                 w={{ base: "100%", lg: "475px" }}
@@ -80,8 +80,8 @@ const NewsFeed = () => {
                   </Text>
                   <Text fontWeight="bold">{dateParser(el.publishedAt)}</Text>
                 </Link>
-                <Text lineHeight="1.5" fontSize="18px">
-                  {el.description}
+                <Text lineHeight="1.5" fontSize="18px" maxW='100%'>
+                  {el.description.replace(/(<([^>]+)>)/gi, "")}
                 </Text>
               </VStack>
             </Stack>
