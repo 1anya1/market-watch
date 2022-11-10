@@ -48,8 +48,8 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: JSON.stringify({ name: "anna", dog: true }),
-    Key: `${key}-${type}`,
+    Body: JSON.stringify(json),
+    Key: "data",
   };
 
   s3.upload(uploadParams, (error: Error, data: any) => {
