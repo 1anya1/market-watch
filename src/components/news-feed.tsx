@@ -1,4 +1,4 @@
-import { Box, Grid, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Link, Stack, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BiLinkExternal } from "react-icons/bi";
 
@@ -13,27 +13,23 @@ const NewsFeed = () => {
   const [newsData, setNewsData] = useState<any[]>([]);
 
   useEffect(() => {
-    const getLocalStorageNews = localStorage.getItem("news");
-    if (!getLocalStorageNews) {
-      console.log(`${window.location.origin}/api/hello`);
-      fetch(`${window.location.origin}/api/hello`)
-        .then((data) => {
-          return data.json();
-        })
-        .then((news) => {
-          console.log(news, JSON.stringify(news));
-          localStorage.setItem("news", JSON.stringify(news));
-        });
-    } else {
-      const data = JSON.parse(getLocalStorageNews);
-      console.log(data);
-      const withImages = data.articles.filter((el: { urlToImage: null }) => {
-        return el.urlToImage;
+    fetch(`${window.location.origin}/api/newsfeed`)
+      .then((data) => {
+        return data.json();
+      })
+      .then((news) => {
+        console.log(news, JSON.stringify(news));
+        if (news.result.status === "ok") {
+          const withImages = news.result.articles.filter(
+            (el: { urlToImage: null }) => {
+              return el.urlToImage;
+            }
+          );
+          setNewsData(withImages);
+        }
       });
-      console.log(withImages, data);
-      setNewsData(withImages);
-    }
   }, []);
+
   const dateParser = (val: string) => {
     const fullDate = val.split("T");
     return new Date(fullDate[0]).toLocaleString("en-us", {

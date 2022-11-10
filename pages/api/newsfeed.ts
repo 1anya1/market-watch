@@ -7,5 +7,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Result>
 ) {
-  res.status(200).json({ result: await updateCards() });
+  const key = process.env.NEWS_KEY || "";
+  res.status(200).json({ result: await updateCards(key) });
 }

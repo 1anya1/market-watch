@@ -5,8 +5,8 @@ const fs = require("fs");
 
 const bucketName: string = "cryptonewsfeed";
 const region: string = "us-west-1";
-const accessKeyId: string = "AKIAZPFXNYTKV5FCGYFB";
-const secretAccessKey: string = "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";
+const accessKeyId: string = process.env.AWS_ACCESS_KEY_ID || "";
+const secretAccessKey: string = process.env.AWS_ACCESS_KEY_SECRET || "";
 const useS3: boolean = true;
 
 AWS.config.update({ region });
@@ -64,6 +64,7 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
 
 // download a file from S3
 export async function getJsonFile(key: string, type: string = "cards") {
+  console.log(key, type);
   const downloadParams = {
     Key: `${key}-${type}`,
     Bucket: bucketName,
@@ -76,7 +77,10 @@ export async function getJsonFile(key: string, type: string = "cards") {
       stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
     });
   }
+
   const body = await s3.getObject(downloadParams).createReadStream();
+
   const bodyContents = await streamToString(body as Readable);
+
   return JSON.parse(bodyContents);
 }
