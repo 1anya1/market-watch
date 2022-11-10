@@ -47,7 +47,7 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
 
   const uploadParams = {
     Bucket: bucketName,
-    Body: JSON.stringify(json),
+    Body: JSON.stringify({ name: "Dante", dog: true }),
     Key: "data",
   };
 
