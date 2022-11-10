@@ -37,7 +37,7 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
       file += `${key}/${key}-${type}.json`;
     }
     if (key) {
-      fs.writeFileSync("myname", JSON.stringify({ name: "anna", dog: true }));
+      fs.writeFileSync("myname", JSON.stringify({ name: "anna", dog: "true" }));
       console.log(`Development mode: stored json data locally in : ${file}`);
     } else {
       console.error("key undefined!!!");
@@ -48,7 +48,7 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
   const uploadParams = {
     Bucket: bucketName,
     Body: JSON.stringify(json),
-    Key: "data",
+    Key: "blue",
   };
 
   s3.upload(uploadParams, (error: Error, data: any) => {
