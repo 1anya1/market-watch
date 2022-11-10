@@ -4,5 +4,9 @@ const fs = require("fs");
 
 export async function updateCards() {
   const me = { name: "Dante", dog: "cat" };
-  uploadJsonFile(me, "test", "card");
+  if (me) {
+    uploadJsonFile(me, "test", "card");
+    return true;
+  }
+  return false;
 }

@@ -12,11 +12,14 @@ const Chart = dynamic(() => import("../src/components/chart"), {
 
 const Home = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+
   useEffect(() => {
-    fetch(`${window.location.origin}/api/newsfeed`).then((data) => {
-      console.log(data.json());
-    });
+    console.log("in here getting api newsfeeds ");
+    fetch(`${window.location.origin}/api/newsfeed`)
+      .then((data) => data.json())
+      .then((info) => console.log(info));
   }, []);
+
   return (
     <Box>
       <HStack pt="20px" justifyContent="flex-end">
