@@ -5,8 +5,8 @@ const fs = require("fs");
 
 const bucketName: string = "cryptonewsfeed";
 const region: string = "us-west-1";
-const accessKeyId: string = process.env.AWS_ACCESS_KEY_ID || "";
-const secretAccessKey: string = process.env.AWS_ACCESS_KEY_SECRET || "";
+const accessKeyId: string = process.env.ACCESS_KEY_ID_AWS || "";
+const secretAccessKey: string = process.env.ACCESS_KEY_SECRET_AWS || "";
 const useS3: boolean = true;
 
 AWS.config.update({ region });

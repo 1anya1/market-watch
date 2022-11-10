@@ -4,7 +4,6 @@ import { Box, HStack, useColorMode } from "@chakra-ui/react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import DataTable from "../src/components/table";
 import NewsFeed from "../src/components/news-feed";
-import { useEffect } from "react";
 
 const Chart = dynamic(() => import("../src/components/chart"), {
   ssr: false,
