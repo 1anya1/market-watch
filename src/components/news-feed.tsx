@@ -15,7 +15,7 @@ const NewsFeed = () => {
   useEffect(() => {
     const getLocalStorageNews = localStorage.getItem("news");
     if (!getLocalStorageNews) {
-      console.log("call is made");
+      console.log(`${window.location.origin}/api/hello`);
       fetch(`${window.location.origin}/api/hello`)
         .then((data) => {
           return data.json();
@@ -27,15 +27,15 @@ const NewsFeed = () => {
     } else {
       const data = JSON.parse(getLocalStorageNews);
       console.log(data);
-      const withImages = data.results.filter((el: { image_url: null }) => {
-        return el.image_url;
+      const withImages = data.articles.filter((el: { urlToImage: null }) => {
+        return el.urlToImage;
       });
-      console.log(withImages);
+      console.log(withImages, data);
       setNewsData(withImages);
     }
   }, []);
   const dateParser = (val: string) => {
-    const fullDate = val.split(" ");
+    const fullDate = val.split("T");
     return new Date(fullDate[0]).toLocaleString("en-us", {
       month: "short",
       day: "numeric",
@@ -59,7 +59,7 @@ const NewsFeed = () => {
               w="100%"
             >
               <Box
-                backgroundImage={el.image_url}
+                backgroundImage={el.urlToImage}
                 backgroundSize="cover"
                 h={{ base: "260px", lg: "240px" }}
                 w={{ base: "100%", lg: "475px" }}
@@ -70,7 +70,7 @@ const NewsFeed = () => {
                 justifyContent="center"
                 alignItems="flex-start"
               >
-                <Link href={el.link} isExternal>
+                <Link href={el.url} isExternal>
                   <Text fontSize="24px" lineHeight="1.5" fontWeight="700">
                     {el.title.replace(/[^a-zA-Z ]/g, "")}
                     <span
@@ -83,7 +83,7 @@ const NewsFeed = () => {
                       <BiLinkExternal size={24} />
                     </span>
                   </Text>
-                  <Text fontWeight="bold">{dateParser(el.pubDate)}</Text>
+                  <Text fontWeight="bold">{dateParser(el.publishedAt)}</Text>
                 </Link>
                 <Text lineHeight="1.5" fontSize="18px">
                   {el.description}

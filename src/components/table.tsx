@@ -2,7 +2,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -12,7 +11,6 @@ import {
   HStack,
   Text,
   useColorMode,
-  VStack,
   Stack,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";

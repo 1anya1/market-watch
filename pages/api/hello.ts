@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   const data = await fetch(
-    `https://newsdata.io/api/1/news?apikey=${process.env.NEWS_KEY}=crypto&language=en`
+    `https://newsapi.org/v2/everything?q=crypto&from=2022-11-08&sortBy=popularity&apiKey=${process.env.NEWS_API}&language=en`
   ).then((response) => response.json());
 
   res.json(data);

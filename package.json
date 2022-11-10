@@ -15,13 +15,17 @@
     "@fontsource/montserrat": "^4.5.13",
     "@fontsource/open-sans": "^4.5.13",
     "@fontsource/raleway": "^4.5.11",
+    "aws-sdk": "^2.1251.0",
+    "dotenv": "^16.0.3",
     "framer-motion": "^6.5.1",
+    "fs": "^0.0.1-security",
     "lightweight-charts": "^3.8.0",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
-    "react-number-format": "^5.1.1"
+    "react-number-format": "^5.1.1",
+    "s3": "^4.4.0"
   },
   "devDependencies": {
     "@types/node": "18.11.4",

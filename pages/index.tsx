@@ -4,6 +4,7 @@ import { Box, HStack, useColorMode } from "@chakra-ui/react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import DataTable from "../src/components/table";
 import NewsFeed from "../src/components/news-feed";
+import { useEffect } from "react";
 
 const Chart = dynamic(() => import("../src/components/chart"), {
   ssr: false,
@@ -11,7 +12,11 @@ const Chart = dynamic(() => import("../src/components/chart"), {
 
 const Home = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  console.log(process.env.NEWS_KEY);
+  useEffect(() => {
+    fetch(`${window.location.origin}/api/newsfeed`).then((data) => {
+      console.log(data.json());
+    });
+  }, []);
   return (
     <Box>
       <HStack pt="20px" justifyContent="flex-end">
