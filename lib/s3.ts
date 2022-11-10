@@ -4,8 +4,7 @@ import { Readable } from "stream";
 const fs = require("fs");
 
 const bucketName: string = "cryptonewsfeed";
-const region: string = "[us-west-1]";
-
+const region: string = "us-west-1";
 const accessKeyId: string = "AKIAZPFXNYTKV5FCGYFB";
 const secretAccessKey: string = "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";
 const useS3: boolean = true;
