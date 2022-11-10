@@ -18,7 +18,6 @@ const NewsFeed = () => {
         return data.json();
       })
       .then((news) => {
-        console.log(news, JSON.stringify(news));
         if (news.result.status === "ok") {
           const withImages = news.result.articles.filter(
             (el: { urlToImage: null }) => {

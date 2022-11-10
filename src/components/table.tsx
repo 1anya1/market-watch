@@ -82,10 +82,6 @@ const DataTable = () => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   if (data.length > 0) {
     return (
       <TableContainer>
