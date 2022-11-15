@@ -28,7 +28,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Chart />
+      <Chart coinId="bitcoin" />
       <DataTable />
       <NewsFeed />
     </Box>
