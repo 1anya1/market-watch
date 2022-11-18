@@ -90,23 +90,31 @@ const DataTable = () => {
             Powered by CoinGecko API
           </TableCaption>
           <Thead>
-            <Tr bg={colorMode === "light" ? "#ececec" : "#133364"}>
+            <Tr
+              bg={colorMode === "light" ? "#f5f6fa" : "#133364"}
+              fontSize="10px"
+            >
               <Th
                 position="sticky"
                 left="-1"
                 zIndex="2"
-                bg={colorMode === "light" ? "#ececec" : "#133364"}
+                fontSize="10px"
+                bg={
+                  colorMode === "light"
+                    ? "linear-gradient(to left , rgba(245,246,250, 0) 3%, rgba(245,246,250, 1) 14%)"
+                    : "linear-gradient(to left , rgba(17,51,99, 0) 3%, rgba(17,51,99, 1) 14%)"
+                }
               >
                 Name
               </Th>
-              <Th>Price</Th>
-              <Th>1h</Th>
-              <Th>24h</Th>
-              <Th>7d</Th>
-              <Th>24h Volume</Th>
-              <Th>Mkt Cap</Th>
-              <Th>Circulating Supply</Th>
-              <Th>Last 7 Days</Th>
+              <Th fontSize="10px">Price</Th>
+              <Th fontSize="10px">1h</Th>
+              <Th fontSize="10px">24h</Th>
+              <Th fontSize="10px">7d</Th>
+              <Th fontSize="10px">24h Volume</Th>
+              <Th fontSize="10px">Mkt Cap</Th>
+              <Th fontSize="10px">Circulating Supply</Th>
+              <Th fontSize="10px">Last 7 Days</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -120,7 +128,7 @@ const DataTable = () => {
                       zIndex="2"
                       bg={
                         colorMode === "light"
-                          ? "linear-gradient(to left , rgba(245,246,249, 0) 3%, rgba(245,246,249, 1) 14%)"
+                          ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
                           : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
                       }
                       padding="5px 30px 5px 10px"

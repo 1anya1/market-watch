@@ -300,7 +300,7 @@ const ChartComponent = (props: any) => {
         <>
           <Box
             padding=" 10px 14px 40px 14px"
-            backgroundColor={colorMode === "light" ? "white" : "#133364"}
+            backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
             position="relative"
             boxShadow="md"
           >

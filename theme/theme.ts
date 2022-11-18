@@ -1,5 +1,5 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-// import { StyleFunctionProps } from "@chakra-ui/theme-tools";
+import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 
 const config: ThemeConfig = {
   initialColorMode: "dark",
@@ -14,7 +14,7 @@ const theme = extendTheme({
   styles: {
     global: {
       // styles for the `body`
-      body: {
+      body: (props: StyleFunctionProps) => ({
         padding: {
           base: "0 4%",
           sm: "0 6%",
@@ -22,7 +22,8 @@ const theme = extendTheme({
           lg: "0 10%",
           xl: "0 14%",
         },
-      },
+        // backgroundColor: props.colorMode === "dark" ? "#343444" : "#ebebeb",
+      }),
     },
   },
   colors: {

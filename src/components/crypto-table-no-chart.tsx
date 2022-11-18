@@ -88,12 +88,16 @@ const DataTableNoChart = () => {
             Powered by CoinGecko API
           </TableCaption>
           <Thead>
-            <Tr bg={colorMode === "light" ? "#ececec" : "#133364"}>
+            <Tr bg={colorMode === "light" ? "#f5f6fa" : "#133364"}>
               <Th
                 position="sticky"
                 left="-1"
                 zIndex="2"
-                bg={colorMode === "light" ? "#ececec" : "#133364"}
+                bg={
+                  colorMode === "light"
+                    ? "linear-gradient(to left , rgba(245,246,250, 0) 3%, rgba(245,246,250, 1) 14%)"
+                    : "linear-gradient(to left , rgba(17,51,99, 0) 3%, rgba(17,51,99, 1) 14%)"
+                }
               >
                 Name
               </Th>
@@ -119,7 +123,7 @@ const DataTableNoChart = () => {
                         zIndex="2"
                         bg={
                           colorMode === "light"
-                            ? "linear-gradient(to left , rgba(245,246,249, 0) 3%, rgba(245,246,249, 1) 14%)"
+                            ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
                             : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
                         }
                         padding="5px 30px 5px 10px"
