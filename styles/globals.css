@@ -44,3 +44,12 @@ html[data-theme="dark"] {
   width: 0px;
   background: transparent; /* make scrollbar transparent */
 }
+
+/* 
+Chakra Ui overwrites */
+.chakra-tabs__tab {
+  padding: 0 !important;
+}
+.css-gkyhes[aria-selected="true"] {
+  color: #4983c7 !important;
+}
