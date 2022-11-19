@@ -446,11 +446,8 @@ const ChartComponent = (props: any) => {
           </TabList>
           <TabPanels>
             <TabPanel p="0">
-              {individualPage && (
+              {individualPage && coinInfo?.description && (
                 <Box>
-                  {/* <Text fontSize="32px" fontWeight="700" pb="20px">
-                  {coinInfo.name}
-                </Text> */}
                   <Box position="relative">
                     <Box
                       maxH={!viewAllCoin ? "500px" : "100%"}
@@ -480,6 +477,7 @@ const ChartComponent = (props: any) => {
                       w="100%"
                     />
                   </Box>
+
                   <Button
                     onClick={() => setViewAllCoin(!viewAllCoin)}
                     mt="20px"
