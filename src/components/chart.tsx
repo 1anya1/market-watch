@@ -427,19 +427,35 @@ const ChartComponent = (props: any) => {
       ) : null}
       {individualPage ? (
         <Tabs width={{ base: "100%", md: "40%" }} pt="40px">
-          <TabList borderBottom="unset" pb="20px" gap="40px">
+          <TabList
+            borderBottom="unset"
+            pb="20px"
+            gap={{ base: "20px", md: "28px" }}
+          >
             {coinInfo?.description ? (
-              <Tab fontSize="24px" fontWeight="700" pb="20px">
+              <Tab
+                fontSize={{ base: "16px", md: "20px" }}
+                fontWeight="700"
+                pb="20px"
+              >
                 Bio
               </Tab>
             ) : null}
             {news?.articles.length > 0 ? (
-              <Tab fontSize="24px" fontWeight="700" pb="20px">
+              <Tab
+                fontSize={{ base: "16px", md: "20px" }}
+                fontWeight="700"
+                pb="20px"
+              >
                 News
               </Tab>
             ) : null}
             {news?.videos.length > 0 ? (
-              <Tab fontSize="24px" fontWeight="700" pb="20px">
+              <Tab
+                fontSize={{ base: "16px", md: "20px" }}
+                fontWeight="700"
+                pb="20px"
+              >
                 Videos
               </Tab>
             ) : null}
