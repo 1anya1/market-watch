@@ -425,141 +425,151 @@ const ChartComponent = (props: any) => {
           </Box>
         </>
       ) : null}
-
-      <Tabs width={{ base: "100%", md: "40%" }} pt="40px">
-        <TabList borderBottom="unset" pb="20px" gap="40px">
-          <Tab fontSize="24px" fontWeight="700" pb="20px">
-            Bio
-          </Tab>
-          {news?.articles.length > 0 ? (
-            <Tab fontSize="24px" fontWeight="700" pb="20px">
-              News
-            </Tab>
-          ) : null}
-          {news?.videos.length > 0 ? (
-            <Tab fontSize="24px" fontWeight="700" pb="20px">
-              Videos
-            </Tab>
-          ) : null}
-        </TabList>
-        <TabPanels>
-          <TabPanel p="0">
-            {individualPage && (
-              <Box>
-                {/* <Text fontSize="32px" fontWeight="700" pb="20px">
+      {individualPage ? (
+        <Tabs width={{ base: "100%", md: "40%" }} pt="40px">
+          <TabList borderBottom="unset" pb="20px" gap="40px">
+            {coinInfo?.description ? (
+              <Tab fontSize="24px" fontWeight="700" pb="20px">
+                Bio
+              </Tab>
+            ) : null}
+            {news?.articles.length > 0 ? (
+              <Tab fontSize="24px" fontWeight="700" pb="20px">
+                News
+              </Tab>
+            ) : null}
+            {news?.videos.length > 0 ? (
+              <Tab fontSize="24px" fontWeight="700" pb="20px">
+                Videos
+              </Tab>
+            ) : null}
+          </TabList>
+          <TabPanels>
+            <TabPanel p="0">
+              {individualPage && (
+                <Box>
+                  {/* <Text fontSize="32px" fontWeight="700" pb="20px">
                   {coinInfo.name}
                 </Text> */}
-                <Box position="relative">
-                  <Box
-                    maxH={!viewAllCoin ? "500px" : "100%"}
-                    dangerouslySetInnerHTML={{ __html: coinInfo.description }}
-                    textOverflow="ellipsis"
-                    overflow="hidden"
-                    whiteSpace="break-spaces"
-                    lineHeight="1.5"
-                    transition="all .3s ease-in-out"
-                    height={
-                      !viewAllCoin
-                        ? { base: "calc(15px * 21)", md: "100%" }
-                        : "100%"
-                    }
-                  />
-                  <Box
-                    position="absolute"
-                    bottom="0"
-                    background={
-                      !viewAllCoin
-                        ? colorMode === "light"
-                          ? "linear-gradient(rgba(255, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
-                          : "linear-gradient(rgba(8, 28, 59, 0) 30%, rgb(8, 28, 59) 100%)"
-                        : "unset"
-                    }
-                    h="150px"
-                    w="100%"
-                  />
-                </Box>
-                <Button onClick={() => setViewAllCoin(!viewAllCoin)} mt="20px">
-                  {!viewAllCoin ? "View More" : "View Less"}
-                </Button>
-              </Box>
-            )}
-          </TabPanel>
-          <TabPanel padding="0">
-            {news?.articles.length > 0 && individualPage ? (
-              <Stack gap="40px">
-                {news.articles.map((el: any) => (
-                  <Stack
-                    flexDir={{ base: "column" }}
-                    gap="20px"
-                    key={el.link}
-                    margin="0 !important"
-                    justifyContent="space-between"
-                    w="100%"
-                  >
+                  <Box position="relative">
                     <Box
-                      backgroundImage={`url("${el.thumbnail}")`}
-                      backgroundSize="cover"
-                      sx={{
-                        aspectRatio: "16/9",
-                      }}
-                      w="100%"
-                      margin="0 !important"
+                      maxH={!viewAllCoin ? "500px" : "100%"}
+                      dangerouslySetInnerHTML={{ __html: coinInfo.description }}
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                      whiteSpace="break-spaces"
+                      lineHeight="1.5"
+                      transition="all .3s ease-in-out"
+                      height={
+                        !viewAllCoin
+                          ? { base: "calc(15px * 21)", md: "100%" }
+                          : "100%"
+                      }
                     />
-                    <VStack
-                      width="100%"
-                      justifyContent="center"
-                      alignItems="flex-start"
+                    <Box
+                      position="absolute"
+                      bottom="0"
+                      background={
+                        !viewAllCoin
+                          ? colorMode === "light"
+                            ? "linear-gradient(rgba(255, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
+                            : "linear-gradient(rgba(8, 28, 59, 0) 30%, rgb(8, 28, 59) 100%)"
+                          : "unset"
+                      }
+                      h="150px"
+                      w="100%"
+                    />
+                  </Box>
+                  <Button
+                    onClick={() => setViewAllCoin(!viewAllCoin)}
+                    mt="20px"
+                  >
+                    {!viewAllCoin ? "View More" : "View Less"}
+                  </Button>
+                </Box>
+              )}
+            </TabPanel>
+            <TabPanel padding="0">
+              {news?.articles.length > 0 && individualPage ? (
+                <Stack gap="40px">
+                  {news.articles.map((el: any) => (
+                    <Stack
+                      flexDir={{ base: "column" }}
+                      gap="20px"
+                      key={el.link}
+                      margin="0 !important"
+                      justifyContent="space-between"
+                      w="100%"
                     >
-                      <Link href={el.link} isExternal>
-                        <Text fontSize="24px" lineHeight="1.5" fontWeight="700">
-                          {el.title.replace(/[^a-zA-Z ]/g, "")}
-                          <span
-                            style={{
-                              display: "inline-block",
-                              marginLeft: "8px",
-                              lineHeight: "1.5",
-                            }}
+                      <Box
+                        backgroundImage={`url("${el.thumbnail}")`}
+                        backgroundSize="cover"
+                        sx={{
+                          aspectRatio: "16/9",
+                        }}
+                        w="100%"
+                        margin="0 !important"
+                      />
+                      <VStack
+                        width="100%"
+                        justifyContent="center"
+                        alignItems="flex-start"
+                      >
+                        <Link href={el.link} isExternal>
+                          <Text
+                            fontSize="24px"
+                            lineHeight="1.5"
+                            fontWeight="700"
                           >
-                            <BiLinkExternal size={24} fill="#4983c7" />
-                          </span>
+                            {el.title.replace(/[^a-zA-Z ]/g, "")}
+                            <span
+                              style={{
+                                display: "inline-block",
+                                marginLeft: "8px",
+                                lineHeight: "1.5",
+                              }}
+                            >
+                              <BiLinkExternal size={24} fill="#4983c7" />
+                            </span>
+                          </Text>
+                          <Text fontWeight="bold">
+                            {dateParse(el.publication_time)}
+                          </Text>
+                        </Link>
+                        <Text lineHeight="1.5" fontSize="18px" maxW="100%">
+                          {el.description}
                         </Text>
-                        <Text fontWeight="bold">
-                          {dateParse(el.publication_time)}
-                        </Text>
-                      </Link>
-                      <Text lineHeight="1.5" fontSize="18px" maxW="100%">
-                        {el.description}
+                      </VStack>
+                    </Stack>
+                  ))}
+                </Stack>
+              ) : null}
+            </TabPanel>
+            <TabPanel padding="0">
+              {news?.videos.length > 0 && individualPage ? (
+                <Stack gap="40px">
+                  {news.videos.map((el: any) => (
+                    <VStack key={el.id}>
+                      <Box
+                        as="iframe"
+                        src={`https://www.youtube.com/embed/${el.id}`}
+                        width="100%"
+                        allow="autoplay"
+                        sx={{
+                          aspectRatio: "16/9",
+                        }}
+                      />
+                      <Text fontSize="24px" lineHeight="1.5" fontWeight="700">
+                        {el.title}
                       </Text>
                     </VStack>
-                  </Stack>
-                ))}
-              </Stack>
-            ) : null}
-          </TabPanel>
-          <TabPanel padding="0">
-            {news?.videos.length > 0 && individualPage ? (
-              <Stack gap="40px">
-                {news.videos.map((el: any) => (
-                  <VStack key={el.id}>
-                    <Box
-                      as="iframe"
-                      src={`https://www.youtube.com/embed/${el.id}`}
-                      width="100%"
-                      allow="autoplay"
-                      sx={{
-                        aspectRatio: "16/9",
-                      }}
-                    />
-                    <Text fontSize="24px" lineHeight="1.5" fontWeight="700">
-                      {el.title}
-                    </Text>
-                  </VStack>
-                ))}
-              </Stack>
-            ) : null}
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+                  ))}
+                </Stack>
+              ) : null}
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      ) : null}
     </Box>
   );
 };
