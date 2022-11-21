@@ -14,32 +14,28 @@ const colors = {
 };
 
 const TableChartComponent = (props: any) => {
-  const { id, change} = props;
+  const { id, change, data } = props;
+
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [cryptoData, setData] = useState<any[]>([]);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
     const getData = async () => {
-      const bitcoinData = await fetch(
-        `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`
-      );
-      if (bitcoinData.ok) {
-        const resData = await bitcoinData.json();
-        const crypto: any[] = [];
-        resData.prices.forEach((el: any) => {
+      if (data.length > 0) {
+        const arr: any = [];
+        data.forEach((el: any, idx: number) => {
           const frame = {
-            value: el[1],
-            time: el[0] / 1000,
+            value: el,
+            time: idx + 1,
           };
-
-          crypto.push(frame);
+          arr.push(frame);
         });
-        setData(crypto);
+        setData(arr);
       }
     };
     getData();
-  }, [id]);
+  }, [data, id]);
 
   useEffect(() => {
     if (chartContainerRef?.current && cryptoData.length > 0) {
@@ -76,7 +72,7 @@ const TableChartComponent = (props: any) => {
 
         timeScale: {
           borderVisible: false,
-          visible:false,
+          visible: false,
         },
         leftPriceScale: {
           visible: false,
@@ -88,7 +84,8 @@ const TableChartComponent = (props: any) => {
       chart.timeScale().fitContent();
 
       const newSeries = chart.addLineSeries({
-        color:change > 0 ? colors.green : change < 0 ? colors.red : colors.blue,
+        color:
+          change > 0 ? colors.green : change < 0 ? colors.red : colors.blue,
         lineWidth: 1,
         crosshairMarkerVisible: false,
         lastValueVisible: false,

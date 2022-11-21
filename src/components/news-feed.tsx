@@ -52,6 +52,7 @@ const NewsFeed = () => {
               margin="0 !important"
               justifyContent="space-between"
               w="100%"
+              
             >
               <Box
                 backgroundImage={`url("${el.urlToImage}")`}
@@ -59,6 +60,7 @@ const NewsFeed = () => {
                 h={{ base: "260px", lg: "240px" }}
                 w={{ base: "100%", lg: "475px" }}
                 margin="0 !important"
+                borderRadius='11px'
               />
               <VStack
                 width={{ base: "100%", lg: "calc(100% - 475px - 60px)" }}

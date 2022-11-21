@@ -42,7 +42,7 @@ const ChartComponent = (props: any) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [cryptoData, setData] = useState<any[]>([]);
   const [chartType, setChartType] = useState("Line");
-  const [timeFrame, setTimeFrame] = useState<number | string>(30);
+  const [timeFrame, setTimeFrame] = useState<number | string>(1);
   const [currentValue, setCurrentValue] = useState<number>(0);
   const [twentyFourHourValue, setTwentyFourHourValue] = useState(0);
   const [timeFrameMax, setTimeFrameMax] = useState(0);
@@ -273,7 +273,7 @@ const ChartComponent = (props: any) => {
   }, [chartType, colorMode, cryptoData]);
 
   const timeFrames = [
-    { query: 1, value: "D" },
+    { query: 1, value: "24Hrs" },
     { query: 7, value: "W" },
     { query: 30, value: "M" },
     { query: 90, value: "3M" },
@@ -285,11 +285,14 @@ const ChartComponent = (props: any) => {
     const frame = date.slice(0, 10).split("-");
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
+  console.log(news);
   return (
     <Box p="40px 0">
       {coinInfo.name.length > 0 && chartContainerRef ? (
         <>
+      
           <Box
+          borderRadius='11px'
             padding=" 10px 14px 40px 14px"
             backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
             position="relative"
@@ -461,8 +464,8 @@ const ChartComponent = (props: any) => {
             ) : null}
           </TabList>
           <TabPanels>
-            <TabPanel p="0">
-              {individualPage && coinInfo?.description && (
+            {individualPage && coinInfo?.description && (
+              <TabPanel p="0">
                 <Box>
                   <Box position="relative">
                     <Box
@@ -501,10 +504,10 @@ const ChartComponent = (props: any) => {
                     {!viewAllCoin ? "View More" : "View Less"}
                   </Button>
                 </Box>
-              )}
-            </TabPanel>
-            <TabPanel padding="0">
-              {news?.articles.length > 0 && individualPage ? (
+              </TabPanel>
+            )}
+            {news?.articles.length > 0 && individualPage && (
+              <TabPanel padding="0">
                 <Stack gap="40px">
                   {news.articles.map((el: any) => (
                     <Stack
@@ -557,10 +560,10 @@ const ChartComponent = (props: any) => {
                     </Stack>
                   ))}
                 </Stack>
-              ) : null}
-            </TabPanel>
-            <TabPanel padding="0">
-              {news?.videos.length > 0 && individualPage ? (
+              </TabPanel>
+            )}
+            {news?.videos.length > 0 && individualPage && (
+              <TabPanel padding="0">
                 <Stack gap="40px">
                   {news.videos.map((el: any) => (
                     <VStack key={el.id}>
@@ -579,8 +582,8 @@ const ChartComponent = (props: any) => {
                     </VStack>
                   ))}
                 </Stack>
-              ) : null}
-            </TabPanel>
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       ) : null}
