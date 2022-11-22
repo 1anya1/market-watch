@@ -18,7 +18,9 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { NumericFormat } from "react-number-format";
-
+import { SlStar } from "react-icons/sl";
+import { TiStarFullOutline } from "react-icons/ti";
+import {BsFillBookmarkFill} from 'react-icons/bs'
 const TableChartComponent = dynamic(() => import("../components/table-chart"), {
   ssr: false,
 });
@@ -65,8 +67,9 @@ const PercentChange = (props: any) => {
 const DataTable = () => {
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-  const lastPage = 265;
+  const lastPage = 530;
   const { colorMode } = useColorMode();
+  const [favoredItems, setFavored] = useState<any[]>([]);
 
   // useEffect(() => {
   //   fetch("https://api.coingecko.com/api/v3/coins/list")
@@ -79,7 +82,7 @@ const DataTable = () => {
   useEffect(() => {
     if (page && lastPage) {
       fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
       )
         .then((response) => {
           if (response.ok) {
@@ -88,6 +91,7 @@ const DataTable = () => {
           throw new Error("Something went wrong");
         })
         .then((data) => {
+          console.log(data);
           setData(data);
         })
         .catch((error) => {
@@ -96,6 +100,35 @@ const DataTable = () => {
     }
   }, [lastPage, page]);
 
+  const pagination = (page: number, lastPage: number) => {
+    if (page + 3 < lastPage) {
+      const arr = [];
+      for (let i = 0; i < 3; i++) {
+        arr.push(page + i);
+      }
+
+      return arr;
+    } else {
+      const arr = [];
+      for (let i = 2; i >= 0; i--) {
+        arr.push(page - i);
+      }
+
+      return arr;
+    }
+  };
+  const favored = (id: string) => {
+    const item = [...favoredItems];
+    const index = item.indexOf(id);
+    console.log(index)
+    if (index !== -1) {
+      const newArr = item.filter(el=>el!==id)
+      setFavored([...newArr]);
+    } else setFavored([...item, id]);
+  };
+  useEffect(() => {
+    console.log(favoredItems);
+  }, [favoredItems]);
   if (data.length > 0) {
     return (
       <>
@@ -140,7 +173,7 @@ const DataTable = () => {
             </Thead>
             <Tbody>
               {data.map((coin, idx) => {
-                if (idx <= 50)
+                if (idx <= 25)
                   return (
                     <Tr key={coin.id} borderTop="unset">
                       <Td
@@ -155,12 +188,27 @@ const DataTable = () => {
                         padding="5px 30px 5px 10px"
                       >
                         <HStack>
+                          <BsFillBookmarkFill
+                            onClick={() => favored(coin.id)}
+                            fill={
+                              favoredItems.indexOf(coin.id) !== -1
+                                ? "yellow"
+                                : "transparent"
+                            }
+                            strokeWidth="1px"
+                            stroke={
+                              favoredItems.indexOf(coin.id) !== -1
+                                ? "yellow"
+                                : "white"
+                            }
+                          />
                           <Box
                             h="25px"
                             w="25px"
                             backgroundImage={coin.image}
                             backgroundSize="contain"
                           />
+
                           <Link href={`/crypto/${coin.id}`}>
                             <Stack
                               alignItems={{
@@ -238,15 +286,35 @@ const DataTable = () => {
         </TableContainer>
 
         <HStack>
-          <Box onClick={() => setPage(1)}>1</Box>
-          {[...Array(page + 3)].map((_, i) =>
-            (i === page  || i > page) && i !== 0 && i !== 264 ? (
-              <Box key={i} onClick={() => setPage(i + 1)}>
-                {i + 1}
-              </Box>
-            ) : null
-          )}
-          <Box onClick={() => setPage(265)}>265</Box>
+          {page > 1 ? (
+            <Box
+              onClick={() => setPage(1)}
+              backgroundColor={1 === page ? "#4783c5" : "#123363"}
+              p="5px 10px"
+              borderRadius="4px"
+            >
+              1
+            </Box>
+          ) : null}
+          {pagination(page, lastPage).map((el) => (
+            <Box
+              key={el}
+              onClick={() => setPage(el)}
+              backgroundColor={el === page ? "#4783c5" : "#123363"}
+              p="5px 10px"
+              borderRadius="4px"
+            >
+              {el}
+            </Box>
+          ))}
+          <Box
+            onClick={() => setPage(530)}
+            backgroundColor={530 === page ? "#4783c5" : "#123363"}
+            p="5px 10px"
+            borderRadius="4px"
+          >
+            530
+          </Box>
         </HStack>
       </>
     );
