@@ -601,32 +601,54 @@ const ChartComponent = (props: any) => {
             </TabPanels>
           </Tabs>
         ) : null}
-        <VStack width="100%">
+        <VStack width="100%" m="0 !important">
           {dataRetrieved && (
             <Box width="100%">
               <Text fontSize="20px" fontWeight="700" pb="20px">
                 Stats
               </Text>
-              <HStack>
-                <Text fontSize="18px" fontWeight="600">
-                  Circulating Supply
-                </Text>
-                <Text fontSize="18px" fontWeight="600">
-                  {stats.circulatingSupply.toFixed(2)}
-                </Text>
-              </HStack>
-              <HStack>
-                <Text>Market Cap</Text>
-                <Text>{stats.marketCap.toFixed(2)}</Text>
-              </HStack>
-              <HStack>
-                <Text>24HR Low</Text>
-                <Text>{stats.low_24}</Text>
-              </HStack>
-              <HStack>
-                <Text>24HR High</Text>
-                <Text>{stats.high_24}</Text>
-              </HStack>
+              <Stack gap="6px">
+                <HStack justifyContent="space-between">
+                  <Text fontSize="18px" fontWeight="600">
+                    Circulating Supply
+                  </Text>
+                  <Text fontSize="20px" fontWeight="600">
+                    {stats.circulatingSupply.toFixed(0)}
+                  </Text>
+                </HStack>
+                <HStack justifyContent="space-between">
+                  <Text fontSize="18px" fontWeight="600">
+                    Market Cap
+                  </Text>
+                  <Box fontSize="20px" fontWeight="600">
+                    <NumericFormat
+                      value={stats.marketCap.toFixed(2)}
+                      prefix={"$"}
+                      displayType="text"
+                      thousandSeparator=","
+                    />
+                  </Box>
+                  {/* <Text fontSize="20px" fontWeight="600">
+                  ${stats.marketCap.toFixed(2)}
+                </Text> */}
+                </HStack>
+                <HStack justifyContent="space-between">
+                  <Text fontSize="18px" fontWeight="600">
+                    24HR Low
+                  </Text>
+                  <Text fontSize="20px" fontWeight="600">
+                    {stats.low_24}
+                  </Text>
+                </HStack>
+                <HStack justifyContent="space-between">
+                  <Text fontSize="18px" fontWeight="600">
+                    24HR High
+                  </Text>
+                  <Text fontSize="20px" fontWeight="600">
+                    {stats.high_24}
+                  </Text>
+                </HStack>
+              </Stack>
             </Box>
           )}
           {coinInfo.symbol.length > 0 && (
