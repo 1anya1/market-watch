@@ -47,6 +47,7 @@ const colors = {
 const ChartComponent = (props: any) => {
   const { coinId, individualPage } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [chartType, setChartType] = useState("Line");
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
@@ -62,6 +63,13 @@ const ChartComponent = (props: any) => {
     size: 0,
     videos: [],
     total: 0,
+  });
+  const [stats, setStats] = useState({
+    circulatingSupply: 0,
+    marketCap: 0,
+    low_24: 0,
+    high_24: 0,
+    rank: 0,
   });
   const [cryptoExchange, setCryptoExchange] = useState(1);
   const [currencyExchange, setCurrencyExchange] = useState(0);
@@ -124,6 +132,13 @@ const ChartComponent = (props: any) => {
             data.market_data.low_24h.usd
           );
 
+          setStats({
+            circulatingSupply: data.market_data.total_supply,
+            marketCap: data.market_data.market_cap.usd,
+            low_24: data.market_data.low_24h.usd,
+            high_24: data.market_data.high_24h.usd,
+            rank: data.market_cap_rank,
+          });
           setCoinInfo(coinInfo);
           setData(crypto);
           setCurrentValue(crypto[crypto.length - 1].open);
@@ -134,6 +149,7 @@ const ChartComponent = (props: any) => {
         });
     };
     getData();
+    setDataRetrieved(true);
   }, [coinId, timeFrame]);
 
   useEffect(() => {
@@ -451,8 +467,8 @@ const ChartComponent = (props: any) => {
       ) : null}
       <Stack
         flexDirection={{ base: "column", lg: "row" }}
-        columnGap={{base:'46px', xl:"100px"}}
-        rowGap='20px'
+        columnGap={{ base: "46px", xl: "100px" }}
+        rowGap="20px"
         pt="40px"
       >
         {individualPage ? (
@@ -585,51 +601,82 @@ const ChartComponent = (props: any) => {
             </TabPanels>
           </Tabs>
         ) : null}
-        {coinInfo.symbol.length > 0 && (
-          <Box
-            width="100%"
-            bg="#133364"
-            padding="20px"
-            borderRadius="11px"
-            h="max-content"
-          >
-            <Text fontSize="20px" fontWeight="700" pb="20px">
-              Currency Converter
-            </Text>
-
-            <InputGroup mb="10px">
-              <InputLeftAddon>{coinInfo.symbol.toUpperCase()} </InputLeftAddon>
-              <Input
-                type="number"
-                onChange={handleChangeCrypto}
-                value={cryptoExchange}
-              />
-            </InputGroup>
-            <InputGroup>
-              <InputLeftAddon>USD</InputLeftAddon>
-              <Input
-                type="number"
-                onChange={handleChangeExchange}
-                value={currencyExchange}
-              />
-            </InputGroup>
-
-            <Box fontSize="18px" pt="20px">
-              <span>
-                1{coinInfo.symbol.toUpperCase()} ={" "}
-                <NumericFormat
-                  value={coinInfo.currentPrice.usd}
-                  suffix=" USD"
-                  displayType="text"
-                  thousandSeparator=","
-                />
-              </span>
+        <VStack width="100%">
+          {dataRetrieved && (
+            <Box width="100%">
+              <Text fontSize="20px" fontWeight="700" pb="20px">
+                Stats
+              </Text>
+              <HStack>
+                <Text fontSize="18px" fontWeight="600">
+                  Circulating Supply
+                </Text>
+                <Text fontSize="18px" fontWeight="600">
+                  {stats.circulatingSupply.toFixed(2)}
+                </Text>
+              </HStack>
+              <HStack>
+                <Text>Market Cap</Text>
+                <Text>{stats.marketCap.toFixed(2)}</Text>
+              </HStack>
+              <HStack>
+                <Text>24HR Low</Text>
+                <Text>{stats.low_24}</Text>
+              </HStack>
+              <HStack>
+                <Text>24HR High</Text>
+                <Text>{stats.high_24}</Text>
+              </HStack>
             </Box>
-            <Text fontSize="12px">
-              This is not real time data. To use for approximation only*
-            </Text>
-          </Box>
-        )}
+          )}
+          {coinInfo.symbol.length > 0 && (
+            <Box
+              width="100%"
+              bg="#133364"
+              padding="20px"
+              borderRadius="11px"
+              h="max-content"
+            >
+              <Text fontSize="20px" fontWeight="700" pb="20px">
+                Currency Converter
+              </Text>
+
+              <InputGroup mb="10px">
+                <InputLeftAddon>
+                  {coinInfo.symbol.toUpperCase()}{" "}
+                </InputLeftAddon>
+                <Input
+                  type="number"
+                  onChange={handleChangeCrypto}
+                  value={cryptoExchange}
+                />
+              </InputGroup>
+              <InputGroup>
+                <InputLeftAddon>USD</InputLeftAddon>
+                <Input
+                  type="number"
+                  onChange={handleChangeExchange}
+                  value={currencyExchange}
+                />
+              </InputGroup>
+
+              <Box fontSize="18px" pt="20px">
+                <span>
+                  1{coinInfo.symbol.toUpperCase()} ={" "}
+                  <NumericFormat
+                    value={coinInfo.currentPrice.usd}
+                    suffix=" USD"
+                    displayType="text"
+                    thousandSeparator=","
+                  />
+                </span>
+              </Box>
+              <Text fontSize="12px">
+                This is not real time data. To use for approximation only*
+              </Text>
+            </Box>
+          )}
+        </VStack>
       </Stack>
 
       {news?.videos.length > 0 && individualPage && (
