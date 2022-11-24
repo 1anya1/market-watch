@@ -601,9 +601,15 @@ const ChartComponent = (props: any) => {
             </TabPanels>
           </Tabs>
         ) : null}
-        <VStack width="100%" m="0 !important">
+        <VStack width="100%" m="0 !important" gap="20px">
           {dataRetrieved && (
-            <Box width="100%">
+            <Box
+              width="100%"
+              bg="#133364"
+              padding="20px"
+              borderRadius="11px"
+              h="max-content"
+            >
               <Text fontSize="20px" fontWeight="700" pb="20px">
                 Stats
               </Text>
@@ -612,9 +618,13 @@ const ChartComponent = (props: any) => {
                   <Text fontSize="18px" fontWeight="600">
                     Circulating Supply
                   </Text>
-                  <Text fontSize="20px" fontWeight="600">
-                    {stats.circulatingSupply.toFixed(0)}
-                  </Text>
+                  <Box fontSize="20px" fontWeight="600">
+                    <NumericFormat
+                      value={stats.circulatingSupply.toFixed(0)}
+                      displayType="text"
+                      thousandSeparator=","
+                    />
+                  </Box>
                 </HStack>
                 <HStack justifyContent="space-between">
                   <Text fontSize="18px" fontWeight="600">
@@ -628,25 +638,32 @@ const ChartComponent = (props: any) => {
                       thousandSeparator=","
                     />
                   </Box>
-                  {/* <Text fontSize="20px" fontWeight="600">
-                  ${stats.marketCap.toFixed(2)}
-                </Text> */}
                 </HStack>
                 <HStack justifyContent="space-between">
                   <Text fontSize="18px" fontWeight="600">
                     24HR Low
                   </Text>
-                  <Text fontSize="20px" fontWeight="600">
-                    {stats.low_24}
-                  </Text>
+                  <Box fontSize="20px" fontWeight="600">
+                    <NumericFormat
+                      value={stats.low_24}
+                      prefix={"$"}
+                      displayType="text"
+                      thousandSeparator=","
+                    />
+                  </Box>
                 </HStack>
                 <HStack justifyContent="space-between">
                   <Text fontSize="18px" fontWeight="600">
                     24HR High
                   </Text>
-                  <Text fontSize="20px" fontWeight="600">
-                    {stats.high_24}
-                  </Text>
+                  <Box fontSize="20px" fontWeight="600">
+                    <NumericFormat
+                      value={stats.high_24}
+                      prefix={"$"}
+                      displayType="text"
+                      thousandSeparator=","
+                    />
+                  </Box>
                 </HStack>
               </Stack>
             </Box>
