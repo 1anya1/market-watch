@@ -300,7 +300,7 @@ const ChartComponent = (props: any) => {
   }, [chartType, colorMode, cryptoData]);
 
   const timeFrames = [
-    { query: 1, value: "24Hrs" },
+    { query: 1, value: "D" },
     { query: 7, value: "W" },
     { query: 30, value: "M" },
     { query: 90, value: "3M" },
