@@ -54,4 +54,15 @@ Chakra Ui overwrites */
   color: #4983c7 !important;
 }
 
+.h-4 {
+  font-weight: 700;
+  font-size: 20px;
+}
+.input {
+  background-color: transparent;
+  width: 100%;
+}
 
+.input:focus-visible {
+  outline: unset !important;
+}
