@@ -17,25 +17,35 @@ const theme = extendTheme({
       body: (props: StyleFunctionProps) => ({
         padding: {
           base: "0 4%",
-          sm: "0 6%",
+          sm: "0 3%",
+          md: "0 4%",
         },
         maxW: "2200px",
         m: "0 auto",
+
         // backgroundColor: props.colorMode === "dark" ? "#343444" : "#ebebeb",
       }),
+      div: {
+        marginInlineStart: "0",
+        marginTop: 0,
+      },
     },
   },
   components: {
     Text: {
       variants: {
+        "h-1": {
+          fontSize: "34px",
+          fontWeight: 700,
+        },
         "h-2": {
           fontSize: "28px",
-          FontSize: 700,
+          fontWeight: 700,
         },
         "h-3": {
           fontSize: "24px",
           fontWeight: "700",
-          pb: "20px",
+          pb: "8px",
         },
         "h-4": {
           fontSize: "20px",
