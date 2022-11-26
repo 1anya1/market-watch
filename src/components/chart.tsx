@@ -1,5 +1,5 @@
 import { createChart, ColorType } from "lightweight-charts";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
@@ -338,7 +338,7 @@ const ChartComponent = (props: any) => {
     setCryptoExchange(value / coinInfo.currentPrice.usd);
   };
 
-  const renderRange = () => {
+  const renderRange = useCallback(() => {
     const val = timeFrames.map((el) => {
       if (el.query === timeFrame) return el.name;
     });
@@ -349,7 +349,9 @@ const ChartComponent = (props: any) => {
         alignItems="flex-start"
         pb="40px"
       >
-        <Text variant="h-4">{val} Range</Text>
+        <Text variant="h-3" pb="0">
+          {val} Range
+        </Text>
         <HStack
           position="relative"
           w="100%"
@@ -375,6 +377,7 @@ const ChartComponent = (props: any) => {
               ((movingAverage - timeFrameLow) * 100) /
                 (timeFrameMax - timeFrameLow)
             }%`}
+            transition=".3s width ease-in-out"
           />
         </HStack>
         <HStack width="100%" justifyContent="space-between">
@@ -396,7 +399,7 @@ const ChartComponent = (props: any) => {
         </HStack>
       </VStack>
     );
-  };
+  }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax]);
 
   return (
     <Box p="40px 0">
@@ -434,21 +437,23 @@ const ChartComponent = (props: any) => {
         <>
           <Box
             borderRadius="11px"
-            padding=" 10px 14px 40px 14px"
+            padding="20px 20px 40px 20px"
             backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
             position="relative"
             boxShadow="md"
           >
-            <HStack>
+            <HStack gap="6px" pb="11px">
               <Box>
                 <Image
                   src={coinInfo.image}
                   alt={coinInfo.name}
-                  width="40px"
-                  height="40px"
+                  width={{ base: "30px", md: "40px" }}
+                  height={{ base: "30px", md: "40px" }}
                 />
               </Box>
-              <Text fontWeight="bold">{coinInfo.name}</Text>
+              <Text variant="h-3" pb="0">
+                {coinInfo.name}
+              </Text>
             </HStack>
             <HStack flexWrap="wrap" columnGap="8px" pb="20px">
               <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
@@ -628,7 +633,46 @@ const ChartComponent = (props: any) => {
           )}
           {individualPage ? (
             <Container variant="box-component" h="max-content">
-              <Tabs width="100%">
+              <Text variant="h-3">Bio</Text>
+              {individualPage && coinInfo?.description && (
+                <Box>
+                  <Box position="relative">
+                    <Text
+                      maxH={!viewAllCoin ? "500px" : "100%"}
+                      dangerouslySetInnerHTML={{
+                        __html: coinInfo.description,
+                      }}
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                      whiteSpace="break-spaces"
+                      lineHeight="1.5"
+                      transition="all .3s ease-in-out"
+                      height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
+                    />
+                    <Box
+                      position="absolute"
+                      bottom="0"
+                      background={
+                        !viewAllCoin
+                          ? colorMode === "light"
+                            ? "linear-gradient(rgba(245, 246, 250, 0) 30%, rgb(245, 246, 250) 100%)"
+                            : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
+                          : "unset"
+                      }
+                      h="150px"
+                      w="100%"
+                    />
+                  </Box>
+
+                  <Button
+                    onClick={() => setViewAllCoin(!viewAllCoin)}
+                    mt="20px"
+                  >
+                    {!viewAllCoin ? "View More" : "View Less"}
+                  </Button>
+                </Box>
+              )}
+              {/* <Tabs width="100%">
                 <TabList
                   borderBottom="unset"
                   pb="20px"
@@ -755,7 +799,7 @@ const ChartComponent = (props: any) => {
                     </TabPanel>
                   )}
                 </TabPanels>
-              </Tabs>
+              </Tabs> */}
             </Container>
           ) : null}
         </VStack>
@@ -882,6 +926,73 @@ const ChartComponent = (props: any) => {
           )}
         </VStack>
       </Stack>
+      {news?.articles.length > 0 && individualPage && (
+        <Box pt="20px">
+          <Text variant="h-3">News</Text>
+          <Box overflow="scroll">
+            <HStack
+              gap="20px"
+              overflow="hidden"
+              width="max-content"
+              alignItems="flex-start"
+            >
+              {news.articles.map((el: any) => (
+                <Stack
+                  flexDir={{ base: "column" }}
+                  gap="20px"
+                  key={el.link}
+                  margin="0 !important"
+                  justifyContent="space-between"
+                  width={{ base: "80vw", sm: "300px", md: "400px" }}
+                >
+                  <Box
+                    backgroundImage={`url("${el.thumbnail}")`}
+                    borderRadius="8px"
+                    backgroundSize="cover"
+                    sx={{
+                      aspectRatio: "16/9",
+                    }}
+                    w="100%"
+                    margin="0 !important"
+                  />
+                  <VStack
+                    width="100%"
+                    justifyContent="center"
+                    alignItems="flex-start"
+                  >
+                    <Link href={el.link} isExternal>
+                      <Text variant="h-4" fontWeight="700" pb="6px">
+                        {50 < el.title.length
+                          ? `${el.title
+                              .replace(/[^a-zA-Z ]/g, "")
+                              .substring(0, 50)}...`
+                          : el.title.replace(/[^a-zA-Z ]/g, "")}
+                        <span
+                          style={{
+                            display: "inline-block",
+                            marginLeft: "8px",
+                            lineHeight: "1.5",
+                          }}
+                        >
+                          <BiLinkExternal size={24} fill="#4983c7" />
+                        </span>
+                      </Text>
+                      <Text fontWeight="bold">
+                        {dateParse(el.publication_time)}
+                      </Text>
+                    </Link>
+                    <Text lineHeight="1.5" fontSize="16px" maxW="100%">
+                      {150 < el.description.length
+                        ? `${el.description.substring(0, 150)}...`
+                        : el.description}
+                    </Text>
+                  </VStack>
+                </Stack>
+              ))}
+            </HStack>
+          </Box>
+        </Box>
+      )}
       {news?.videos.length > 0 && individualPage && (
         <Box pt="20px">
           <Text variant="h-3">Videos</Text>
@@ -893,8 +1004,12 @@ const ChartComponent = (props: any) => {
               alignItems="flex-start"
             >
               {news.videos.map((el: any) => (
-                <VStack key={el.id} width={{ base: "250px", md: "300px" }}>
+                <VStack
+                  key={el.id}
+                  width={{ base: "80vw", sm: "300px", md: "400px" }}
+                >
                   <Box
+                    borderRadius="8px"
                     as="iframe"
                     src={`https://www.youtube.com/embed/${el.id}`}
                     width="100%"
@@ -902,7 +1017,7 @@ const ChartComponent = (props: any) => {
                       aspectRatio: "16/9",
                     }}
                   />
-                  <Text fontSize="18px" lineHeight="1.5" fontWeight="700">
+                  <Text  variant="h-4" >
                     {el.title}
                   </Text>
                 </VStack>

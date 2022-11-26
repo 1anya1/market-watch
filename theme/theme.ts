@@ -29,7 +29,14 @@ const theme = extendTheme({
         marginInlineStart: "0",
         marginTop: 0,
       },
+      a: {
+        color: "#90cdf5",
+        fontWeight: 700,
+      },
     },
+  },
+  breakpoints: {
+    xs: "320px",
   },
   components: {
     InputLeftAddon: {
@@ -56,7 +63,7 @@ const theme = extendTheme({
           pb: "8px",
         },
         "h-4": {
-          fontSize: { base: "16px", sm: "16px" },
+          fontSize: { base: "16px", sm: "18px" },
           fontWeight: "700",
         },
         "h-5": {
