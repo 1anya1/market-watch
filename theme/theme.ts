@@ -58,9 +58,9 @@ const theme = extendTheme({
           fontWeight: 700,
         },
         "h-3": {
-          fontSize: { base: "18px", sm: "24px" },
+          fontSize: { base: "24px", sm: "26px" },
           fontWeight: "700",
-          pb: "8px",
+          pb: "20px",
         },
         "h-4": {
           fontSize: { base: "16px", sm: "18px" },

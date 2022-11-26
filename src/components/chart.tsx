@@ -579,8 +579,9 @@ const ChartComponent = (props: any) => {
         <VStack gap="20px" width={{ base: "100%", lg: "55%" }}>
           {dataRetrieved && coinInfo.symbol && (
             <Container variant="box-component" h="max-content" w="100%">
-              <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text>
-              <Stack gap="6px">
+              {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
+              <Text variant="h-3">Stats</Text>
+              <Stack >
                 <HStack justifyContent="space-between">
                   <Text variant="h-5">Market Cap</Text>
 
@@ -927,11 +928,13 @@ const ChartComponent = (props: any) => {
         </VStack>
       </Stack>
       {news?.articles.length > 0 && individualPage && (
-        <Box pt="20px">
-          <Text variant="h-3">News</Text>
+        <Box pt="40px">
+          <Text variant="h-3" pb="20px">
+            In The News
+          </Text>
           <Box overflow="scroll">
             <HStack
-              gap="20px"
+              columnGap="20px"
               overflow="hidden"
               width="max-content"
               alignItems="flex-start"
@@ -939,11 +942,18 @@ const ChartComponent = (props: any) => {
               {news.articles.map((el: any) => (
                 <Stack
                   flexDir={{ base: "column" }}
-                  gap="20px"
+                  // gap="20px"
                   key={el.link}
                   margin="0 !important"
                   justifyContent="space-between"
-                  width={{ base: "80vw", sm: "300px", md: "400px" }}
+                  width={{
+                    base: "80vw",
+                    xs: "70vw",
+                    sm: "60vw",
+                    md: "50vw",
+                    lg: "40vw",
+                  }}
+                  maxW="400px"
                 >
                   <Box
                     backgroundImage={`url("${el.thumbnail}")`}
@@ -994,8 +1004,10 @@ const ChartComponent = (props: any) => {
         </Box>
       )}
       {news?.videos.length > 0 && individualPage && (
-        <Box pt="20px">
-          <Text variant="h-3">Videos</Text>
+        <Box pt='10px'>
+          <Text variant="h-3" pb="20px">
+            Youtube Videos
+          </Text>
           <Box overflow="scroll">
             <HStack
               gap="20px"
@@ -1006,7 +1018,14 @@ const ChartComponent = (props: any) => {
               {news.videos.map((el: any) => (
                 <VStack
                   key={el.id}
-                  width={{ base: "80vw", sm: "300px", md: "400px" }}
+                  width={{
+                    base: "80vw",
+                    xs: "70vw",
+                    sm: "60vw",
+                    md: "50vw",
+                    lg: "40vw",
+                  }}
+                  maxW="400px"
                 >
                   <Box
                     borderRadius="8px"
@@ -1017,9 +1036,7 @@ const ChartComponent = (props: any) => {
                       aspectRatio: "16/9",
                     }}
                   />
-                  <Text  variant="h-4" >
-                    {el.title}
-                  </Text>
+                  <Text variant="h-4">{el.title}</Text>
                 </VStack>
               ))}
             </HStack>
