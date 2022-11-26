@@ -6,6 +6,7 @@ import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaStar } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
+import { TbWorld } from "react-icons/tb";
 
 import {
   Box,
@@ -26,19 +27,12 @@ import {
   Tab,
   TabPanel,
   TabPanels,
-  FormControl,
-  FormLabel,
-  Input,
-  FormHelperText,
   InputLeftAddon,
   InputGroup,
   Divider,
   Container,
-  background,
   Progress,
 } from "@chakra-ui/react";
-import Bitcoin from "../white/btc.svg";
-import BitcoinLightMode from "../black/btc.svg";
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
@@ -79,6 +73,7 @@ const ChartComponent = (props: any) => {
     rank: 0,
     volume: 0,
   });
+  const [movingAverage, setMovingAverage] = useState(0);
   const [cryptoExchange, setCryptoExchange] = useState(1);
   const [currencyExchange, setCurrencyExchange] = useState(0);
   const [coinInfo, setCoinInfo] = useState<any>({
@@ -100,6 +95,7 @@ const ChartComponent = (props: any) => {
       let crypto: any[] = [];
       let low = Infinity;
       let high = 0;
+
       Promise.all([
         await fetch(
           `https://api.coingecko.com/api/v3/coins/${coinId}/ohlc?vs_currency=usd&days=${timeFrame}`
@@ -114,6 +110,7 @@ const ChartComponent = (props: any) => {
         ])
         .then(([graph, data]) => {
           console.log({ data }, { graph });
+          const totalNew = graph[graph.length - 1][1];
           graph.forEach((el: any) => {
             const frame = {
               value: el[1],
@@ -147,10 +144,10 @@ const ChartComponent = (props: any) => {
             rank: data.market_cap_rank,
             volume: data.market_data.total_volume.usd,
           });
+          setMovingAverage(totalNew);
           setCoinInfo(coinInfo);
           setData(crypto);
           setCurrentValue(crypto[crypto.length - 1].open);
-
           setTwentyFourHourValue(crypto[0].open);
           setTimeFrameMax(high);
           setTimeFrameLow(low);
@@ -189,6 +186,15 @@ const ChartComponent = (props: any) => {
   useEffect(() => {
     console.log(cryptoExchange, currencyExchange);
   }, [currencyExchange, cryptoExchange]);
+
+  useEffect(() => {
+    // console.log({ movingAverage }, { timeFrameMax }, { timeFrameLow });
+
+    const max = timeFrameMax - timeFrameLow; //100%
+    const val = movingAverage - timeFrameLow;
+    console.log({ val }, { max });
+    // console.log("lets see", max + hmm + min);
+  });
 
   useEffect(() => {
     if (chartContainerRef?.current) {
@@ -308,13 +314,13 @@ const ChartComponent = (props: any) => {
   }, [chartType, colorMode, cryptoData]);
 
   const timeFrames = [
-    { query: 1, value: "D" },
-    { query: 7, value: "W" },
-    { query: 30, value: "M" },
-    { query: 90, value: "3M" },
-    { query: 180, value: "6M" },
-    { query: 365, value: "Y" },
-    { query: "max", value: "All" },
+    { query: 1, value: "D", name: "24H" },
+    { query: 7, value: "W", name: "7 Days" },
+    { query: 30, value: "M", name: "30 Days" },
+    { query: 90, value: "3M", name: "90 Days" },
+    { query: 180, value: "6M", name: "180 Days" },
+    { query: 365, value: "Y", name: "365 Days" },
+    { query: "max", value: "All", name: "All Time" },
   ];
   const dateParse = (date: string) => {
     const frame = date.slice(0, 10).split("-");
@@ -330,6 +336,66 @@ const ChartComponent = (props: any) => {
     const value = Number(event.target.value.split(",").join(""));
     setCurrencyExchange(value);
     setCryptoExchange(value / coinInfo.currentPrice.usd);
+  };
+
+  const renderRange = () => {
+    const val = timeFrames.map((el) => {
+      if (el.query === timeFrame) return el.name;
+    });
+    return (
+      <VStack
+        gap="6px"
+        w={{ base: "100%", md: "50%" }}
+        alignItems="flex-start"
+        pb="40px"
+      >
+        <Text variant="h-4">{val} Range</Text>
+        <HStack
+          position="relative"
+          w="100%"
+          h="12px"
+          borderRadius="4px"
+          overflow="hidden"
+        >
+          <Box
+            position="relative"
+            zIndex="0"
+            h="12px"
+            w="100%"
+            bg="linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+          />
+          <Box
+            position="absolute"
+            h="12px"
+            bg={colorMode === "light" ? "#edf2f6" : "#30405b"}
+            right="0"
+            zIndex="1"
+            w={`${
+              100 -
+              ((movingAverage - timeFrameLow) * 100) /
+                (timeFrameMax - timeFrameLow)
+            }%`}
+          />
+        </HStack>
+        <HStack width="100%" justifyContent="space-between">
+          <NumericFormat
+            value={timeFrameLow}
+            displayType="text"
+            thousandSeparator=","
+            className="h-4"
+            prefix="Low: $"
+          />
+
+          <NumericFormat
+            value={timeFrameMax}
+            displayType="text"
+            thousandSeparator=","
+            className="h-4"
+            prefix="High: $"
+          />
+        </HStack>
+      </VStack>
+    );
   };
 
   return (
@@ -352,7 +418,7 @@ const ChartComponent = (props: any) => {
             <Button>Rank #{coinInfo.rank}</Button>
             <Button>
               <HStack>
-                <FiLink />
+                <TbWorld />
                 <Text>{coinInfo.url.replace(/^https?:\/\//, "")}</Text>
               </HStack>
             </Button>
@@ -363,7 +429,7 @@ const ChartComponent = (props: any) => {
           <Button>Sell</Button>
         </HStack>
       </HStack>
-
+      {movingAverage && timeFrameLow && timeFrameMax && renderRange()}
       {coinInfo.name.length > 0 && chartContainerRef ? (
         <>
           <Box
@@ -385,7 +451,7 @@ const ChartComponent = (props: any) => {
               <Text fontWeight="bold">{coinInfo.name}</Text>
             </HStack>
             <HStack flexWrap="wrap" columnGap="8px" pb="20px">
-              <Box fontSize={{ base: "20px", sm: "28px" }}>
+              <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
                 <NumericFormat
                   value={currentValue}
                   prefix={"$"}
@@ -407,8 +473,7 @@ const ChartComponent = (props: any) => {
                 <HStack margin="0 !important">
                   <Text
                     color={currentValue > twentyFourHourValue ? "green" : "red"}
-                    fontSize={{ base: "16px", sm: "20px" }}
-                    fontWeight="bold"
+                    variant="bold-small"
                   >
                     {Math.abs(
                       (currentValue * 100) / twentyFourHourValue - 100
@@ -418,10 +483,7 @@ const ChartComponent = (props: any) => {
                   {timeFrames.map((el) => {
                     if (el.query === timeFrame)
                       return (
-                        <Text
-                          fontSize={{ base: "14px", sm: "18px" }}
-                          fontWeight="bold"
-                        >{`(${el.value})`}</Text>
+                        <Text variant="bold-small">{`(${el.value})`}</Text>
                       );
                   })}
                 </HStack>
@@ -487,7 +549,7 @@ const ChartComponent = (props: any) => {
                         ? "black"
                         : "white"
                     }
-                    fontSize="14px"
+                    fontSize={{ base: "12px", sm: "14px" }}
                     fontWeight="bold"
                   >
                     {el.value}
@@ -752,7 +814,11 @@ const ChartComponent = (props: any) => {
               <Text variant="h-3">Currency Converter</Text>
 
               <InputGroup mb="10px" borderRadius="11px">
-                <InputLeftAddon>{coinInfo.symbol.toUpperCase()}</InputLeftAddon>
+                <InputLeftAddon>
+                  <Text variant="bold-xsmall">
+                    {coinInfo.symbol.toUpperCase()}
+                  </Text>
+                </InputLeftAddon>
                 <Box
                   pl="10px"
                   border={
@@ -769,12 +835,14 @@ const ChartComponent = (props: any) => {
                     thousandSeparator=","
                     className="h-4 input"
                     onChange={handleChangeCrypto}
-                    style={{ background: "transparent" }}
+                    style={{ background: "transparent", height: "100%" }}
                   />
                 </Box>
               </InputGroup>
               <InputGroup>
-                <InputLeftAddon>USD</InputLeftAddon>
+                <InputLeftAddon>
+                  <Text variant="bold-xsmall">USD</Text>
+                </InputLeftAddon>
                 <Box
                   pl="10px"
                   border={
@@ -791,12 +859,12 @@ const ChartComponent = (props: any) => {
                     thousandSeparator=","
                     className="h-4 input"
                     onChange={handleChangeExchange}
-                    style={{ background: "transparent" }}
+                    style={{ background: "transparent", height: "100%" }}
                   />
                 </Box>
               </InputGroup>
 
-              <Box fontSize="18px" pt="20px">
+              <Box fontSize={{ base: "14px", sm: "18px" }} pt="20px">
                 <span>
                   1{coinInfo.symbol.toUpperCase()} ={" "}
                   <NumericFormat
@@ -814,7 +882,6 @@ const ChartComponent = (props: any) => {
           )}
         </VStack>
       </Stack>
-
       {news?.videos.length > 0 && individualPage && (
         <Box pt="20px">
           <Text variant="h-3">Videos</Text>

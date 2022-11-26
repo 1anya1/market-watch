@@ -32,6 +32,14 @@ const theme = extendTheme({
     },
   },
   components: {
+    InputLeftAddon: {
+      variants: {
+        "bold-small": {
+          fontSize: { base: "14px", sm: "16px", md: "20px" },
+          fontWeight: 700,
+        },
+      },
+    },
     Text: {
       variants: {
         "h-1": {
@@ -43,21 +51,36 @@ const theme = extendTheme({
           fontWeight: 700,
         },
         "h-3": {
-          fontSize: "24px",
+          fontSize: { base: "18px", sm: "24px" },
           fontWeight: "700",
           pb: "8px",
         },
         "h-4": {
-          fontSize: "20px",
+          fontSize: { base: "16px", sm: "16px" },
           fontWeight: "700",
         },
         "h-5": {
-          fontSize: "16px",
+          fontSize: { base: "12px", sm: "16px" },
           fontWeight: "600",
         },
         "text-bold": {
           fontSize: "14px",
           fontWeight: "700",
+        },
+        "small-bold": {
+          fontSize: "12px",
+          fontWeight: "700",
+        },
+        "bold-small": {
+          fontSize: { base: "14px", sm: "16px", md: "20px" },
+          fontWeight: 700,
+        },
+        "bold-xsmall": {
+          fontSize: { base: "12px", sm: "14px", md: "18px" },
+          fontWeight: 700,
+        },
+        body: {
+          fontSize: { base: "16px", sm: "18px" },
         },
       },
     },
@@ -69,6 +92,14 @@ const theme = extendTheme({
           borderRadius: "11px",
           maxW: "unset",
         }),
+      },
+    },
+    Progress: {
+      variants: {
+        "bar.200": {
+          // backgroundColor: "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+          bg: "purple",
+        },
       },
     },
   },

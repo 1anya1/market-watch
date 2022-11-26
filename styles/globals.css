@@ -58,6 +58,20 @@ Chakra Ui overwrites */
   font-weight: 700;
   font-size: 20px;
 }
+.h-5 {
+  font-weight: 700;
+  font-size: 16px;
+}
+@media screen and (max-width: 479px) {
+  .h-4 {
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .h-5 {
+    font-weight: 700;
+    font-size: 12px;
+  }
+}
 .input {
   background-color: transparent;
   width: 100%;
@@ -65,4 +79,13 @@ Chakra Ui overwrites */
 
 .input:focus-visible {
   outline: unset !important;
+}
+.range [aria-valuenow] {
+  /* background-color: purple; */
+  background: linear-gradient(
+    90deg,
+    hsla(0, 100%, 50%, 1) 0%,
+    hsla(60, 100%, 50%, 1) 50%,
+    hsla(120, 100%, 50%, 1) 100%
+  );
 }
