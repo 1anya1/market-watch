@@ -91,10 +91,10 @@ Chakra Ui overwrites */
 }
 
 .container ::-webkit-scrollbar {
-  display: none;
-  -webkit-appearance: none;
+  display: none !important;
+  -webkit-appearance: none !important;
 }
 .container {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
 }
