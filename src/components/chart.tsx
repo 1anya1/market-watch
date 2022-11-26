@@ -581,7 +581,7 @@ const ChartComponent = (props: any) => {
             <Container variant="box-component" h="max-content" w="100%">
               {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
               <Text variant="h-3">Stats</Text>
-              <Stack >
+              <Stack>
                 <HStack justifyContent="space-between">
                   <Text variant="h-5">Market Cap</Text>
 
@@ -932,7 +932,7 @@ const ChartComponent = (props: any) => {
           <Text variant="h-3" pb="20px">
             In The News
           </Text>
-          <Box overflow="scroll">
+          <Box overflow="scroll" className="container">
             <HStack
               columnGap="20px"
               overflow="hidden"
@@ -1004,11 +1004,11 @@ const ChartComponent = (props: any) => {
         </Box>
       )}
       {news?.videos.length > 0 && individualPage && (
-        <Box pt='10px'>
+        <Box pt="10px">
           <Text variant="h-3" pb="20px">
             Youtube Videos
           </Text>
-          <Box overflow="scroll">
+          <Box overflow="scroll" className="container">
             <HStack
               gap="20px"
               overflow="hidden"
