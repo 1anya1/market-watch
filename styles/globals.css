@@ -92,6 +92,7 @@ Chakra Ui overwrites */
 
 .container ::-webkit-scrollbar {
   display: none;
+  -webkit-appearance: none;
 }
 .container {
   -ms-overflow-style: none; /* IE and Edge */
