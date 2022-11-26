@@ -975,7 +975,7 @@ const ChartComponent = (props: any) => {
                         {50 < el.title.length
                           ? `${el.title
                               .replace(/[^a-zA-Z ]/g, "")
-                              .substring(0, 50)}...`
+                              .substring(0, 35)}...`
                           : el.title.replace(/[^a-zA-Z ]/g, "")}
                         <span
                           style={{
@@ -1004,7 +1004,7 @@ const ChartComponent = (props: any) => {
         </Box>
       )}
       {news?.videos.length > 0 && individualPage && (
-        <Box pt="10px">
+        <Box pt="40px">
           <Text variant="h-3" pb="20px">
             Youtube Videos
           </Text>

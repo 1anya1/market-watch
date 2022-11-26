@@ -98,3 +98,7 @@ Chakra Ui overwrites */
   -ms-overflow-style: none !important; /* IE and Edge */
   scrollbar-width: none !important; /* Firefox */
 }
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+display: none;
+}
