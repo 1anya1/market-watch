@@ -54,8 +54,9 @@ const theme = extendTheme({
           fontWeight: 700,
         },
         "h-2": {
-          fontSize: "28px",
+          fontSize: { base: "28px", sm: "34px" },
           fontWeight: 700,
+          
         },
         "h-3": {
           fontSize: { base: "24px", sm: "26px" },
@@ -89,6 +90,24 @@ const theme = extendTheme({
         body: {
           fontSize: { base: "16px", sm: "18px" },
         },
+      },
+    },
+    Stack: {
+      baseStyle: {
+        margin: "0 !important",
+        spacing: "0px",
+      },
+    },
+    HStack: {
+      baseStyle: {
+        margin: "0 !important",
+        spacing: "0px",
+      },
+    },
+    VStack: {
+      baseStyle: {
+        margin: "0 !important",
+        spacing: "0px",
       },
     },
     Container: {

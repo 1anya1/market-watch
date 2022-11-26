@@ -4,7 +4,7 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaShareAlt } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
 import { TbWorld } from "react-icons/tb";
 
@@ -344,20 +344,21 @@ const ChartComponent = (props: any) => {
     });
     return (
       <VStack
-        gap="6px"
-        w={{ base: "100%", md: "50%" }}
+        gap="11px"
+        // w={{ base: "100%", md: "50%" }}
+        w="100%"
         alignItems="flex-start"
-        pb="40px"
+        pb="20px"
+        spacing="0"
       >
-        <Text variant="h-3" pb="0">
-          {val} Range
-        </Text>
+        <Text variant="h-5">{val} High / Low</Text>
         <HStack
           position="relative"
           w="100%"
           h="12px"
           borderRadius="4px"
           overflow="hidden"
+          spacing="0"
         >
           <Box
             position="relative"
@@ -380,13 +381,14 @@ const ChartComponent = (props: any) => {
             transition=".3s width ease-in-out"
           />
         </HStack>
-        <HStack width="100%" justifyContent="space-between">
+        <HStack width="100%" justifyContent="space-between" spacing="0">
           <NumericFormat
             value={timeFrameLow}
             displayType="text"
             thousandSeparator=","
             className="h-4"
-            prefix="Low: $"
+            // prefix="Low: $"
+            prefix="$"
           />
 
           <NumericFormat
@@ -394,7 +396,8 @@ const ChartComponent = (props: any) => {
             displayType="text"
             thousandSeparator=","
             className="h-4"
-            prefix="High: $"
+            // prefix="High: $"
+            prefix="$"
           />
         </HStack>
       </VStack>
@@ -402,357 +405,485 @@ const ChartComponent = (props: any) => {
   }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax]);
 
   return (
-    <Box p="40px 0">
-      <HStack
-        justifyContent="space-between"
-        alignItems="flex-end"
-        flexWrap="wrap"
-        pb="40px"
-        gap="11px"
-      >
-        <VStack alignItems="flex-start" gap="10px">
-          <HStack gap="6px">
-            <Text variant="h-1">{coinInfo.name}</Text>
-            <Button>
-              <FaStar size={20} />
-            </Button>
-          </HStack>
-          <HStack gap="6px">
-            <Button>Rank #{coinInfo.rank}</Button>
-            <Button>
-              <HStack>
-                <TbWorld />
-                <Text>{coinInfo.url.replace(/^https?:\/\//, "")}</Text>
-              </HStack>
-            </Button>
-          </HStack>
-        </VStack>
-        <HStack gap="6px">
-          <Button>Buy</Button>
-          <Button>Sell</Button>
-        </HStack>
-      </HStack>
-      {movingAverage && timeFrameLow && timeFrameMax && renderRange()}
-      {coinInfo.name.length > 0 && chartContainerRef ? (
-        <>
-          <Box
-            borderRadius="11px"
-            padding="20px 20px 40px 20px"
-            backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
-            position="relative"
-            boxShadow="md"
-          >
-            <HStack gap="6px" pb="11px">
+    <>
+      {dataRetrieved ? (
+        <Box p="40px 0">
+          <HStack gap="11px" spacing="0" pb="28px" flexWrap="wrap">
+            <HStack gap="11px" spacing="0">
               <Box>
                 <Image
                   src={coinInfo.image}
                   alt={coinInfo.name}
-                  width={{ base: "30px", md: "40px" }}
-                  height={{ base: "30px", md: "40px" }}
+                  width={{ base: "28px", md: "34px" }}
+                  height={{ base: "28px", md: "34px" }}
                 />
               </Box>
-              <Text variant="h-3" pb="0">
+              <Text variant="h-2" pb="0">
                 {coinInfo.name}
               </Text>
             </HStack>
-            <HStack flexWrap="wrap" columnGap="8px" pb="20px">
-              <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
-                <NumericFormat
-                  value={currentValue}
-                  prefix={"$"}
-                  suffix=" USD"
-                  displayType="text"
-                  thousandSeparator=","
-                  style={{
-                    fontSize: "inherit",
-                    fontWeight: "bold",
-                  }}
-                />
-              </Box>
-              <HStack margin="0 !important">
-                {currentValue > twentyFourHourValue ? (
-                  <AiFillCaretUp fill="var(--green)" size={16} />
-                ) : (
-                  <AiFillCaretDown fill="var(--red)" size={16} />
-                )}
-                <HStack margin="0 !important">
-                  <Text
-                    color={currentValue > twentyFourHourValue ? "green" : "red"}
-                    variant="bold-small"
-                  >
-                    {Math.abs(
-                      (currentValue * 100) / twentyFourHourValue - 100
-                    ).toFixed(2)}
-                    %
-                  </Text>
-                  {timeFrames.map((el) => {
-                    if (el.query === timeFrame)
-                      return (
-                        <Text variant="bold-small">{`(${el.value})`}</Text>
-                      );
-                  })}
-                </HStack>
-              </HStack>
+            <HStack>
+              <Button>
+                <FaStar size={18} />
+              </Button>
+              <Button>
+                <FaShareAlt size={18} />
+              </Button>
+              <Button>Buy/Sell</Button>
             </HStack>
-            <HStack
-              justifyContent="space-between"
-              flexWrap="wrap"
-              pb="20px"
-              gap="10px"
-            >
-              <Box position="relative" zIndex="10">
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    fontSize="12px"
-                    lineHeight="12px"
-                    height="32px"
-                    fontWeight="600"
-                    padding="0 !important"
-                    background="unset !important"
-                    // backgroundColor={
-                    //   colorMode === "light" ? colors.gray : colors.white
-                    // }
-                  >
-                    <RiSettings3Fill
-                      fill={colorMode === "light" ? colors.gray : colors.blue}
-                      size={20}
-                    />
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem
-                      onClick={() => setChartType("Line")}
-                      // backgroundColor={chartType === "Line" ? "pink" : "unset"}
-                    >
-                      Line
-                    </MenuItem>
-                    <MenuItem
-                      // backgroundColor={chartType === "Line" ? "pink" : "white"}
-                      onClick={() => setChartType("Area")}
-                    >
-                      Area
-                    </MenuItem>
-                    <MenuItem onClick={() => setChartType("Histogram")}>
-                      Histogram
-                    </MenuItem>
-                    <MenuItem onClick={() => setChartType("Candle")}>
-                      Candlestick
-                    </MenuItem>
-                    <MenuItem onClick={() => setChartType("Bar")}>Bar</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-              <HStack>
-                {timeFrames.map((el) => (
-                  <Text
-                    key={el.value}
-                    onClick={() => setTimeFrame(el.query)}
-                    color={
-                      timeFrame === el.query
-                        ? "#1099FA"
-                        : colorMode === "light"
-                        ? "black"
-                        : "white"
-                    }
-                    fontSize={{ base: "12px", sm: "14px" }}
-                    fontWeight="bold"
-                  >
-                    {el.value}
-                  </Text>
-                ))}
-              </HStack>
-            </HStack>
-            <Box ref={chartContainerRef} height="200px">
-              <Text fontSize="10px" position="absolute" bottom="2" right="5">
-                Powered by CoinGecko API
-              </Text>
-            </Box>
-          </Box>
-        </>
-      ) : null}
-      <Stack
-        flexDirection={{ base: "column", lg: "row" }}
-        columnGap="20px"
-        rowGap="20px"
-        pt="40px"
-      >
-        <VStack gap="20px" width={{ base: "100%", lg: "55%" }}>
-          {dataRetrieved && coinInfo.symbol && (
-            <Container variant="box-component" h="max-content" w="100%">
-              {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
-              <Text variant="h-3">Stats</Text>
-              <Stack>
-                <HStack justifyContent="space-between">
-                  <Text variant="h-5">Market Cap</Text>
+          </HStack>
 
-                  <NumericFormat
-                    value={stats.marketCap.toFixed(2)}
-                    prefix={"$"}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-                <Divider orientation="horizontal" />
-
-                <HStack justifyContent="space-between">
-                  <Text variant="h-5">Volume</Text>
-
-                  <NumericFormat
-                    value={stats.volume.toFixed(0)}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-                <Divider orientation="horizontal" />
-                <HStack justifyContent="space-between">
-                  <Text variant="h-5">24HR Low</Text>
-
-                  <NumericFormat
-                    value={stats.low_24}
-                    prefix={"$"}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-                <Divider orientation="horizontal" />
-                <HStack justifyContent="space-between">
-                  <Text variant="h-5">24HR High</Text>
-
-                  <NumericFormat
-                    value={stats.high_24}
-                    prefix={"$"}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-              </Stack>
-            </Container>
-          )}
-          {individualPage ? (
-            <Container variant="box-component" h="max-content">
-              <Text variant="h-3">Bio</Text>
-              {individualPage && coinInfo?.description && (
-                <Box>
-                  <Box position="relative">
-                    <Text
-                      maxH={!viewAllCoin ? "500px" : "100%"}
-                      dangerouslySetInnerHTML={{
-                        __html: coinInfo.description,
-                      }}
-                      textOverflow="ellipsis"
-                      overflow="hidden"
-                      whiteSpace="break-spaces"
-                      lineHeight="1.5"
-                      transition="all .3s ease-in-out"
-                      height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
-                    />
-                    <Box
-                      position="absolute"
-                      bottom="0"
-                      background={
-                        !viewAllCoin
-                          ? colorMode === "light"
-                            ? "linear-gradient(rgba(245, 246, 250, 0) 30%, rgb(245, 246, 250) 100%)"
-                            : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
-                          : "unset"
-                      }
-                      h="150px"
-                      w="100%"
-                    />
-                  </Box>
-
-                  <Button
-                    onClick={() => setViewAllCoin(!viewAllCoin)}
-                    mt="20px"
-                  >
-                    {!viewAllCoin ? "View More" : "View Less"}
-                  </Button>
-                </Box>
-              )}
-              {/* <Tabs width="100%">
-                <TabList
-                  borderBottom="unset"
+          {/* {movingAverage && timeFrameLow && timeFrameMax && renderRange()} */}
+          {coinInfo.name.length > 0 && chartContainerRef ? (
+            <>
+              <Box
+                borderRadius="11px"
+                padding="20px 20px 40px 20px"
+                backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
+                position="relative"
+                boxShadow="md"
+                overflow="hidden"
+              >
+                <HStack
+                  flexWrap="wrap"
+                  gap="11px"
                   pb="20px"
-                  gap={{ base: "20px", md: "28px" }}
+                  spacing="0"
+                  justifyContent="space-between"
                 >
-                  {coinInfo?.description ? (
-                    <Tab
-                      fontSize={{ base: "16px", md: "20px" }}
-                      fontWeight="700"
-                      pb="20px"
-                    >
-                      Bio
-                    </Tab>
-                  ) : null}
-                  {news?.articles.length > 0 ? (
-                    <Tab
-                      fontSize={{ base: "16px", md: "20px" }}
-                      fontWeight="700"
-                      pb="20px"
-                    >
-                      News
-                    </Tab>
-                  ) : null}
-                </TabList>
-                <TabPanels>
-                  {individualPage && coinInfo?.description && (
-                    <TabPanel p="0">
-                      <Box>
-                        <Box position="relative">
-                          <Box
-                            maxH={!viewAllCoin ? "500px" : "100%"}
-                            dangerouslySetInnerHTML={{
-                              __html: coinInfo.description,
-                            }}
-                            textOverflow="ellipsis"
-                            overflow="hidden"
-                            whiteSpace="break-spaces"
-                            lineHeight="1.5"
-                            transition="all .3s ease-in-out"
-                            height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
-                          />
-                          <Box
-                            position="absolute"
-                            bottom="0"
-                            background={
-                              !viewAllCoin
-                                ? colorMode === "light"
-                                  ? "linear-gradient(rgba(245, 246, 250, 0) 30%, rgb(245, 246, 250) 100%)"
-                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
-                                : "unset"
-                            }
-                            h="150px"
-                            w="100%"
-                          />
-                        </Box>
-
-                        <Button
-                          onClick={() => setViewAllCoin(!viewAllCoin)}
-                          mt="20px"
+                  <HStack>
+                    <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
+                      <NumericFormat
+                        value={currentValue}
+                        prefix={"$"}
+                        suffix=" USD"
+                        displayType="text"
+                        thousandSeparator=","
+                        style={{
+                          fontSize: "inherit",
+                          fontWeight: "bold",
+                        }}
+                      />
+                    </Box>
+                    <HStack spacing="0">
+                      {currentValue > twentyFourHourValue ? (
+                        <AiFillCaretUp fill="var(--green)" size={16} />
+                      ) : (
+                        <AiFillCaretDown fill="var(--red)" size={16} />
+                      )}
+                      <HStack margin="0 !important">
+                        <Text
+                          color={
+                            currentValue > twentyFourHourValue ? "green" : "red"
+                          }
+                          variant="bold-small"
                         >
-                          {!viewAllCoin ? "View More" : "View Less"}
-                        </Button>
+                          {Math.abs(
+                            (currentValue * 100) / twentyFourHourValue - 100
+                          ).toFixed(2)}
+                          %
+                        </Text>
+                        {timeFrames.map((el) => {
+                          if (el.query === timeFrame)
+                            return (
+                              <Text variant="bold-small">{`(${el.value})`}</Text>
+                            );
+                        })}
+                      </HStack>
+                    </HStack>
+                  </HStack>
+                  <HStack spacing="0" gap="11px">
+                    {timeFrames.map((el) => (
+                      <Text
+                        key={el.value}
+                        onClick={() => setTimeFrame(el.query)}
+                        color={
+                          timeFrame === el.query
+                            ? "#4983c6"
+                            : colorMode === "light"
+                            ? "black"
+                            : "white"
+                        }
+                        fontSize={{ base: "12px", sm: "14px" }}
+                        fontWeight="bold"
+                      >
+                        {el.value}
+                      </Text>
+                    ))}
+                    <Box position="relative" zIndex="10" display="flex">
+                      <Menu>
+                        <MenuButton>
+                          <RiSettings3Fill
+                            fill={
+                              // colorMode === "light" ? colors.gray : colors.blue
+                              "#4983c6"
+                            }
+                            size={20}
+                          />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem
+                            onClick={() => setChartType("Line")}
+                            // backgroundColor={chartType === "Line" ? "pink" : "unset"}
+                          >
+                            Line
+                          </MenuItem>
+                          {/* <MenuItem
+                            // backgroundColor={chartType === "Line" ? "pink" : "white"}
+                            onClick={() => setChartType("Area")}
+                          >
+                            Area
+                          </MenuItem> */}
+                          {/* <MenuItem onClick={() => setChartType("Histogram")}>
+                            Histogram
+                          </MenuItem> */}
+                          <MenuItem onClick={() => setChartType("Candle")}>
+                            Candlestick
+                          </MenuItem>
+                          {/* <MenuItem onClick={() => setChartType("Bar")}>
+                            Bar
+                          </MenuItem> */}
+                        </MenuList>
+                      </Menu>
+                    </Box>
+                  </HStack>
+                </HStack>
+
+                <Box ref={chartContainerRef} height="200px">
+                  <Text
+                    fontSize="10px"
+                    position="absolute"
+                    bottom="2"
+                    right="5"
+                  >
+                    Powered by CoinGecko API
+                  </Text>
+                </Box>
+              </Box>
+            </>
+          ) : null}
+          <Stack
+            flexDirection={{ base: "column", lg: "row" }}
+            columnGap="20px"
+            rowGap="20px"
+            pt="20px"
+            spacing="0"
+          >
+            <VStack gap="20px" width={{ base: "100%", lg: "55%" }} spacing="0">
+              {dataRetrieved && coinInfo.symbol && (
+                <Container variant="box-component" h="max-content" w="100%">
+                  {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
+                  <HStack pb="20px" spacing="0" gap="11px">
+                    <Text variant="h-3" pb="0px">
+                      Stats
+                    </Text>
+                    <Button>Rank #{coinInfo.rank}</Button>
+                  </HStack>
+                  <Stack spacing="0" gap="11px">
+                    {movingAverage &&
+                      timeFrameLow &&
+                      timeFrameMax &&
+                      renderRange()}
+
+                    <HStack justifyContent="space-between">
+                      <Text variant="h-5">Market Cap</Text>
+
+                      <NumericFormat
+                        value={stats.marketCap.toFixed(2)}
+                        prefix={"$"}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                    <Divider orientation="horizontal" />
+
+                    <HStack justifyContent="space-between">
+                      <Text variant="h-5">Volume</Text>
+
+                      <NumericFormat
+                        value={stats.volume.toFixed(0)}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                    <Divider orientation="horizontal" />
+                    <HStack justifyContent="space-between">
+                      <Text variant="h-5">24HR Low</Text>
+
+                      <NumericFormat
+                        value={stats.low_24}
+                        prefix={"$"}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                    <Divider orientation="horizontal" />
+                    <HStack justifyContent="space-between">
+                      <Text variant="h-5">24HR High</Text>
+
+                      <NumericFormat
+                        value={stats.high_24}
+                        prefix={"$"}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                  </Stack>
+                </Container>
+              )}
+
+              {individualPage ? (
+                <Container variant="box-component" h="max-content">
+                  <Text variant="h-3">Bio</Text>
+                  {individualPage && coinInfo?.description && (
+                    <Box>
+                      <Box position="relative">
+                        <Text
+                          maxH={!viewAllCoin ? "500px" : "100%"}
+                          dangerouslySetInnerHTML={{
+                            __html: coinInfo.description,
+                          }}
+                          textOverflow="ellipsis"
+                          overflow="hidden"
+                          whiteSpace="break-spaces"
+                          lineHeight="1.5"
+                          transition="all .3s ease-in-out"
+                          height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
+                        />
+                        <Box
+                          position="absolute"
+                          bottom="0"
+                          background={
+                            !viewAllCoin
+                              ? colorMode === "light"
+                                ? "linear-gradient(rgba(245, 246, 250, 0) 30%, rgb(245, 246, 250) 100%)"
+                                : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
+                              : "unset"
+                          }
+                          h="150px"
+                          w="100%"
+                        />
                       </Box>
-                    </TabPanel>
+
+                      <Button
+                        onClick={() => setViewAllCoin(!viewAllCoin)}
+                        mt="20px"
+                      >
+                        {!viewAllCoin ? "View More" : "View Less"}
+                      </Button>
+                    </Box>
                   )}
+                </Container>
+              ) : null}
+            </VStack>
+
+            <VStack
+              width={{ base: "100%", lg: "45%" }}
+              m="0 !important"
+              gap="20px"
+              spacing="0"
+            >
+              {dataRetrieved && coinInfo.symbol && (
+                <Container variant="box-component" width="100%" h="max-content">
+                  <Text variant="h-3">Circulating Supply</Text>
+                  <Stack gap="11px" spacing="0">
+                    <HStack justifyContent="space-between" spacing="0">
+                      <NumericFormat
+                        value={stats.circulatingSupply.toFixed(0)}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                        suffix={` ${coinInfo.symbol.toUpperCase()}`}
+                      />
+                      <Text variant="h-5">
+                        {(
+                          (stats.circulatingSupply * 100) /
+                          stats.totalSupply
+                        ).toFixed(0)}
+                        %
+                      </Text>
+                    </HStack>
+                    <Progress
+                      borderRadius="4px"
+                      value={
+                        (stats.circulatingSupply * 100) / stats.totalSupply
+                      }
+                    />
+
+                    <HStack justifyContent="space-between" pt="20px">
+                      <Text variant="h-5">Total Supply</Text>
+                      <NumericFormat
+                        value={stats.totalSupply.toFixed(0)}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                    <Divider orientation="horizontal" />
+                    <HStack justifyContent="space-between">
+                      <Text variant="h-5">Circulating Supply</Text>
+
+                      <NumericFormat
+                        value={stats.circulatingSupply.toFixed(0)}
+                        displayType="text"
+                        thousandSeparator=","
+                        className="h-4"
+                      />
+                    </HStack>
+                  </Stack>
+                </Container>
+              )}
+              {coinInfo.symbol.length > 0 && (
+                <Container variant="box-component" width="100%" h="max-content">
+                  <Text variant="h-3">Currency Converter</Text>
+
+                  <InputGroup mb="10px" borderRadius="11px">
+                    <InputLeftAddon>
+                      <Text variant="bold-xsmall">
+                        {coinInfo.symbol.toUpperCase()}
+                      </Text>
+                    </InputLeftAddon>
+                    <Box
+                      pl="10px"
+                      border={
+                        colorMode === "dark"
+                          ? "1px solid #3b547d"
+                          : "1px solid #e2e8f0"
+                      }
+                      width="100%"
+                      borderRadius="0 6px 6px  0"
+                    >
+                      <NumericFormat
+                        value={cryptoExchange}
+                        displayType="input"
+                        thousandSeparator=","
+                        className="h-4 input"
+                        onChange={handleChangeCrypto}
+                        style={{ background: "transparent", height: "100%" }}
+                      />
+                    </Box>
+                  </InputGroup>
+                  <InputGroup>
+                    <InputLeftAddon>
+                      <Text variant="bold-xsmall">USD</Text>
+                    </InputLeftAddon>
+                    <Box
+                      pl="10px"
+                      border={
+                        colorMode === "dark"
+                          ? "1px solid #3b547d"
+                          : "1px solid #e2e8f0"
+                      }
+                      width="100%"
+                      borderRadius="0 6px 6px  0"
+                    >
+                      <NumericFormat
+                        value={currencyExchange}
+                        displayType="input"
+                        thousandSeparator=","
+                        className="h-4 input"
+                        onChange={handleChangeExchange}
+                        style={{ background: "transparent", height: "100%" }}
+                      />
+                    </Box>
+                  </InputGroup>
+
+                  <Box fontSize={{ base: "14px", sm: "18px" }} pt="20px">
+                    <span>
+                      1{coinInfo.symbol.toUpperCase()} ={" "}
+                      <NumericFormat
+                        value={coinInfo.currentPrice.usd}
+                        suffix=" USD"
+                        displayType="text"
+                        thousandSeparator=","
+                      />
+                    </span>
+                  </Box>
+                  <Text fontSize="12px">
+                    This is not real time data. To use for approximation only*
+                  </Text>
+                  <Button width="100%" bg="#4983c6" mt="11px">
+                    Buy
+                  </Button>
+                </Container>
+              )}
+              <Container variant="box-component" width="100%" h="max-content">
+                <Text variant="h-3">{coinInfo.name} Links</Text>
+                <VStack>
+                  <Button>
+                    <HStack>
+                      <TbWorld />
+                      <Text>{coinInfo.url.replace(/^https?:\/\//, "")}</Text>
+                    </HStack>
+                  </Button>
+                </VStack>
+              </Container>
+            </VStack>
+          </Stack>
+          <Container
+            variant="box-component"
+            width="100%"
+            h="max-content"
+            mt="20px"
+          >
+            <Tabs width="100%">
+              <TabList
+                borderBottom="unset"
+                pb="20px"
+                gap={{ base: "20px", md: "28px" }}
+              >
+                {news?.articles.length > 0 ? (
+                  <Tab
+                    fontSize={{ base: "24px", sm: "26px" }}
+                    fontWeight="700"
+                    pb="20px"
+                  >
+                    News
+                  </Tab>
+                ) : null}
+                {news?.videos.length > 0 ? (
+                  <Tab
+                    fontSize={{ base: "24px", sm: "26px" }}
+                    fontWeight="700"
+                    pb="20px"
+                  >
+                    Videos
+                  </Tab>
+                ) : null}
+              </TabList>
+              <TabPanels padding="0">
+                <TabPanel padding="0">
                   {news?.articles.length > 0 && individualPage && (
-                    <TabPanel padding="0">
-                      <Stack gap="40px">
+                    <Box overflow="scroll" className="container">
+                      <HStack
+                        columnGap="20px"
+                        overflow="hidden"
+                        width="max-content"
+                        alignItems="flex-start"
+                      >
                         {news.articles.map((el: any) => (
                           <Stack
                             flexDir={{ base: "column" }}
-                            gap="20px"
+                            // gap="20px"
                             key={el.link}
                             margin="0 !important"
                             justifyContent="space-between"
-                            w="100%"
+                            width={{
+                              base: "80vw",
+                              xs: "70vw",
+                              sm: "60vw",
+                              md: "50vw",
+                              lg: "40vw",
+                            }}
+                            maxW="400px"
                           >
                             <Box
                               backgroundImage={`url("${el.thumbnail}")`}
+                              borderRadius="8px"
                               backgroundSize="cover"
                               sx={{
                                 aspectRatio: "16/9",
@@ -766,12 +897,12 @@ const ChartComponent = (props: any) => {
                               alignItems="flex-start"
                             >
                               <Link href={el.link} isExternal>
-                                <Text
-                                  fontSize="24px"
-                                  lineHeight="1.5"
-                                  fontWeight="700"
-                                >
-                                  {el.title.replace(/[^a-zA-Z ]/g, "")}
+                                <Text variant="h-4" fontWeight="700" pb="6px">
+                                  {50 < el.title.length
+                                    ? `${el.title
+                                        .replace(/[^a-zA-Z ]/g, "")
+                                        .substring(0, 35)}...`
+                                    : el.title.replace(/[^a-zA-Z ]/g, "")}
                                   <span
                                     style={{
                                       display: "inline-block",
@@ -788,262 +919,63 @@ const ChartComponent = (props: any) => {
                               </Link>
                               <Text
                                 lineHeight="1.5"
-                                fontSize="18px"
+                                fontSize="16px"
                                 maxW="100%"
                               >
-                                {el.description}
+                                {150 < el.description.length
+                                  ? `${el.description.substring(0, 150)}...`
+                                  : el.description}
                               </Text>
                             </VStack>
                           </Stack>
                         ))}
-                      </Stack>
-                    </TabPanel>
+                      </HStack>
+                    </Box>
                   )}
-                </TabPanels>
-              </Tabs> */}
-            </Container>
-          ) : null}
-        </VStack>
-
-        <VStack width={{ base: "100%", lg: "45%" }} m="0 !important" gap="20px">
-          {dataRetrieved && coinInfo.symbol && (
-            <Container variant="box-component" width="100%" h="max-content">
-              <Stack gap="6px">
-                <Text variant="h-3">Circulating Supply</Text>
-                <HStack justifyContent="space-between">
-                  <NumericFormat
-                    value={stats.circulatingSupply.toFixed(0)}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                    suffix={` ${coinInfo.symbol.toUpperCase()}`}
-                  />
-                  <Text variant="h-5">
-                    {(
-                      (stats.circulatingSupply * 100) /
-                      stats.totalSupply
-                    ).toFixed(0)}
-                    %
-                  </Text>
-                </HStack>
-                <Progress
-                  borderRadius="4px"
-                  value={(stats.circulatingSupply * 100) / stats.totalSupply}
-                />
-
-                <HStack justifyContent="space-between" pt="34px">
-                  <Text variant="h-5">Total Supply</Text>
-                  <NumericFormat
-                    value={stats.totalSupply.toFixed(0)}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-                <Divider orientation="horizontal" />
-                <HStack justifyContent="space-between">
-                  <Text variant="h-5">Circulating Supply</Text>
-
-                  <NumericFormat
-                    value={stats.circulatingSupply.toFixed(0)}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="h-4"
-                  />
-                </HStack>
-              </Stack>
-            </Container>
-          )}
-          {coinInfo.symbol.length > 0 && (
-            <Container variant="box-component" width="100%" h="max-content">
-              <Text variant="h-3">Currency Converter</Text>
-
-              <InputGroup mb="10px" borderRadius="11px">
-                <InputLeftAddon>
-                  <Text variant="bold-xsmall">
-                    {coinInfo.symbol.toUpperCase()}
-                  </Text>
-                </InputLeftAddon>
-                <Box
-                  pl="10px"
-                  border={
-                    colorMode === "dark"
-                      ? "1px solid #3b547d"
-                      : "1px solid #e2e8f0"
-                  }
-                  width="100%"
-                  borderRadius="0 6px 6px  0"
-                >
-                  <NumericFormat
-                    value={cryptoExchange}
-                    displayType="input"
-                    thousandSeparator=","
-                    className="h-4 input"
-                    onChange={handleChangeCrypto}
-                    style={{ background: "transparent", height: "100%" }}
-                  />
-                </Box>
-              </InputGroup>
-              <InputGroup>
-                <InputLeftAddon>
-                  <Text variant="bold-xsmall">USD</Text>
-                </InputLeftAddon>
-                <Box
-                  pl="10px"
-                  border={
-                    colorMode === "dark"
-                      ? "1px solid #3b547d"
-                      : "1px solid #e2e8f0"
-                  }
-                  width="100%"
-                  borderRadius="0 6px 6px  0"
-                >
-                  <NumericFormat
-                    value={currencyExchange}
-                    displayType="input"
-                    thousandSeparator=","
-                    className="h-4 input"
-                    onChange={handleChangeExchange}
-                    style={{ background: "transparent", height: "100%" }}
-                  />
-                </Box>
-              </InputGroup>
-
-              <Box fontSize={{ base: "14px", sm: "18px" }} pt="20px">
-                <span>
-                  1{coinInfo.symbol.toUpperCase()} ={" "}
-                  <NumericFormat
-                    value={coinInfo.currentPrice.usd}
-                    suffix=" USD"
-                    displayType="text"
-                    thousandSeparator=","
-                  />
-                </span>
-              </Box>
-              <Text fontSize="12px">
-                This is not real time data. To use for approximation only*
-              </Text>
-            </Container>
-          )}
-        </VStack>
-      </Stack>
-      {news?.articles.length > 0 && individualPage && (
-        <Box pt="40px">
-          <Text variant="h-3" pb="20px">
-            In The News
-          </Text>
-          <Box overflow="scroll" className="container">
-            <HStack
-              columnGap="20px"
-              overflow="hidden"
-              width="max-content"
-              alignItems="flex-start"
-            >
-              {news.articles.map((el: any) => (
-                <Stack
-                  flexDir={{ base: "column" }}
-                  // gap="20px"
-                  key={el.link}
-                  margin="0 !important"
-                  justifyContent="space-between"
-                  width={{
-                    base: "80vw",
-                    xs: "70vw",
-                    sm: "60vw",
-                    md: "50vw",
-                    lg: "40vw",
-                  }}
-                  maxW="400px"
-                >
-                  <Box
-                    backgroundImage={`url("${el.thumbnail}")`}
-                    borderRadius="8px"
-                    backgroundSize="cover"
-                    sx={{
-                      aspectRatio: "16/9",
-                    }}
-                    w="100%"
-                    margin="0 !important"
-                  />
-                  <VStack
-                    width="100%"
-                    justifyContent="center"
-                    alignItems="flex-start"
-                  >
-                    <Link href={el.link} isExternal>
-                      <Text variant="h-4" fontWeight="700" pb="6px">
-                        {50 < el.title.length
-                          ? `${el.title
-                              .replace(/[^a-zA-Z ]/g, "")
-                              .substring(0, 35)}...`
-                          : el.title.replace(/[^a-zA-Z ]/g, "")}
-                        <span
-                          style={{
-                            display: "inline-block",
-                            marginLeft: "8px",
-                            lineHeight: "1.5",
-                          }}
-                        >
-                          <BiLinkExternal size={24} fill="#4983c7" />
-                        </span>
-                      </Text>
-                      <Text fontWeight="bold">
-                        {dateParse(el.publication_time)}
-                      </Text>
-                    </Link>
-                    <Text lineHeight="1.5" fontSize="16px" maxW="100%">
-                      {150 < el.description.length
-                        ? `${el.description.substring(0, 150)}...`
-                        : el.description}
-                    </Text>
-                  </VStack>
-                </Stack>
-              ))}
-            </HStack>
-          </Box>
+                </TabPanel>
+                <TabPanel padding="0">
+                  {news?.videos.length > 0 && individualPage && (
+                    <Box overflow="scroll" className="container">
+                      <HStack
+                        gap="20px"
+                        overflow="hidden"
+                        width="max-content"
+                        alignItems="flex-start"
+                      >
+                        {news.videos.map((el: any) => (
+                          <VStack
+                            key={el.id}
+                            width={{
+                              base: "80vw",
+                              xs: "70vw",
+                              sm: "60vw",
+                              md: "50vw",
+                              lg: "40vw",
+                            }}
+                            maxW="400px"
+                          >
+                            <Box
+                              borderRadius="8px"
+                              as="iframe"
+                              src={`https://www.youtube.com/embed/${el.id}`}
+                              width="100%"
+                              sx={{
+                                aspectRatio: "16/9",
+                              }}
+                            />
+                            <Text variant="h-4">{el.title}</Text>
+                          </VStack>
+                        ))}
+                      </HStack>
+                    </Box>
+                  )}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Container>
         </Box>
-      )}
-      {news?.videos.length > 0 && individualPage && (
-        <Box pt="40px">
-          <Text variant="h-3" pb="20px">
-            Youtube Videos
-          </Text>
-          <Box overflow="scroll" className="container">
-            <HStack
-              gap="20px"
-              overflow="hidden"
-              width="max-content"
-              alignItems="flex-start"
-            >
-              {news.videos.map((el: any) => (
-                <VStack
-                  key={el.id}
-                  width={{
-                    base: "80vw",
-                    xs: "70vw",
-                    sm: "60vw",
-                    md: "50vw",
-                    lg: "40vw",
-                  }}
-                  maxW="400px"
-                >
-                  <Box
-                    borderRadius="8px"
-                    as="iframe"
-                    src={`https://www.youtube.com/embed/${el.id}`}
-                    width="100%"
-                    sx={{
-                      aspectRatio: "16/9",
-                    }}
-                  />
-                  <Text variant="h-4">{el.title}</Text>
-                </VStack>
-              ))}
-            </HStack>
-          </Box>
-        </Box>
-      )}
-    </Box>
+      ) : null}
+    </>
   );
 };
 
