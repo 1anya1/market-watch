@@ -8,8 +8,8 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   fonts: {
-    heading: `'Open Sans', sans-serif`,
-    body: `'Montserrat', sans-serif`,
+    body: `'Manrope', sans-serif;`,
+    // body: `'Montserrat', sans-serif`,
   },
   styles: {
     global: {
@@ -56,7 +56,6 @@ const theme = extendTheme({
         "h-2": {
           fontSize: { base: "28px", sm: "34px" },
           fontWeight: 700,
-          
         },
         "h-3": {
           fontSize: { base: "24px", sm: "26px" },
@@ -64,7 +63,7 @@ const theme = extendTheme({
           pb: "20px",
         },
         "h-4": {
-          fontSize: { base: "16px", sm: "18px" },
+          fontSize: { base: "16px", sm: "20px" },
           fontWeight: "700",
         },
         "h-5": {
@@ -89,6 +88,15 @@ const theme = extendTheme({
         },
         body: {
           fontSize: { base: "16px", sm: "18px" },
+        },
+        "small-font": 
+        {
+          fontSize: "12px",
+          fontWeight: "500",
+        },
+        "price-tip": {
+          fontWeight: 700,
+          fontSize: "12px",
         },
       },
     },

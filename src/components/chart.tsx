@@ -1,5 +1,16 @@
-import { createChart, ColorType } from "lightweight-charts";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  createChart,
+  ColorType,
+  ISeriesApi,
+  SeriesOptionsMap,
+} from "lightweight-charts";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
@@ -47,16 +58,26 @@ const colors = {
 const ChartComponent = (props: any) => {
   const { coinId, individualPage } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const toolTipRef = useRef<HTMLDivElement>(null);
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [chartType, setChartType] = useState("Line");
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
-  const [currentValue, setCurrentValue] = useState<number>(0);
-  const [twentyFourHourValue, setTwentyFourHourValue] = useState(0);
+  // const [currentValue, setCurrentValue] = useState<number>(0);
+  // const [twentyFourHourValue, setTwentyFourHourValue] = useState(0);
   const [timeFrameMax, setTimeFrameMax] = useState(1);
   const [timeFrameLow, setTimeFrameLow] = useState(1);
   const [cryptoId, setCryptoId] = useState(0);
   const [viewAllCoin, setViewAllCoin] = useState(false);
+  const [initalPricePoint, setInitialPricePoint] = useState(0);
+  const [initialPercent, setInitialPercent] = useState(0);
+  // const [ticker, setTicker] = useState(0);
+  const [tooltipDate, setTooltipData] = useState<JSX.Element | null>(null);
+  const [coordinates, setCoordinates] = useState({
+    top: "unset",
+    left: "unset",
+  });
+  // const [percentChange, setPercentChange] = useState(0);
   const [news, setNews] = useState<any>({
     articles: [],
     page: 0,
@@ -73,9 +94,11 @@ const ChartComponent = (props: any) => {
     rank: 0,
     volume: 0,
   });
+  //#c6d7ec
   const [movingAverage, setMovingAverage] = useState(0);
   const [cryptoExchange, setCryptoExchange] = useState(1);
   const [currencyExchange, setCurrencyExchange] = useState(0);
+  const [showToolTip, setShowTooltip] = useState(false);
   const [coinInfo, setCoinInfo] = useState<any>({
     name: "",
     description: "",
@@ -124,6 +147,10 @@ const ChartComponent = (props: any) => {
             high = Math.max(high, el[2]);
             crypto.push(frame);
           });
+          const startingVal = crypto[0].value;
+          const endValue = crypto[crypto.length - 1].value;
+          const percentChange =
+            (Number(endValue) * 100) / Number(startingVal) - 100;
           const coinInfo = {
             name: data?.name,
             description: data?.description?.en,
@@ -144,13 +171,17 @@ const ChartComponent = (props: any) => {
             rank: data.market_cap_rank,
             volume: data.market_data.total_volume.usd,
           });
+          // setPercentChange(percentChange);
+          setInitialPercent(percentChange);
           setMovingAverage(totalNew);
           setCoinInfo(coinInfo);
           setData(crypto);
-          setCurrentValue(crypto[crypto.length - 1].open);
-          setTwentyFourHourValue(crypto[0].open);
+          // setCurrentValue(crypto[crypto.length - 1].open);
+          // setTwentyFourHourValue(crypto[0].open);
           setTimeFrameMax(high);
           setTimeFrameLow(low);
+          setInitialPricePoint(data.market_data.current_price.usd);
+          // setTicker(data.market_data.current_price.usd);
         });
     };
     getData();
@@ -177,24 +208,34 @@ const ChartComponent = (props: any) => {
       fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setNews(data);
         });
     }
   }, [cryptoId, individualPage]);
 
-  useEffect(() => {
-    console.log(cryptoExchange, currencyExchange);
-  }, [currencyExchange, cryptoExchange]);
+  // useEffect(() => {
+
+  //   const max = timeFrameMax - timeFrameLow; //100%
+  //   const val = movingAverage - timeFrameLow;
+
+  // });
+  const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
-    // console.log({ movingAverage }, { timeFrameMax }, { timeFrameLow });
+    if (currWidth === 0) {
+      setWidth(window.innerWidth);
+    }
+    function updateSize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, [currWidth]);
 
-    const max = timeFrameMax - timeFrameLow; //100%
-    const val = movingAverage - timeFrameLow;
-    console.log({ val }, { max });
-    // console.log("lets see", max + hmm + min);
-  });
+  useEffect(() => {
+    console.log(currWidth);
+  }, [currWidth]);
 
   useEffect(() => {
     if (chartContainerRef?.current) {
@@ -204,8 +245,14 @@ const ChartComponent = (props: any) => {
             width: chartContainerRef?.current?.clientWidth,
             height: chartContainerRef?.current?.clientHeight,
             leftPriceScale: {
-              visible:
-                chartContainerRef?.current?.clientWidth > 480 ? true : false,
+              visible: false,
+              // chartContainerRef?.current?.clientWidth > 480 ? true : false,
+            },
+            handleScale: {
+              axisPressedMouseMove: {
+                time: false,
+                price: false,
+              },
             },
           });
           chart.timeScale().fitContent();
@@ -219,6 +266,7 @@ const ChartComponent = (props: any) => {
         },
         width: chartContainerRef?.current?.clientWidth,
         height: chartContainerRef?.current?.clientHeight,
+
         grid: {
           vertLines: {
             visible: false,
@@ -227,8 +275,10 @@ const ChartComponent = (props: any) => {
             visible: false,
           },
         },
+
         crosshair: {
-          vertLine: { visible: false },
+          vertLine: { visible: true, labelVisible: false },
+          horzLine: { visible: false },
         },
         handleScroll: {
           vertTouchDrag: false,
@@ -244,9 +294,29 @@ const ChartComponent = (props: any) => {
 
         timeScale: {
           borderVisible: false,
+          tickMarkFormatter: (time: number) => {
+            const hours = new Date(time * 1000);
+            const withPmAm = hours.toLocaleTimeString("en-US", {
+              // en-US can be set to 'default' to use user's browser settings
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            const date = new Date(time * 1000).toISOString();
+            console.log(date);
+            const t = date.slice(0, 10).split("-");
+            const month = `${t[1]}/${t[2]}`;
+            const year = `${t[1]}/${t[2]}/${t[0]}`;
+            return timeFrame === 1
+              ? withPmAm
+              : timeFrame === "max"
+              ? year
+              : month;
+          },
         },
         leftPriceScale: {
-          visible: chartContainerRef?.current?.clientWidth > 480 ? true : false,
+          // visible: chartContainerRef?.current?.clientWidth > 480 ? true : false,
+          visible: false,
           borderVisible: false,
           drawTicks: false,
         },
@@ -257,15 +327,17 @@ const ChartComponent = (props: any) => {
       chart.timeScale().fitContent();
 
       if (cryptoData.length > 0) {
-        let newSeries;
+        let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
 
         switch (chartType) {
           case "Line":
+            setShowTooltip(false);
             newSeries = chart.addLineSeries({
               color: colors.blue,
-              crosshairMarkerVisible: false,
               lastValueVisible: false,
               priceLineColor: "transparent",
+              crosshairMarkerVisible: true,
+              crosshairMarkerRadius: 6,
             });
             newSeries.setData(cryptoData);
             break;
@@ -283,6 +355,7 @@ const ChartComponent = (props: any) => {
             newSeries.setData(cryptoData);
             break;
           case "Candle":
+            setShowTooltip(false);
             newSeries = chart.addCandlestickSeries({
               upColor: colors.green,
               downColor: colors.red,
@@ -290,6 +363,7 @@ const ChartComponent = (props: any) => {
               wickUpColor: colors.green,
               wickDownColor: colors.red,
             });
+
             newSeries.setData(cryptoData);
             break;
 
@@ -301,6 +375,142 @@ const ChartComponent = (props: any) => {
             newSeries.setData(cryptoData);
             break;
         }
+
+        chart.subscribeCrosshairMove((param) => {
+          if (
+            param.point === undefined ||
+            !param.time ||
+            param.point.x < 0 ||
+            param.point.y < 0
+          ) {
+            setShowTooltip(false);
+          } else {
+            const day = new Date(Number(param.time) * 1000);
+            const mIDX = day.getMonth();
+            const dIDX = day.getDay();
+            const days = [
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ];
+            const monthNames = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ];
+
+            const date = new Date(Number(param.time) * 1000).toISOString();
+            const t = date.slice(0, 10).split("-");
+
+            const startingVal = cryptoData[0].value;
+            let close = 0;
+            let high = 0;
+            let low = 0;
+            const val: any = param.seriesPrices.get(newSeries);
+            if (chartType === "Candle") {
+              close = Number(val?.close) || 0;
+              // high = Number(val?.high) || 0;
+              // low = val?.low || 0;
+            } else if (chartContainerRef.current) {
+              close = Number(val);
+            }
+            // const val = param.seriesPrices.get(newSeries);
+            // console.log(val);;
+
+            const currPercentChange =
+              (Number(close) * 100) / Number(startingVal) - 100;
+
+            const tooltipHeight = (toolTipRef?.current?.clientHeight || 0) + 20;
+            const tooltipWidth = (toolTipRef?.current?.clientWidth || 0) + 10;
+            const containerWidth = chartContainerRef?.current?.clientWidth || 0;
+            let left = Number(param.point.x);
+            if (left + tooltipWidth > containerWidth - left) {
+              const right =
+                containerWidth - (containerWidth - left + tooltipWidth);
+              if (right < 0) {
+                left =
+                  Number(param.point.x) - Number(tooltipWidth) - right + 60;
+              } else {
+                left = Number(param.point.x) - Number(tooltipWidth) + 20;
+              }
+            }
+
+            const chartHeight = currWidth > 992 ? 400 : 200;
+            console.log({ chartHeight }, {currWidth});
+
+            let top = Number(param.point.y) + tooltipHeight;
+            if (
+              Number(param.point.y) + tooltipHeight >
+              (currWidth > 992 ? 400 : 200)
+            ) {
+              top = Number(param.point.y) - 80;
+            }
+            if (
+              top >
+              (chartContainerRef?.current?.clientHeight || 0) - tooltipHeight
+            ) {
+              console.log("here");
+              top = Number(param.point.y) + Number(tooltipHeight);
+            }
+
+            const timeAndDate = (
+              <>
+                <HStack>
+                  <Text variant="small-font">{`${days[dIDX]}, ${monthNames[mIDX]} ${t[2]}, ${t[0]}`}</Text>
+                </HStack>
+                <HStack>
+                  <Text variant="small-font">Price (USD):</Text>
+                  <NumericFormat
+                    value={Number(close)}
+                    prefix={"$"}
+                    displayType="text"
+                    thousandSeparator=","
+                    className="price-tip"
+                  />
+                  {/* <Text variant="small-bold">{Number(val)}</Text> */}
+                </HStack>
+                <HStack>
+                  <Text variant="small-font">Change:</Text>
+                  <HStack spacing="0" gap="2px">
+                    {currPercentChange > 0 ? (
+                      <AiFillCaretUp fill="var(--green)" size={14} />
+                    ) : (
+                      <AiFillCaretDown fill="var(--red)" size={14} />
+                    )}
+
+                    <Text
+                      variant="price-tip"
+                      color={currPercentChange > 0 ? "green" : "red"}
+                    >
+                      {Math.abs(currPercentChange).toFixed(2)}%
+                    </Text>
+                  </HStack>
+                </HStack>
+              </>
+            );
+
+            setCoordinates({
+              top: `${top}px`,
+
+              left: `${left}px`,
+            });
+            setTooltipData(timeAndDate);
+            setShowTooltip(true);
+          }
+        });
       }
 
       window.addEventListener("resize", handleResize);
@@ -311,7 +521,7 @@ const ChartComponent = (props: any) => {
         chart.remove();
       };
     }
-  }, [chartType, colorMode, cryptoData]);
+  }, [chartType, colorMode, cryptoData, currWidth, initalPricePoint, timeFrame]);
 
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
@@ -454,7 +664,7 @@ const ChartComponent = (props: any) => {
                   <HStack>
                     <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
                       <NumericFormat
-                        value={currentValue}
+                        value={initalPricePoint}
                         prefix={"$"}
                         suffix=" USD"
                         displayType="text"
@@ -466,22 +676,17 @@ const ChartComponent = (props: any) => {
                       />
                     </Box>
                     <HStack spacing="0">
-                      {currentValue > twentyFourHourValue ? (
+                      {initialPercent > 0 ? (
                         <AiFillCaretUp fill="var(--green)" size={16} />
                       ) : (
                         <AiFillCaretDown fill="var(--red)" size={16} />
                       )}
                       <HStack margin="0 !important">
                         <Text
-                          color={
-                            currentValue > twentyFourHourValue ? "green" : "red"
-                          }
+                          color={initialPercent > 0 ? "green" : "red"}
                           variant="bold-small"
                         >
-                          {Math.abs(
-                            (currentValue * 100) / twentyFourHourValue - 100
-                          ).toFixed(2)}
-                          %
+                          {initialPercent.toFixed(2)}%
                         </Text>
                         {timeFrames.map((el) => {
                           if (el.query === timeFrame)
@@ -522,42 +727,48 @@ const ChartComponent = (props: any) => {
                           />
                         </MenuButton>
                         <MenuList>
-                          <MenuItem
-                            onClick={() => setChartType("Line")}
-                            // backgroundColor={chartType === "Line" ? "pink" : "unset"}
-                          >
+                          <MenuItem onClick={() => setChartType("Line")}>
                             Line
                           </MenuItem>
-                          {/* <MenuItem
-                            // backgroundColor={chartType === "Line" ? "pink" : "white"}
-                            onClick={() => setChartType("Area")}
-                          >
-                            Area
-                          </MenuItem> */}
-                          {/* <MenuItem onClick={() => setChartType("Histogram")}>
-                            Histogram
-                          </MenuItem> */}
+
                           <MenuItem onClick={() => setChartType("Candle")}>
                             Candlestick
                           </MenuItem>
-                          {/* <MenuItem onClick={() => setChartType("Bar")}>
-                            Bar
-                          </MenuItem> */}
                         </MenuList>
                       </Menu>
                     </Box>
                   </HStack>
                 </HStack>
-
-                <Box ref={chartContainerRef} height="200px">
-                  <Text
-                    fontSize="10px"
-                    position="absolute"
-                    bottom="2"
-                    right="5"
+                <Box>
+                  <Box
+                    ref={chartContainerRef}
+                    height={{ base: "200px", lg: "300px" }}
                   >
-                    Powered by CoinGecko API
-                  </Text>
+                    <Text
+                      fontSize="10px"
+                      position="absolute"
+                      bottom="2"
+                      right="5"
+                    >
+                      Powered by CoinGecko API
+                    </Text>
+                  </Box>
+                  <Box
+                    position="absolute"
+                    zIndex="15"
+                    pointerEvents="none"
+                    ref={toolTipRef}
+                    top={coordinates ? coordinates.top : "unset"}
+                    left={coordinates ? coordinates.left : "unset"}
+                    bg={colorMode === "light" ? "white" : "#081c3b"}
+                    borderRadius="8px"
+                    display={showToolTip ? "block" : "none"}
+                    p="10px"
+                    minW="160px"
+                    shadow="md"
+                  >
+                    {tooltipDate}
+                  </Box>
                 </Box>
               </Box>
             </>

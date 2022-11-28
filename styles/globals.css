@@ -55,16 +55,20 @@ Chakra Ui overwrites */
 }
 
 .h-4 {
-  font-weight: 700;
+  font-weight: 500;
   font-size: 20px;
 }
 .h-5 {
   font-weight: 700;
   font-size: 16px;
 }
+.price-tip {
+  font-weight: 700;
+  font-size: 12px;
+}
 @media screen and (max-width: 479px) {
   .h-4 {
-    font-weight: 700;
+    font-weight: 500;
     font-size: 16px;
   }
   .h-5 {
