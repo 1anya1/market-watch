@@ -294,6 +294,7 @@ const ChartComponent = (props: any) => {
 
         timeScale: {
           borderVisible: false,
+
           tickMarkFormatter: (time: number) => {
             const hours = new Date(time * 1000);
             const withPmAm = hours.toLocaleTimeString("en-US", {
@@ -436,35 +437,38 @@ const ChartComponent = (props: any) => {
             const tooltipHeight = (toolTipRef?.current?.clientHeight || 0) + 20;
             const tooltipWidth = (toolTipRef?.current?.clientWidth || 0) + 10;
             const containerWidth = chartContainerRef?.current?.clientWidth || 0;
-            let left = Number(param.point.x);
+            let left = Number(param.point.x)+20;
             if (left + tooltipWidth > containerWidth - left) {
+              
               const right =
                 containerWidth - (containerWidth - left + tooltipWidth);
               if (right < 0) {
                 left =
-                  Number(param.point.x) - Number(tooltipWidth) - right + 60;
+                  Number(param.point.x) - Number(tooltipWidth) - right - 40;
               } else {
-                left = Number(param.point.x) - Number(tooltipWidth) + 20;
+                left = Number(param.point.x) - Number(tooltipWidth)+20;
               }
             }
 
-            const chartHeight = currWidth > 992 ? 400 : 200;
-            console.log({ chartHeight }, {currWidth});
+            const chartHeight = currWidth > 992 ? 300 : 200;
+            console.log({ chartHeight }, { currWidth });
 
-            let top = Number(param.point.y) + tooltipHeight;
-            if (
-              Number(param.point.y) + tooltipHeight >
-              (currWidth > 992 ? 400 : 200)
-            ) {
-              top = Number(param.point.y) - 80;
+            let top = Number(param.point.y);
+            if (param.point.y < 176) {
+              top = param.point.y + 85;
             }
-            if (
-              top >
-              (chartContainerRef?.current?.clientHeight || 0) - tooltipHeight
-            ) {
-              console.log("here");
-              top = Number(param.point.y) + Number(tooltipHeight);
+            console.log(Number(param.point.y));
+            if (Number(param.point.y) >= 98) {
+              if (currWidth < 552) {
+                top = param.point.y;
+              } else {
+                top = param.point.y - 10;
+              }
             }
+            if (param.point.x <= 10) {
+              console.log('here')
+            }
+       
 
             const timeAndDate = (
               <>
@@ -521,7 +525,14 @@ const ChartComponent = (props: any) => {
         chart.remove();
       };
     }
-  }, [chartType, colorMode, cryptoData, currWidth, initalPricePoint, timeFrame]);
+  }, [
+    chartType,
+    colorMode,
+    cryptoData,
+    currWidth,
+    initalPricePoint,
+    timeFrame,
+  ]);
 
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
