@@ -444,7 +444,7 @@ const ChartComponent = (props: any) => {
                 containerWidth - (containerWidth - left + tooltipWidth);
               if (right < 0) {
                 left =
-                  Number(param.point.x) - Number(tooltipWidth) - right - 40;
+                  Number(param.point.x) - Number(tooltipWidth) - right +40;
               } else {
                 left = Number(param.point.x) - Number(tooltipWidth)+20;
               }
