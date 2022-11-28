@@ -17,6 +17,11 @@ import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaStar, FaShareAlt } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
+import { VscGithub } from "react-icons/vsc";
+import { FaReddit, FaGithub } from "react-icons/fa";
+import { BsFacebook } from "react-icons/bs";
+import { AiFillTwitterCircle } from "react-icons/ai";
+import { RiRedditFill } from "react-icons/ri";
 import { TbWorld } from "react-icons/tb";
 
 import {
@@ -47,13 +52,6 @@ import {
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
-
-const colors = {
-  red: "#f13d3d",
-  green: "#039f65",
-  blue: "#4983C6",
-  gray: "#ECECEC",
-};
 
 const ChartComponent = (props: any) => {
   const { coinId, individualPage } = props;
@@ -95,6 +93,7 @@ const ChartComponent = (props: any) => {
     volume: 0,
   });
   //#c6d7ec
+
   const [movingAverage, setMovingAverage] = useState(0);
   const [cryptoExchange, setCryptoExchange] = useState(1);
   const [currencyExchange, setCurrencyExchange] = useState(0);
@@ -108,8 +107,18 @@ const ChartComponent = (props: any) => {
     symbol: "",
     currentPrice: {},
     rank: 0,
+    reddit: "",
+    fecebook: "",
+    twitter: "",
+    github: "",
   });
   const { colorMode } = useColorMode();
+  const colors = {
+    red: "#f13d3d",
+    green: "#039f65",
+    blue: colorMode === "light" ? "#1099fa" : "#4983C6",
+    gray: "#ECECEC",
+  };
   useEffect(() => {
     setCurrencyExchange(coinInfo.currentPrice.usd);
   }, [coinInfo]);
@@ -155,6 +164,10 @@ const ChartComponent = (props: any) => {
             name: data?.name,
             description: data?.description?.en,
             url: data?.links?.homepage[0],
+            reddit: data?.links?.subreddit_url,
+            twitter: data?.links?.twitter_screen_name,
+            facebook: data?.links?.facebook_username,
+            github: data?.links?.repos_url?.github[0],
             currentPrice: data.market_data.current_price,
             image: data?.image?.small,
             score: data?.community_score,
@@ -193,7 +206,6 @@ const ChartComponent = (props: any) => {
       fetch(`https://price-api.crypto.com/price/v1/tokens?page=1&limit=500`)
         .then((res) => res.json())
         .then((data) => {
-          console.log({ data });
           const findId = data.data.filter(
             (el: { symbol: any }) => el.symbol.toLowerCase() === coinInfo.symbol
           );
@@ -231,10 +243,6 @@ const ChartComponent = (props: any) => {
     window.addEventListener("resize", updateSize);
     updateSize();
     return () => window.removeEventListener("resize", updateSize);
-  }, [currWidth]);
-
-  useEffect(() => {
-    console.log(currWidth);
   }, [currWidth]);
 
   useEffect(() => {
@@ -304,7 +312,6 @@ const ChartComponent = (props: any) => {
             });
 
             const date = new Date(time * 1000).toISOString();
-            console.log(date);
             const t = date.slice(0, 10).split("-");
             const month = `${t[1]}/${t[2]}`;
             const year = `${t[1]}/${t[2]}/${t[0]}`;
@@ -351,7 +358,7 @@ const ChartComponent = (props: any) => {
 
           case "Histogram":
             newSeries = chart.addHistogramSeries({
-              color: "#4983C6",
+              color: colorMode === "light" ? "#1099fa" : "#4983C6",
             });
             newSeries.setData(cryptoData);
             break;
@@ -428,8 +435,6 @@ const ChartComponent = (props: any) => {
             } else if (chartContainerRef.current) {
               close = Number(val);
             }
-            // const val = param.seriesPrices.get(newSeries);
-            // console.log(val);;
 
             const currPercentChange =
               (Number(close) * 100) / Number(startingVal) - 100;
@@ -437,27 +442,25 @@ const ChartComponent = (props: any) => {
             const tooltipHeight = (toolTipRef?.current?.clientHeight || 0) + 20;
             const tooltipWidth = (toolTipRef?.current?.clientWidth || 0) + 10;
             const containerWidth = chartContainerRef?.current?.clientWidth || 0;
-            let left = Number(param.point.x)+20;
+            let left = Number(param.point.x) + 20;
             if (left + tooltipWidth > containerWidth - left) {
-              
               const right =
                 containerWidth - (containerWidth - left + tooltipWidth);
               if (right < 0) {
                 left =
-                  Number(param.point.x) - Number(tooltipWidth) - right +40;
+                  Number(param.point.x) - Number(tooltipWidth) - right + 40;
               } else {
-                left = Number(param.point.x) - Number(tooltipWidth)+20;
+                left = Number(param.point.x) - Number(tooltipWidth) + 20;
               }
             }
 
             const chartHeight = currWidth > 992 ? 300 : 200;
-            console.log({ chartHeight }, { currWidth });
 
             let top = Number(param.point.y);
             if (param.point.y < 176) {
               top = param.point.y + 85;
             }
-            console.log(Number(param.point.y));
+
             if (Number(param.point.y) >= 98) {
               if (currWidth < 552) {
                 top = param.point.y;
@@ -465,10 +468,6 @@ const ChartComponent = (props: any) => {
                 top = param.point.y - 10;
               }
             }
-            if (param.point.x <= 10) {
-              console.log('here')
-            }
-       
 
             const timeAndDate = (
               <>
@@ -528,11 +527,16 @@ const ChartComponent = (props: any) => {
   }, [
     chartType,
     colorMode,
+    colors.blue,
+    colors.green,
+    colors.red,
     cryptoData,
     currWidth,
     initalPricePoint,
     timeFrame,
   ]);
+
+  //#a1bde2
 
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
@@ -586,12 +590,16 @@ const ChartComponent = (props: any) => {
             zIndex="0"
             h="12px"
             w="100%"
-            bg="linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+            bg={
+              colorMode === "light"
+                ? "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+                : "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+            }
           />
           <Box
             position="absolute"
             h="12px"
-            bg={colorMode === "light" ? "#edf2f6" : "#30405b"}
+            bg={colorMode === "light" ? "#dddfe0" : "#3b547d"}
             right="0"
             zIndex="1"
             w={`${
@@ -647,6 +655,7 @@ const ChartComponent = (props: any) => {
               <Button>
                 <FaStar size={18} />
               </Button>
+
               <Button>
                 <FaShareAlt size={18} />
               </Button>
@@ -656,13 +665,14 @@ const ChartComponent = (props: any) => {
 
           {/* {movingAverage && timeFrameLow && timeFrameMax && renderRange()} */}
           {coinInfo.name.length > 0 && chartContainerRef ? (
-            <>
-              <Box
-                borderRadius="11px"
+            <Box width="100%">
+              <Container
+                variant="box-component"
+                width="100% !important"
+                maxW="100%"
                 padding="20px 20px 40px 20px"
-                backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
+                // backgroundColor={colorMode === "light" ? "#f5f6fa" : "#133364"}
                 position="relative"
-                boxShadow="md"
                 overflow="hidden"
               >
                 <HStack
@@ -715,7 +725,9 @@ const ChartComponent = (props: any) => {
                         onClick={() => setTimeFrame(el.query)}
                         color={
                           timeFrame === el.query
-                            ? "#4983c6"
+                            ? colorMode === "light"
+                              ? "#1099fa"
+                              : "#4983C6"
                             : colorMode === "light"
                             ? "black"
                             : "white"
@@ -732,7 +744,8 @@ const ChartComponent = (props: any) => {
                           <RiSettings3Fill
                             fill={
                               // colorMode === "light" ? colors.gray : colors.blue
-                              "#4983c6"
+                              // "#4983c6"
+                              colorMode === "light" ? "#1099fa" : "#4983C6"
                             }
                             size={20}
                           />
@@ -781,8 +794,8 @@ const ChartComponent = (props: any) => {
                     {tooltipDate}
                   </Box>
                 </Box>
-              </Box>
-            </>
+              </Container>
+            </Box>
           ) : null}
           <Stack
             flexDirection={{ base: "column", lg: "row" }}
@@ -799,7 +812,15 @@ const ChartComponent = (props: any) => {
                     <Text variant="h-3" pb="0px">
                       Stats
                     </Text>
-                    <Button>Rank #{coinInfo.rank}</Button>
+                    <Box
+                      bgColor={colorMode === "light" ? "#1099fa" : "#4983C6"}
+                      p="0 10px"
+                      borderRadius={12}
+                    >
+                      <Text color="white" fontSize={12} fontWeight="700">
+                        Rank #{coinInfo.rank}
+                      </Text>
+                    </Box>
                   </HStack>
                   <Stack spacing="0" gap="11px">
                     {movingAverage &&
@@ -882,7 +903,7 @@ const ChartComponent = (props: any) => {
                           background={
                             !viewAllCoin
                               ? colorMode === "light"
-                                ? "linear-gradient(rgba(245, 246, 250, 0) 30%, rgb(245, 246, 250) 100%)"
+                                ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
                                 : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
                               : "unset"
                           }
@@ -930,7 +951,9 @@ const ChartComponent = (props: any) => {
                       </Text>
                     </HStack>
                     <Progress
+                      className="progress-bar"
                       borderRadius="4px"
+                      variant="prog-bar"
                       value={
                         (stats.circulatingSupply * 100) / stats.totalSupply
                       }
@@ -1028,21 +1051,95 @@ const ChartComponent = (props: any) => {
                   <Text fontSize="12px">
                     This is not real time data. To use for approximation only*
                   </Text>
-                  <Button width="100%" bg="#4983c6" mt="11px">
+                  <Button
+                    width="100%"
+                    bg={colorMode === "light" ? "#1099fa" : "#4983C6"}
+                    mt="11px"
+                    color="white"
+                  >
                     Buy
                   </Button>
                 </Container>
               )}
               <Container variant="box-component" width="100%" h="max-content">
-                <Text variant="h-3">{coinInfo.name} Links</Text>
-                <VStack>
-                  <Button>
-                    <HStack>
-                      <TbWorld />
-                      <Text>{coinInfo.url.replace(/^https?:\/\//, "")}</Text>
-                    </HStack>
-                  </Button>
-                </VStack>
+                <Text variant="h-3"> Links</Text>
+                <HStack spacing={0} flexWrap="wrap" gap="11px">
+                  <VStack>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={coinInfo.url}
+                      className="links"
+                    >
+                      <Button w="135px">
+                        <HStack>
+                          <TbWorld size={22} />
+                          <Text>Website</Text>
+                        </HStack>
+                      </Button>
+                    </Link>
+                  </VStack>
+                  <VStack>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`https://www.facebook.com/${coinInfo.facebook}`}
+                      className="links"
+                    >
+                      <Button w="135px">
+                        <HStack>
+                          <BsFacebook size={20} />
+                          <Text>Facebook</Text>
+                        </HStack>
+                      </Button>
+                    </Link>
+                  </VStack>
+                  <VStack>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`https://www.twitter.com/${coinInfo.twitter}`}
+                      className="links"
+                    >
+                      <Button w="135px">
+                        <HStack>
+                          <AiFillTwitterCircle size="22.5px" />
+                          <Text>Twitter</Text>
+                        </HStack>
+                      </Button>
+                    </Link>
+                  </VStack>
+                  <VStack>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={coinInfo.reddit}
+                      className="links"
+                    >
+                      <Button w="135px">
+                        <HStack>
+                          <FaReddit size={20} />
+                          <Text>Reddit</Text>
+                        </HStack>
+                      </Button>
+                    </Link>
+                  </VStack>
+                  <VStack>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={coinInfo.github}
+                      className="links"
+                    >
+                      <Button w="135px">
+                        <HStack>
+                          <FaGithub size="20px" />
+                          <Text>Github</Text>
+                        </HStack>
+                      </Button>
+                    </Link>
+                  </VStack>
+                </HStack>
               </Container>
             </VStack>
           </Stack>
@@ -1063,6 +1160,7 @@ const ChartComponent = (props: any) => {
                     fontSize={{ base: "24px", sm: "26px" }}
                     fontWeight="700"
                     pb="20px"
+                    className="tab"
                   >
                     News
                   </Tab>
@@ -1072,6 +1170,7 @@ const ChartComponent = (props: any) => {
                     fontSize={{ base: "24px", sm: "26px" }}
                     fontWeight="700"
                     pb="20px"
+                    className="tab"
                   >
                     Videos
                   </Tab>
@@ -1123,7 +1222,7 @@ const ChartComponent = (props: any) => {
                                   {50 < el.title.length
                                     ? `${el.title
                                         .replace(/[^a-zA-Z ]/g, "")
-                                        .substring(0, 35)}...`
+                                        .substring(0, 50)}...`
                                     : el.title.replace(/[^a-zA-Z ]/g, "")}
                                   <span
                                     style={{

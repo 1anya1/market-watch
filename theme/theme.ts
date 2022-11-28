@@ -29,10 +29,10 @@ const theme = extendTheme({
         marginInlineStart: "0",
         marginTop: 0,
       },
-      a: {
-        color: "#90cdf5",
-        fontWeight: 700,
-      },
+      a: (props: StyleFunctionProps) => ({
+        color: props.colorMode === "light" ? "#1099fa " : "#4983C6",
+        fontWeight: 900,
+      }),
     },
   },
   breakpoints: {
@@ -89,8 +89,7 @@ const theme = extendTheme({
         body: {
           fontSize: { base: "16px", sm: "18px" },
         },
-        "small-font": 
-        {
+        "small-font": {
           fontSize: "12px",
           fontWeight: "500",
         },
@@ -121,7 +120,13 @@ const theme = extendTheme({
     Container: {
       variants: {
         "box-component": (props: StyleFunctionProps) => ({
-          backgroundColor: props.colorMode === "dark" ? "#123364" : "#f5f6fa",
+          boxShadow: "base",
+          border:
+            props.colorMode === "light"
+              ? ".75px  solid #dddfe1"
+              : "2px solid #133364",
+          // backgroundColor: props.colorMode === "dark" ? "#123364" : "#f5f6fa",
+          backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
           padding: "20px",
           borderRadius: "11px",
           maxW: "unset",
@@ -129,11 +134,21 @@ const theme = extendTheme({
       },
     },
     Progress: {
-      variants: {
-        "bar.200": {
-          // backgroundColor: "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
-          bg: "purple",
+      baseStyle: (props: StyleFunctionProps) => ({
+        filledTrack: {
+          bg:
+            props.colorMode === "light"
+              ? "#1099fa !important"
+              : "#4983C6 !important",
         },
+        track: {
+          bg: props.colorMode === "light" ? "#dddfe0" : "#3b547d",
+        },
+      }),
+    },
+    Button: {
+      defaultProps: {
+        colorScheme: "gray", // default is gray
       },
     },
   },
