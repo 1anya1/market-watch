@@ -1064,14 +1064,14 @@ const ChartComponent = (props: any) => {
               <Container variant="box-component" width="100%" h="max-content">
                 <Text variant="h-3"> Links</Text>
                 <HStack spacing={0} flexWrap="wrap" gap="11px">
-                  <VStack>
+                  <VStack w={{ base: "100%", sm: "48.5%" }}>
                     <Link
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.url}
                       className="links"
                     >
-                      <Button w="135px">
+                      <Button w="100%">
                         <HStack>
                           <TbWorld size={22} />
                           <Text>Website</Text>
@@ -1079,14 +1079,14 @@ const ChartComponent = (props: any) => {
                       </Button>
                     </Link>
                   </VStack>
-                  <VStack>
+                  <VStack w={{ base: "100%", sm: "48.5%" }}>
                     <Link
                       target="_blank"
                       rel="noopener noreferrer"
                       href={`https://www.facebook.com/${coinInfo.facebook}`}
                       className="links"
                     >
-                      <Button w="135px">
+                      <Button w="100%">
                         <HStack>
                           <BsFacebook size={20} />
                           <Text>Facebook</Text>
@@ -1094,14 +1094,14 @@ const ChartComponent = (props: any) => {
                       </Button>
                     </Link>
                   </VStack>
-                  <VStack>
+                  <VStack w={{ base: "100%", sm: "48.5%" }}>
                     <Link
                       target="_blank"
                       rel="noopener noreferrer"
                       href={`https://www.twitter.com/${coinInfo.twitter}`}
                       className="links"
                     >
-                      <Button w="135px">
+                      <Button w="100%">
                         <HStack>
                           <AiFillTwitterCircle size="22.5px" />
                           <Text>Twitter</Text>
@@ -1109,14 +1109,14 @@ const ChartComponent = (props: any) => {
                       </Button>
                     </Link>
                   </VStack>
-                  <VStack>
+                  <VStack w={{ base: "100%", sm: "48.5%" }}>
                     <Link
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w="135px">
+                      <Button w='100%'>
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
@@ -1124,14 +1124,14 @@ const ChartComponent = (props: any) => {
                       </Button>
                     </Link>
                   </VStack>
-                  <VStack>
+                  <VStack w={{ base: "100%", sm: "48.5%" }}>
                     <Link
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.github}
                       className="links"
                     >
-                      <Button w="135px">
+                      <Button w="100%">
                         <HStack>
                           <FaGithub size="20px" />
                           <Text>Github</Text>
