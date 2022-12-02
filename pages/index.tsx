@@ -231,6 +231,8 @@ const Home = () => {
       setSlides(1);
     }
   }, [width]);
+  
+  
 
   return (
     <>
