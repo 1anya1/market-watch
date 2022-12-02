@@ -116,7 +116,7 @@ const DataTableNoChart = () => {
               if (idx < 25)
                 return (
                   <Tr key={coin.id}>
-                    <Link href={`/crypto/${coin.id}`}>
+                    <Link href={`/coins/${coin.id}`}>
                       <Td
                         position="sticky"
                         left="-1"

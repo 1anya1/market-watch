@@ -15,14 +15,26 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
-import { FaStar, FaShareAlt } from "react-icons/fa";
+import { FaStar, FaShareAlt, FaRegNewspaper } from "react-icons/fa";
 import { FiLink } from "react-icons/fi";
 import { VscGithub } from "react-icons/vsc";
 import { FaReddit, FaGithub } from "react-icons/fa";
 import { BsFacebook } from "react-icons/bs";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import { RiRedditFill } from "react-icons/ri";
-import { TbWorld } from "react-icons/tb";
+import { TbWorld, TbClipboardCheck } from "react-icons/tb";
+
+import { database } from "../../context/clientApp";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+  addDoc,
+  collection,
+  Firestore,
+  deleteDoc,
+} from "firebase/firestore";
 
 import {
   Box,
@@ -48,12 +60,17 @@ import {
   Divider,
   Container,
   Progress,
+  useToast,
 } from "@chakra-ui/react";
+
+import { useAuth } from "../../context/AuthContext";
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
 const ChartComponent = (props: any) => {
+  const { user } = useAuth();
+  console.log({ user });
   const { coinId, individualPage } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const toolTipRef = useRef<HTMLDivElement>(null);
@@ -118,6 +135,52 @@ const ChartComponent = (props: any) => {
     green: "#039f65",
     blue: colorMode === "light" ? "#1099fa" : "#4983C6",
     gray: "#ECECEC",
+  };
+  const [liked, setLiked] = useState(false);
+  useEffect(() => {
+    const username = localStorage.getItem("username");
+    const liked = async () => {
+      if (coinId && coinInfo.symbol.length > 0 && username) {
+        const docRef = doc(
+          database,
+          "users",
+          JSON.parse(username),
+          "liked",
+          coinId
+        );
+        const docSnap = await getDoc(docRef);
+        console.log(docSnap);
+        if (docSnap.exists()) {
+          console.log("Document data:", docSnap.data());
+          setLiked(true);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          setLiked(false);
+        }
+      } else {
+        setLiked(false);
+      }
+    };
+    liked();
+  }, [coinId, coinInfo]);
+
+  const addToDatabase = async () => {
+    if (user.name) {
+      const data = {
+        name: coinId,
+        sym: coinInfo.symbol,
+      };
+      await setDoc(doc(database, "users", user.name, "liked", coinId), data);
+      setLiked(true);
+    }
+  };
+
+  const deleteFromDatabase = async () => {
+    if (user.name) {
+      await deleteDoc(doc(database, "users", user.name, "liked", coinId));
+      setLiked(false);
+    }
   };
   useEffect(() => {
     setCurrencyExchange(coinInfo.currentPrice.usd);
@@ -336,6 +399,7 @@ const ChartComponent = (props: any) => {
 
       if (cryptoData.length > 0) {
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
+        console.log(cryptoData);
 
         switch (chartType) {
           case "Line":
@@ -632,7 +696,7 @@ const ChartComponent = (props: any) => {
       </VStack>
     );
   }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax]);
-
+  const toast = useToast();
   return (
     <>
       {dataRetrieved ? (
@@ -653,11 +717,43 @@ const ChartComponent = (props: any) => {
             </HStack>
             <HStack>
               <Button>
-                <FaStar size={18} />
+                <FaStar
+                  size={18}
+                  onClick={liked ? deleteFromDatabase : addToDatabase}
+                  fill={liked ? "yellow" : "pink"}
+                />
               </Button>
 
               <Button>
-                <FaShareAlt size={18} />
+                <FaShareAlt
+                  size={18}
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast({
+                      // title: "Copied to clipboard",
+                      // // status: "info",
+                      // variant: "solid",
+                      isClosable: true,
+                      position: "top",
+                      duration: 1000,
+                      render: () => (
+                        <HStack
+                          justifyContent="center"
+                          bg="green"
+                          width="max-content"
+                          margin="20px auto 0 auto"
+                          p=" 10px 20px"
+                          borderRadius="6px"
+                        >
+                          <TbClipboardCheck size={18} />
+                          <Text variant="toast" color="white">
+                            Copied to Clipboard!
+                          </Text>
+                        </HStack>
+                      ),
+                    });
+                  }}
+                />
               </Button>
               <Button>Buy/Sell</Button>
             </HStack>
@@ -987,7 +1083,10 @@ const ChartComponent = (props: any) => {
                   <Text variant="h-3">Currency Converter</Text>
 
                   <InputGroup mb="10px" borderRadius="11px">
-                    <InputLeftAddon>
+                    <InputLeftAddon
+                      minW={{ base: "70px", sm: "100px" }}
+                      justifyContent="center"
+                    >
                       <Text variant="bold-xsmall">
                         {coinInfo.symbol.toUpperCase()}
                       </Text>
@@ -1013,7 +1112,10 @@ const ChartComponent = (props: any) => {
                     </Box>
                   </InputGroup>
                   <InputGroup>
-                    <InputLeftAddon>
+                    <InputLeftAddon
+                      minW={{ base: "70px", sm: "100px" }}
+                      justifyContent="center"
+                    >
                       <Text variant="bold-xsmall">USD</Text>
                     </InputLeftAddon>
                     <Box
@@ -1053,7 +1155,7 @@ const ChartComponent = (props: any) => {
                   </Text>
                   <Button
                     width="100%"
-                    bg={colorMode === "light" ? "#1099fa" : "#4983C6"}
+                    // bg={colorMode === "light" ? "#1099fa" : "#4983C6"}
                     mt="11px"
                     color="white"
                   >
@@ -1071,7 +1173,7 @@ const ChartComponent = (props: any) => {
                       href={coinInfo.url}
                       className="links"
                     >
-                      <Button w="100%">
+                      <Button w="100%" p="20px">
                         <HStack>
                           <TbWorld size={22} />
                           <Text>Website</Text>
@@ -1086,7 +1188,7 @@ const ChartComponent = (props: any) => {
                       href={`https://www.facebook.com/${coinInfo.facebook}`}
                       className="links"
                     >
-                      <Button w="100%">
+                      <Button w="100%" p="20px">
                         <HStack>
                           <BsFacebook size={20} />
                           <Text>Facebook</Text>
@@ -1101,7 +1203,7 @@ const ChartComponent = (props: any) => {
                       href={`https://www.twitter.com/${coinInfo.twitter}`}
                       className="links"
                     >
-                      <Button w="100%">
+                      <Button w="100%" p="20px">
                         <HStack>
                           <AiFillTwitterCircle size="22.5px" />
                           <Text>Twitter</Text>
@@ -1116,7 +1218,7 @@ const ChartComponent = (props: any) => {
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w='100%'>
+                      <Button w="100%">
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
@@ -1301,6 +1403,7 @@ const ChartComponent = (props: any) => {
 };
 
 const Chart = (props: any) => {
+  console.log(props);
   return <ChartComponent {...props}></ChartComponent>;
 };
 

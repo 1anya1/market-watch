@@ -12,15 +12,27 @@ import {
   Text,
   useColorMode,
   Stack,
-  Link,
+  Popover,
+  PopoverTrigger,
+  Portal,
+  PopoverContent,
+  PopoverArrow,
+  PopoverHeader,
+  PopoverCloseButton,
+  PopoverBody,
+  Button,
+  PopoverFooter,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { NumericFormat } from "react-number-format";
 import { SlStar } from "react-icons/sl";
+import { FaStar } from "react-icons/fa";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 import { TiStarFullOutline } from "react-icons/ti";
-import {BsFillBookmarkFill} from 'react-icons/bs'
+import { BsFillBookmarkFill } from "react-icons/bs";
 const TableChartComponent = dynamic(() => import("../components/table-chart"), {
   ssr: false,
 });
@@ -120,9 +132,9 @@ const DataTable = () => {
   const favored = (id: string) => {
     const item = [...favoredItems];
     const index = item.indexOf(id);
-    console.log(index)
+    console.log(index);
     if (index !== -1) {
-      const newArr = item.filter(el=>el!==id)
+      const newArr = item.filter((el) => el !== id);
       setFavored([...newArr]);
     } else setFavored([...item, id]);
   };
@@ -160,9 +172,9 @@ const DataTable = () => {
                   Name
                 </Th>
                 <Th fontSize="12px">Price</Th>
-                {/* <Th fontSize="12px">1h</Th> */}
+                <Th fontSize="12px">1h</Th>
                 <Th fontSize="12px">24h</Th>
-                {/* <Th fontSize="12px">7d</Th> */}
+                <Th fontSize="12px">7d</Th>
                 <Th fontSize="12px">24h Volume</Th>
                 <Th fontSize="12px">Mkt Cap</Th>
                 <Th fontSize="12px">Circulating Supply</Th>
@@ -186,14 +198,15 @@ const DataTable = () => {
                             : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
                         }
                         padding="5px 30px 5px 10px"
+                        // maxW={{ base: "150px", sm: "unset" }}
                       >
-                        <HStack>
-                          <BsFillBookmarkFill
+                        <HStack flexWrap="wrap">
+                          <FaStar
                             onClick={() => favored(coin.id)}
                             fill={
                               favoredItems.indexOf(coin.id) !== -1
                                 ? "yellow"
-                                : "transparent"
+                                : "white"
                             }
                             strokeWidth="1px"
                             stroke={
@@ -209,7 +222,7 @@ const DataTable = () => {
                             backgroundSize="contain"
                           />
 
-                          <Link href={`/crypto/${coin.id}`}>
+                          <Link href={`/coins/${coin.id}`}>
                             <Stack
                               alignItems={{
                                 base: "flex-start",
@@ -242,21 +255,21 @@ const DataTable = () => {
                           prefix="$"
                         />
                       </Td>
-                      {/* <Td padding="5px 10px">
+                      <Td padding="5px 10px">
                         <PercentChange
                           value={coin.price_change_percentage_1h_in_currency}
                         />
-                      </Td> */}
+                      </Td>
                       <Td padding="5px 10px">
                         <PercentChange
                           value={coin.price_change_percentage_24h}
                         />
                       </Td>
-                      {/* <Td padding="5px 10px">
+                      <Td padding="5px 10px">
                         <PercentChange
                           value={coin.price_change_percentage_7d_in_currency}
                         />
-                      </Td> */}
+                      </Td>
                       <Td padding="5px 10px">
                         <FormattedNumber value={coin.total_volume} prefix="$" />
                       </Td>
@@ -271,11 +284,34 @@ const DataTable = () => {
                         />
                       </Td>
                       <Td padding="5px 10px">
-                        <TableChartComponent
-                          id={coin.id}
-                          change={coin.price_change_percentage_7d_in_currency}
-                          data={coin.sparkline_in_7d?.price}
-                        />
+                        <HStack spacing="0" gap="20px">
+                          <TableChartComponent
+                            id={coin.id}
+                            change={coin.price_change_percentage_7d_in_currency}
+                            data={coin.sparkline_in_7d?.price}
+                          />
+                          <Popover placement="bottom-start">
+                            <PopoverTrigger>
+                              <Box>
+                                <BiDotsVerticalRounded size={20} />
+                              </Box>
+                            </PopoverTrigger>
+                            <div className="chakra-portal chart-popover">
+                              <PopoverContent
+                                width="max-content"
+                                // _focusVisible={{ boxShadow: "unset" }}
+                              >
+                                <PopoverArrow />
+                                <PopoverBody p=" 10px 20px">
+                                  <Text>View Charts</Text>
+                                  <Link passHref href={`/historic-data/${coin.id}`}>
+                                    <Text>Historic Data</Text>
+                                  </Link>
+                                </PopoverBody>
+                              </PopoverContent>
+                            </div>
+                          </Popover>
+                        </HStack>
                       </Td>
                     </Tr>
                   );

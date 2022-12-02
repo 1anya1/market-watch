@@ -109,3 +109,7 @@ a {
 *::-webkit-scrollbar {
   display: none;
 }
+.chart-popover {
+  position: fixed;
+  z-index: 10;
+}

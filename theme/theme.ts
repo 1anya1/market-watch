@@ -11,16 +11,36 @@ const theme = extendTheme({
     body: `'Manrope', sans-serif;`,
     // body: `'Montserrat', sans-serif`,
   },
+  colors: {
+    green: "#039F65",
+    red: "#F13D3D",
+    buttons: {
+      50: "#e4f3ff",
+      100: "#c1d9f2",
+      200: "#9cbee3",
+      300: "#76a4d5",
+      400: "#5189c8",
+      500: "#3770ae",
+      600: "#295789",
+      700: "#1b3e63",
+      800: "#0b253e",
+      900: "#000d1b",
+    },
+    trial: {
+      blue: "#000d1b",
+      500: "#3770ae",
+    },
+  },
   styles: {
     global: {
       // styles for the `body`
       body: (props: StyleFunctionProps) => ({
         padding: {
-          base: "0 4%",
-          sm: "0 3%",
-          md: "0 4%",
+          base: "0 4% !important",
+          sm: "0 3% !important",
+          md: "0 4% !important",
         },
-        maxW: "2200px",
+        maxW: "1800px !important",
         m: "0 auto",
 
         // backgroundColor: props.colorMode === "dark" ? "#343444" : "#ebebeb",
@@ -37,6 +57,7 @@ const theme = extendTheme({
   },
   breakpoints: {
     xs: "320px",
+    ms: "490px",
   },
   components: {
     InputLeftAddon: {
@@ -70,8 +91,13 @@ const theme = extendTheme({
           fontSize: { base: "12px", sm: "16px" },
           fontWeight: "600",
         },
+
         "text-bold": {
           fontSize: "14px",
+          fontWeight: "700",
+        },
+        "med-text-bold": {
+          fontSize: "18px",
           fontWeight: "700",
         },
         "small-bold": {
@@ -85,6 +111,10 @@ const theme = extendTheme({
         "bold-xsmall": {
           fontSize: { base: "12px", sm: "14px", md: "18px" },
           fontWeight: 700,
+        },
+        toast: {
+          fontSize: "12px",
+          fontWeight: 600,
         },
         body: {
           fontSize: { base: "16px", sm: "18px" },
@@ -112,9 +142,12 @@ const theme = extendTheme({
       },
     },
     VStack: {
-      baseStyle: {
-        margin: "0 !important",
-        spacing: "0px",
+      variants: {
+        "input-fields": {
+          spacing: 0,
+          gap: "4px",
+          width: "100%",
+        },
       },
     },
     Container: {
@@ -146,15 +179,30 @@ const theme = extendTheme({
         },
       }),
     },
+
     Button: {
       defaultProps: {
-        colorScheme: "gray", // default is gray
+        // bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
+        // colorScheme: "buttons", // default is gray
+        // bgColor: (props: StyleFunctionProps) => ({
+        //   bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
+        // }),
+
+        height: "32px",
+        size: "sm",
+      },
+      variants: {
+        authentication: {
+          border: "unset",
+          bg: "none",
+          outline: "none",
+          borderRadius: "0",
+        },
+        blue: (props: StyleFunctionProps) => ({
+          bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
+        }),
       },
     },
-  },
-  colors: {
-    green: "#039F65",
-    red: "#F13D3D",
   },
 });
 export default theme;
