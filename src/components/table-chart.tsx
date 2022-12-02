@@ -1,7 +1,9 @@
 import { createChart, ColorType } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 import { Box, useColorMode } from "@chakra-ui/react";
+
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
@@ -15,6 +17,7 @@ const colors = {
 
 const TableChartComponent = (props: any) => {
   const { id, change, data } = props;
+  const { user } = useAuth();
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [cryptoData, setData] = useState<any[]>([]);

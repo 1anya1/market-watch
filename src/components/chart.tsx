@@ -35,6 +35,7 @@ import {
   Firestore,
   deleteDoc,
 } from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext";
 
 import {
   Box,
@@ -63,14 +64,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { useAuth } from "../../context/AuthContext";
-
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
 const ChartComponent = (props: any) => {
   const { user } = useAuth();
-  console.log({ user });
+
   const { coinId, individualPage } = props;
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const toolTipRef = useRef<HTMLDivElement>(null);
@@ -138,16 +137,9 @@ const ChartComponent = (props: any) => {
   };
   const [liked, setLiked] = useState(false);
   useEffect(() => {
-    const username = localStorage.getItem("username");
     const liked = async () => {
-      if (coinId && coinInfo.symbol.length > 0 && username) {
-        const docRef = doc(
-          database,
-          "users",
-          JSON.parse(username),
-          "liked",
-          coinId
-        );
+      if (coinId && coinInfo.symbol.length > 0 && user.name) {
+        const docRef = doc(database, "users", user.name, "liked", coinId);
         const docSnap = await getDoc(docRef);
         console.log(docSnap);
         if (docSnap.exists()) {
@@ -163,7 +155,7 @@ const ChartComponent = (props: any) => {
       }
     };
     liked();
-  }, [coinId, coinInfo]);
+  }, [coinId, coinInfo, user]);
 
   const addToDatabase = async () => {
     if (user.name) {
@@ -863,6 +855,7 @@ const ChartComponent = (props: any) => {
                   <Box
                     ref={chartContainerRef}
                     height={{ base: "200px", lg: "300px" }}
+                    
                   >
                     <Text
                       fontSize="10px"

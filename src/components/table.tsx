@@ -33,6 +33,20 @@ import { FaStar } from "react-icons/fa";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { TiStarFullOutline } from "react-icons/ti";
 import { BsFillBookmarkFill } from "react-icons/bs";
+import { useAuth } from "../../context/AuthContext";
+import { database } from "../../context/clientApp";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+  addDoc,
+  collection,
+  getDocs,
+  Firestore,
+  deleteDoc,
+} from "firebase/firestore";
+
 const TableChartComponent = dynamic(() => import("../components/table-chart"), {
   ssr: false,
 });
@@ -82,6 +96,7 @@ const DataTable = () => {
   const lastPage = 530;
   const { colorMode } = useColorMode();
   const [favoredItems, setFavored] = useState<any[]>([]);
+  const { user } = useAuth();
 
   // useEffect(() => {
   //   fetch("https://api.coingecko.com/api/v3/coins/list")
@@ -103,7 +118,6 @@ const DataTable = () => {
           throw new Error("Something went wrong");
         })
         .then((data) => {
-          console.log(data);
           setData(data);
         })
         .catch((error) => {
@@ -132,15 +146,52 @@ const DataTable = () => {
   const favored = (id: string) => {
     const item = [...favoredItems];
     const index = item.indexOf(id);
-    console.log(index);
     if (index !== -1) {
       const newArr = item.filter((el) => el !== id);
       setFavored([...newArr]);
     } else setFavored([...item, id]);
   };
+
+  const [liked, setLiked] = useState<string[] | []>([]);
   useEffect(() => {
-    console.log(favoredItems);
-  }, [favoredItems]);
+    const liked = async () => {
+      if (user.name) {
+        const arr: string[] = [];
+        const docRef = collection(database, "users", user.name, "liked");
+        const docSnap = await getDocs(docRef);
+        if (docSnap.docs.length > 0) {
+          docSnap.forEach((doc) => {
+            arr.push(doc.id);
+          });
+          setLiked(arr);
+        } else {
+          console.log("No such document!");
+        }
+      } else {
+        console.log("not happening");
+      }
+    };
+    liked();
+  }, [user]);
+  const deleteFromDatabase = async (id: string) => {
+    if (user.name) {
+      await deleteDoc(doc(database, "users", user.name, "liked", id));
+      const state = [...liked];
+      const newState = state.filter((el) => el !== id);
+      setLiked(newState);
+    }
+  };
+  const addToDatabase = async (name: any, sym: any) => {
+    if (user.name) {
+      const data = {
+        name,
+        sym,
+      };
+      await setDoc(doc(database, "users", user.name, "liked", name), data);
+      const newState = [...liked, name];
+      setLiked(newState);
+    }
+  };
   if (data.length > 0) {
     return (
       <>
@@ -202,11 +253,13 @@ const DataTable = () => {
                       >
                         <HStack flexWrap="wrap">
                           <FaStar
-                            onClick={() => favored(coin.id)}
+                            onClick={() =>
+                              liked.indexOf(coin.id) !== -1
+                                ? deleteFromDatabase(coin.id)
+                                : addToDatabase(coin.id, coin.symbol)
+                            }
                             fill={
-                              favoredItems.indexOf(coin.id) !== -1
-                                ? "yellow"
-                                : "white"
+                              liked.indexOf(coin.id) !== -1 ? "yellow" : "white"
                             }
                             strokeWidth="1px"
                             stroke={
@@ -304,7 +357,10 @@ const DataTable = () => {
                                 <PopoverArrow />
                                 <PopoverBody p=" 10px 20px">
                                   <Text>View Charts</Text>
-                                  <Link passHref href={`/historic-data/${coin.id}`}>
+                                  <Link
+                                    passHref
+                                    href={`/historic-data/${coin.id}`}
+                                  >
                                     <Text>Historic Data</Text>
                                   </Link>
                                 </PopoverBody>

@@ -201,6 +201,44 @@ const theme = extendTheme({
         blue: (props: StyleFunctionProps) => ({
           bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
         }),
+        hollow: {
+          bg: "unset",
+          border: "1px solid whites !important",
+        },
+      },
+    },
+    Menu: {
+      baseStyle: {
+        list: {
+          fontWeight: "700",
+          bg: "#081c3b",
+          minW: "max-content",
+        },
+      },
+    },
+    Popover: {
+      baseStyle: {
+        content: {
+          fontWeight: "700",
+          bg: "#133364",
+          minW: "max-content",
+          outline: "unset",
+          "--popper-bg": "#133364",
+          _focus_visible: {
+            boxShadow: "none !important",
+            outline: "none",
+          },
+        },
+        body: {
+          display: "flex",
+          flexDir:'column',
+          spacing:'0',
+          padding:'10px 20px',
+          gap:'6px',
+          _focus_visible: {
+            outline: "none",
+          },
+        },
       },
     },
   },

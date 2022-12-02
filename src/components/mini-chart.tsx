@@ -33,10 +33,9 @@ const MiniChart = (props: any) => {
     left: "unset",
   });
   const { colorMode } = useColorMode();
-  const { data } = props;
+  const { data, setChartFeedback } = props;
   const [currWidth, setWidth] = useState(0);
 
-  data.sort((a: { time: number }, b: { time: number }) => a.time - b.time);
   useEffect(() => {
     console.log(data[0]);
     const percent = (data[data.length - 1].value * 100) / data[0].value - 100;
@@ -120,8 +119,8 @@ const MiniChart = (props: any) => {
           borderVisible: false,
           barSpacing: 20,
           minBarSpacing: 2,
-          timeVisible:true,
-          tickMarkFormatter: (time: number, tickMarkType=1) => {
+          timeVisible: true,
+          tickMarkFormatter: (time: number, tickMarkType = 1) => {
             const hours = new Date(time * 1000);
             const withPmAm = hours.toLocaleTimeString("en-US", {
               // en-US can be set to 'default' to use user's browser settings
@@ -162,6 +161,7 @@ const MiniChart = (props: any) => {
               crosshairMarkerRadius: 6,
             });
             newSeries.setData(data);
+            setChartFeedback(true);
             break;
 
           case "Candle":
@@ -175,6 +175,7 @@ const MiniChart = (props: any) => {
             });
 
             newSeries.setData(data);
+            setChartFeedback(true);
             break;
         }
 
@@ -347,7 +348,7 @@ const MiniChart = (props: any) => {
 
   return (
     <>
-      {data.length > 0 && (
+      {data.length > 0 ? (
         <Box>
           <HStack>
             <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
@@ -408,7 +409,7 @@ const MiniChart = (props: any) => {
               </Menu>
             </Box>
           </HStack>
-          <Box ref={chartContainerRef} height={{ base: "400px", xl: "500px" }}>
+          <Box ref={chartContainerRef} height={{ base: "300px", xl: "400px" }}>
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
               Powered by CoinGecko API
             </Text>
@@ -430,6 +431,8 @@ const MiniChart = (props: any) => {
             {tooltipDate}
           </Box>
         </Box>
+      ) :(
+        <Text>Hello there</Text>
       )}
     </>
   );
