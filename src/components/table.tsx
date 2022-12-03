@@ -143,14 +143,14 @@ const DataTable = () => {
       return arr;
     }
   };
-  const favored = (id: string) => {
-    const item = [...favoredItems];
-    const index = item.indexOf(id);
-    if (index !== -1) {
-      const newArr = item.filter((el) => el !== id);
-      setFavored([...newArr]);
-    } else setFavored([...item, id]);
-  };
+  // const favored = (id: string) => {
+  //   const item = [...favoredItems];
+  //   const index = item.indexOf(id);
+  //   if (index !== -1) {
+  //     const newArr = item.filter((el) => el !== id);
+  //     setFavored([...newArr]);
+  //   } else setFavored([...item, id]);
+  // };
 
   const [liked, setLiked] = useState<string[] | []>([]);
   useEffect(() => {
@@ -236,138 +236,143 @@ const DataTable = () => {
             </Thead>
             <Tbody>
               {data.map((coin, idx) => {
-                if (idx <= 25);
-                return (
-                  <Tr key={coin.id} borderTop="unset">
-                    <Td
-                      position="sticky"
-                      left="-1"
-                      zIndex="2"
-                      bg={
-                        colorMode === "light"
-                          ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
-                          : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
-                      }
-                      padding="5px 30px 5px 10px"
-                      // maxW={{ base: "150px", sm: "unset" }}
-                    >
-                      <HStack flexWrap="wrap">
-                        <FaStar
-                          onClick={() =>
-                            liked.indexOf(coin.id as never) !== -1
-                              ? deleteFromDatabase(coin.id)
-                              : addToDatabase(coin.id, coin.symbol)
-                          }
-                          fill={
-                            liked.indexOf(coin.id as never) !== -1
-                              ? "yellow"
-                              : "white"
-                          }
-                          strokeWidth="1px"
-                          stroke={
-                            favoredItems.indexOf(coin.id as never) !== -1
-                              ? "yellow"
-                              : "white"
-                          }
-                        />
-                        <Box
-                          h="25px"
-                          w="25px"
-                          backgroundImage={coin.image}
-                          backgroundSize="contain"
-                        />
+                if (idx <= 25)
+                  return (
+                    <Tr key={coin.id} borderTop="unset">
+                      <Td
+                        position="sticky"
+                        left="-1"
+                        zIndex="2"
+                        bg={
+                          colorMode === "light"
+                            ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
+                            : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
+                        }
+                        padding="5px 30px 5px 10px"
+                        // maxW={{ base: "150px", sm: "unset" }}
+                      >
+                        <HStack flexWrap="wrap">
+                          <FaStar
+                            onClick={() =>
+                              liked.indexOf(coin.id as never) !== -1
+                                ? deleteFromDatabase(coin.id)
+                                : addToDatabase(coin.id, coin.symbol)
+                            }
+                            fill={
+                              liked.indexOf(coin.id as never) !== -1
+                                ? "yellow"
+                                : "white"
+                            }
+                            strokeWidth="1px"
+                            stroke={
+                              favoredItems.indexOf(coin.id as never) !== -1
+                                ? "yellow"
+                                : "white"
+                            }
+                          />
+                          <Box
+                            h="25px"
+                            w="25px"
+                            backgroundImage={coin.image}
+                            backgroundSize="contain"
+                          />
 
-                        <Link href={`/coins/${coin.id}`}>
-                          <Stack
-                            alignItems={{
-                              base: "flex-start",
-                              sm: "baseline",
-                            }}
-                            flexDir={{ base: "column", sm: "row" }}
-                            columnGap="8px"
-                          >
-                            <Text
-                              fontSize="14px"
-                              fontWeight="bold"
-                              margin="0 !important"
+                          <Link href={`/coins/${coin.id}`}>
+                            <Stack
+                              alignItems={{
+                                base: "flex-start",
+                                sm: "baseline",
+                              }}
+                              flexDir={{ base: "column", sm: "row" }}
+                              columnGap="8px"
                             >
-                              {coin.name}
-                            </Text>
-                            <Text
-                              fontSize="10px"
-                              fontWeight="medium"
-                              margin="0 !important"
-                            >
-                              {coin.symbol.toUpperCase()}
-                            </Text>
-                          </Stack>
-                        </Link>
-                      </HStack>
-                    </Td>
-                    <Td padding="5px 10px">
-                      <FormattedNumber value={coin.current_price} prefix="$" />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <PercentChange
-                        value={coin.price_change_percentage_1h_in_currency}
-                      />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <PercentChange value={coin.price_change_percentage_24h} />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <PercentChange
-                        value={coin.price_change_percentage_7d_in_currency}
-                      />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <FormattedNumber value={coin.total_volume} prefix="$" />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <FormattedNumber value={coin.market_cap} prefix="$" />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <FormattedNumber
-                        value={coin?.circulating_supply?.toFixed() || null}
-                        prefix=""
-                        // sufffix={` ${coin.symbol.toUpperCase()}`}
-                      />
-                    </Td>
-                    <Td padding="5px 10px">
-                      <HStack spacing="0" gap="20px">
-                        <TableChartComponent
-                          id={coin.id}
-                          change={coin.price_change_percentage_7d_in_currency}
-                          data={coin.sparkline_in_7d?.price}
+                              <Text
+                                fontSize="14px"
+                                fontWeight="bold"
+                                margin="0 !important"
+                              >
+                                {coin.name}
+                              </Text>
+                              <Text
+                                fontSize="10px"
+                                fontWeight="medium"
+                                margin="0 !important"
+                              >
+                                {coin.symbol.toUpperCase()}
+                              </Text>
+                            </Stack>
+                          </Link>
+                        </HStack>
+                      </Td>
+                      <Td padding="5px 10px">
+                        <FormattedNumber
+                          value={coin.current_price}
+                          prefix="$"
                         />
-                        <Popover placement="bottom-start">
-                          <PopoverTrigger>
-                            <Box>
-                              <BiDotsVerticalRounded size={20} />
-                            </Box>
-                          </PopoverTrigger>
-                          <div className="chakra-portal chart-popover">
-                            <PopoverContent
-                              width="max-content"
-                              // _focusVisible={{ boxShadow: "unset" }}
-                            >
-                              <PopoverArrow />
-                              <PopoverBody p=" 10px 20px">
-                                <Text>View Charts</Text>
-                                <Link
-                                  passHref
-                                  href={`/historic-data/${coin.id}`}
-                                >
-                                  <Text>Historic Data</Text>
-                                </Link>
-                              </PopoverBody>
-                            </PopoverContent>
-                          </div>
-                        </Popover>
-                      </HStack>
-                    </Td>
-                  </Tr>
-                );
+                      </Td>
+                      <Td padding="5px 10px">
+                        <PercentChange
+                          value={coin.price_change_percentage_1h_in_currency}
+                        />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <PercentChange
+                          value={coin.price_change_percentage_24h}
+                        />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <PercentChange
+                          value={coin.price_change_percentage_7d_in_currency}
+                        />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <FormattedNumber value={coin.total_volume} prefix="$" />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <FormattedNumber value={coin.market_cap} prefix="$" />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <FormattedNumber
+                          value={coin?.circulating_supply?.toFixed() || null}
+                          prefix=""
+                          // sufffix={` ${coin.symbol.toUpperCase()}`}
+                        />
+                      </Td>
+                      <Td padding="5px 10px">
+                        <HStack spacing="0" gap="20px">
+                          <TableChartComponent
+                            id={coin.id}
+                            change={coin.price_change_percentage_7d_in_currency}
+                            data={coin.sparkline_in_7d?.price}
+                          />
+                          <Popover placement="bottom-start">
+                            <PopoverTrigger>
+                              <Box>
+                                <BiDotsVerticalRounded size={20} />
+                              </Box>
+                            </PopoverTrigger>
+                            <div className="chakra-portal chart-popover">
+                              <PopoverContent
+                                width="max-content"
+                                // _focusVisible={{ boxShadow: "unset" }}
+                              >
+                                <PopoverArrow />
+                                <PopoverBody p=" 10px 20px">
+                                  <Text>View Charts</Text>
+                                  <Link
+                                    passHref
+                                    href={`/historic-data/${coin.id}`}
+                                  >
+                                    <Text>Historic Data</Text>
+                                  </Link>
+                                </PopoverBody>
+                              </PopoverContent>
+                            </div>
+                          </Popover>
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  );
                 return undefined;
               })}
             </Tbody>
