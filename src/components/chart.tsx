@@ -16,8 +16,8 @@ import { RiSettings3Fill } from "react-icons/ri";
 import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaStar, FaShareAlt, FaRegNewspaper } from "react-icons/fa";
-import { FiLink } from "react-icons/fi";
-import { VscGithub } from "react-icons/vsc";
+// import { Fia } from "react-icons/fi";
+// import { VscGithub } from "react-icons/vsc";
 import { FaReddit, FaGithub } from "react-icons/fa";
 import { BsFacebook } from "react-icons/bs";
 import { AiFillTwitterCircle } from "react-icons/ai";
@@ -50,7 +50,6 @@ import {
   Image,
   Stack,
   VStack,
-  Link,
   Tabs,
   TabList,
   Tab,
@@ -62,7 +61,9 @@ import {
   Container,
   Progress,
   useToast,
+  Collapse,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
@@ -708,15 +709,16 @@ const ChartComponent = (props: any) => {
               </Text>
             </HStack>
             <HStack>
-              <Button>
+              <Button variant='medium'>
+                
                 <FaStar
                   size={18}
                   onClick={liked ? deleteFromDatabase : addToDatabase}
-                  fill={liked ? "yellow" : "pink"}
+                  fill={liked ? "yellow" : "white"}
                 />
               </Button>
 
-              <Button>
+              <Button variant='medium'>
                 <FaShareAlt
                   size={18}
                   onClick={() => {
@@ -747,7 +749,7 @@ const ChartComponent = (props: any) => {
                   }}
                 />
               </Button>
-              <Button>Buy/Sell</Button>
+              <Button variant='medium'>Buy/Sell</Button>
             </HStack>
           </HStack>
 
@@ -855,7 +857,6 @@ const ChartComponent = (props: any) => {
                   <Box
                     ref={chartContainerRef}
                     height={{ base: "200px", lg: "300px" }}
-                    
                   >
                     <Text
                       fontSize="10px"
@@ -967,6 +968,11 @@ const ChartComponent = (props: any) => {
                   </Stack>
                 </Container>
               )}
+              <Link href={`/historic-data/${coinId}`} passHref>
+                <Button width="100%" variant="large">
+                  View Historic Prices
+                </Button>
+              </Link>
 
               {individualPage ? (
                 <Container variant="box-component" h="max-content">
@@ -974,36 +980,41 @@ const ChartComponent = (props: any) => {
                   {individualPage && coinInfo?.description && (
                     <Box>
                       <Box position="relative">
-                        <Text
-                          maxH={!viewAllCoin ? "500px" : "100%"}
-                          dangerouslySetInnerHTML={{
-                            __html: coinInfo.description,
-                          }}
-                          textOverflow="ellipsis"
-                          overflow="hidden"
-                          whiteSpace="break-spaces"
-                          lineHeight="1.5"
-                          transition="all .3s ease-in-out"
-                          height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
-                        />
-                        <Box
-                          position="absolute"
-                          bottom="0"
-                          background={
-                            !viewAllCoin
-                              ? colorMode === "light"
-                                ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
-                                : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
-                              : "unset"
-                          }
-                          h="150px"
-                          w="100%"
-                        />
+                        <Collapse startingHeight={140} in={viewAllCoin}>
+                          <Text
+                            maxH={!viewAllCoin ? "500px" : "100%"}
+                            dangerouslySetInnerHTML={{
+                              __html: coinInfo.description,
+                            }}
+                            textOverflow="ellipsis"
+                            overflow="hidden"
+                            whiteSpace="break-spaces"
+                            lineHeight="1.5"
+                            transition="all .3s ease-in-out"
+                            height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
+                          />
+
+                          <Box
+                            position="absolute"
+                            bottom="0"
+                            background={
+                              !viewAllCoin
+                                ? colorMode === "light"
+                                  ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
+                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
+                                : "unset"
+                            }
+                            h="150px"
+                            w="100%"
+                          />
+                        </Collapse>
                       </Box>
 
                       <Button
                         onClick={() => setViewAllCoin(!viewAllCoin)}
                         mt="20px"
+                        width="100%"
+                        variant="large"
                       >
                         {!viewAllCoin ? "View More" : "View Less"}
                       </Button>
@@ -1147,92 +1158,92 @@ const ChartComponent = (props: any) => {
                     This is not real time data. To use for approximation only*
                   </Text>
                   <Button
-                    width="100%"
-                    // bg={colorMode === "light" ? "#1099fa" : "#4983C6"}
-                    mt="11px"
-                    color="white"
+                   variant='large'
+                   width='100%'
+                   mt='10px'
                   >
+
                     Buy
                   </Button>
                 </Container>
               )}
               <Container variant="box-component" width="100%" h="max-content">
-                <Text variant="h-3"> Links</Text>
+                <Text variant="h-3">Links</Text>
                 <HStack spacing={0} flexWrap="wrap" gap="11px">
                   <VStack w={{ base: "100%", sm: "48.5%" }}>
-                    <Link
+                    <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.url}
                       className="links"
                     >
-                      <Button w="100%" p="20px">
+                      <Button w="100%" p="20px" variant='medium'>
                         <HStack>
                           <TbWorld size={22} />
                           <Text>Website</Text>
                         </HStack>
                       </Button>
-                    </Link>
+                    </a>
                   </VStack>
                   <VStack w={{ base: "100%", sm: "48.5%" }}>
-                    <Link
+                    <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href={`https://www.facebook.com/${coinInfo.facebook}`}
                       className="links"
                     >
-                      <Button w="100%" p="20px">
+                      <Button w="100%" p="20px" variant='medium'>
                         <HStack>
                           <BsFacebook size={20} />
                           <Text>Facebook</Text>
                         </HStack>
                       </Button>
-                    </Link>
+                    </a>
                   </VStack>
                   <VStack w={{ base: "100%", sm: "48.5%" }}>
-                    <Link
+                    <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href={`https://www.twitter.com/${coinInfo.twitter}`}
                       className="links"
                     >
-                      <Button w="100%" p="20px">
+                      <Button w="100%" p="20px" variant='medium'>
                         <HStack>
                           <AiFillTwitterCircle size="22.5px" />
                           <Text>Twitter</Text>
                         </HStack>
                       </Button>
-                    </Link>
+                    </a>
                   </VStack>
                   <VStack w={{ base: "100%", sm: "48.5%" }}>
-                    <Link
+                    <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w="100%">
+                      <Button w="100%" variant='medium'>
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
                         </HStack>
                       </Button>
-                    </Link>
+                    </a>
                   </VStack>
                   <VStack w={{ base: "100%", sm: "48.5%" }}>
-                    <Link
+                    <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href={coinInfo.github}
                       className="links"
                     >
-                      <Button w="100%">
+                      <Button w="100%" variant='medium'>
                         <HStack>
                           <FaGithub size="20px" />
                           <Text>Github</Text>
                         </HStack>
                       </Button>
-                    </Link>
+                    </a>
                   </VStack>
                 </HStack>
               </Container>
@@ -1312,7 +1323,7 @@ const ChartComponent = (props: any) => {
                               justifyContent="center"
                               alignItems="flex-start"
                             >
-                              <Link href={el.link} isExternal>
+                              <a href={el.link}>
                                 <Text variant="h-4" fontWeight="700" pb="6px">
                                   {50 < el.title.length
                                     ? `${el.title
@@ -1332,7 +1343,7 @@ const ChartComponent = (props: any) => {
                                 <Text fontWeight="bold">
                                   {dateParse(el.publication_time)}
                                 </Text>
-                              </Link>
+                              </a>
                               <Text
                                 lineHeight="1.5"
                                 fontSize="16px"

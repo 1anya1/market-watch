@@ -33,7 +33,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
         <Box>
           <Link href="/" passHref>
             <Box>
-            <Logo />
+              <Logo />
             </Box>
           </Link>
         </Box>
@@ -96,6 +96,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           {!user.name ? (
             <>
               <Button
+                variant="medium"
                 onClick={() => {
                   onOpen();
                   setUserLogin("log-in");
@@ -104,6 +105,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 Log In
               </Button>
               <Button
+                variant="medium"
                 onClick={() => {
                   onOpen();
                   setUserLogin("sign-up");

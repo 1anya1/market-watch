@@ -14,21 +14,9 @@ const theme = extendTheme({
   colors: {
     green: "#039F65",
     red: "#F13D3D",
-    buttons: {
-      50: "#e4f3ff",
-      100: "#c1d9f2",
-      200: "#9cbee3",
-      300: "#76a4d5",
-      400: "#5189c8",
-      500: "#3770ae",
-      600: "#295789",
-      700: "#1b3e63",
-      800: "#0b253e",
-      900: "#000d1b",
-    },
-    trial: {
-      blue: "#000d1b",
-      500: "#3770ae",
+    button: {
+      200: "#ffffff14",
+      500: "#dee8f3",
     },
   },
   styles: {
@@ -183,11 +171,11 @@ const theme = extendTheme({
     Button: {
       defaultProps: {
         // bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
-        // colorScheme: "buttons", // default is gray
+
         // bgColor: (props: StyleFunctionProps) => ({
         //   bgColor: props.colorMode === "light" ? "#cae5ff" : "#295789",
         // }),
-
+        // color: props.colorMode === "light" ? "black" : "white",
         height: "32px",
         size: "sm",
       },
@@ -205,6 +193,14 @@ const theme = extendTheme({
           bg: "unset",
           border: "1px solid whites !important",
         },
+        large: (props: StyleFunctionProps) => ({
+          height: "40px",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#3b547d",
+        }),
+        medium: (props: StyleFunctionProps) => ({
+          height: "32px",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#3b547d",
+        }),
       },
     },
     Menu: {
@@ -217,29 +213,30 @@ const theme = extendTheme({
       },
     },
     Popover: {
-      baseStyle: {
+      baseStyle:(props: StyleFunctionProps) => ({ 
         content: {
           fontWeight: "700",
-          bg: "#133364",
+          bg: props.colorMode === "light" ? "#e7ecf1" : "#133364",
           minW: "max-content",
-          outline: "unset",
+          outline: "none",
           "--popper-bg": "#133364",
           _focus_visible: {
             boxShadow: "none !important",
-            outline: "none",
+            outline: "none !important",
           },
         },
         body: {
           display: "flex",
-          flexDir:'column',
-          spacing:'0',
-          padding:'10px 20px',
-          gap:'6px',
+          flexDir: "column",
+          spacing: "0",
+          padding: "10px 20px",
+          gap: "6px",
           _focus_visible: {
-            outline: "none",
+            boxShadow: "none !important",
+            outline: "none !important",
           },
         },
-      },
+      }),
     },
   },
 });

@@ -65,6 +65,7 @@ a {
 }
 .links {
   width: 100%;
+  color: var(--text-color);
 }
 .links:hover {
   text-decoration: unset !important;

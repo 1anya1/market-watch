@@ -22,7 +22,7 @@ const SignOut = (props: any) => {
       console.log(error.message);
     }
   };
-  return <Button onClick={handleLogout}>Sign Out</Button>;
+  return <Button onClick={handleLogout} variant='medium'>Sign Out</Button>;
 };
 
 export default SignOut;

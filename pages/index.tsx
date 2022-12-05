@@ -19,170 +19,10 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";
 import { BsFillTriangleFill } from "react-icons/bs";
+import { useAuth } from "../context/AuthContext";
 
 import "swiper/css";
 import "swiper/css/pagination";
-
-// type FormData = {
-//   name: string;
-//   email: string;
-//   password: string;
-// };
-
-// const SignUp = (props: any) => {
-//   const { userActive, setUserActive, setUserInfo } = props;
-//   const {
-//     register,
-//     setValue,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm<FormData>();
-//   const onSubmit = handleSubmit(async (data) => {
-//     const { name, email, password } = data;
-//     const databaseVerification = async () => {
-//       const docRef = doc(database, "users", name);
-//       const docSnap = await getDoc(docRef);
-//       if (docSnap.exists()) {
-//         console.log("the user already exists");
-//       } else {
-//         console.log("No such document!");
-
-//         const auth = getAuth();
-//         try {
-//           const { user } = await createUserWithEmailAndPassword(
-//             auth,
-//             email,
-//             password
-//           );
-//           await updateProfile(user, { displayName: name });
-//           await setDoc(doc(database, "users", name), {
-//             username: name,
-//             email: email,
-//             // uid,
-//           });
-//         } finally {
-//           await signInWithEmailAndPassword(auth, email, password)
-//             .then(async (userCredential) => {
-//               console.log(userCredential);
-//               const user = userCredential.user;
-//               console.log("successfully signed in");
-//               setUserActive(true);
-//               setUserInfo({ username: name });
-//               localStorage.setItem("username", JSON.stringify(name));
-//             })
-//             .catch((error) => {
-//               const errorCode = error.code;
-//               const errorMessage = error.message;
-//               console.log(errorCode, errorMessage);
-//             });
-//         }
-//       }
-//     };
-//     databaseVerification();
-//   });
-
-//   return (
-//     <form onSubmit={onSubmit}>
-//       <VStack spacing={0} gap="11px">
-//         <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Name</FormLabel>
-//           <Input variant="flushed" {...register("name")} />
-//         </VStack>
-//         <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Email</FormLabel>
-//           <Input variant="flushed" {...register("email")} />
-//         </VStack>
-//         <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Password</FormLabel>
-//           <Input variant="flushed" {...register("password")} />
-//         </VStack>
-//         <Button type="submit">Submit</Button>
-//       </VStack>
-//     </form>
-//   );
-// };
-
-// const SignIn = (props: any) => {
-//   const { setUserActive, setUserInfo } = props;
-//   const {
-//     register,
-//     setValue,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm<FormData>();
-
-//   const onSubmit = handleSubmit((data) => {
-//     const { email, password } = data;
-//     const auth = getAuth();
-
-//     signInWithEmailAndPassword(auth, email, password)
-//       .then((userCredential) => {
-//         // Signed in
-//         const user: any = userCredential.user;
-//         console.log({ user });
-//         setUserActive(true);
-//         // setUserInfo({ username: name, uid: userCredential.user.uid });
-//         localStorage.setItem("username", JSON.stringify(user.displayName));
-//       })
-//       .catch((error) => {
-//         const errorCode = error.code;
-//         const errorMessage = error.message;
-//         console.log(errorCode, errorMessage);
-//       });
-//   });
-
-//   return (
-//     <form onSubmit={onSubmit}>
-//       <VStack spacing={0} gap="11px">
-//         {/* <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Name</FormLabel>
-//           <Input {...register("name")} />
-//         </VStack> */}
-//         <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Email</FormLabel>
-//           <Input {...register("email")} />
-//         </VStack>
-//         <VStack spacing={0} gap="4px" width="100%">
-//           <FormLabel margin="0">Password</FormLabel>
-//           <Input {...register("password")} />
-//         </VStack>
-//         <Button type="submit">Submit</Button>
-//       </VStack>
-//     </form>
-//   );
-// };
-
-// const SignOut = (props: any) => {
-//   const [userIn, setUsername] = useState<null | string>(null);
-//   useEffect(() => {
-//     const username = localStorage.getItem("username");
-//     if (username) {
-//       setUsername(username);
-//     }
-//   }, []);
-//   console.log("here");
-//   const { userActive, setUserActive, setUserInfo } = props;
-
-//   const sOut = () => {
-//     const auth = getAuth();
-
-//     signOut(auth)
-//       .then(() => {
-//         console.log("success");
-//         // Sign-out successful.
-//         setUserActive(false);
-//         setUserInfo({ username: "", uid: "" });
-//         localStorage.removeItem("username");
-//         localStorage.removeItem("loggedIn");
-//         localStorage.removeToken("token");
-//       })
-//       .catch((error) => {
-//         // An error happened.
-//         console.log("cant sign out ????");
-//       });
-//   };
-//   return userActive || userIn ? <Button onClick={sOut}>Sign Out</Button> : null;
-// };
 
 const Home = () => {
   const [data, setData] = useState<any[]>([]);
@@ -191,6 +31,16 @@ const Home = () => {
   const { colorMode } = useColorMode();
   const [userActive, setUserActive] = useState(false);
   const [userInfo, setUserInfo] = useState({ username: "", uid: "" });
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+      fetch(`${window.location.origin}/api/liked/${user.name}`)
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }
+  }, [user]);
 
   useEffect(() => {
     console.log({ userActive }, { userInfo });
@@ -231,8 +81,6 @@ const Home = () => {
       setSlides(1);
     }
   }, [width]);
-  
-  
 
   return (
     <>

@@ -99,7 +99,7 @@ const SignUp = (props: any) => {
           <FormLabel margin="0">Password</FormLabel>
           <Input {...register("password")} />
         </VStack>
-        <Button type="submit" onClick={onClose} width="100%">
+        <Button type="submit" onClick={onClose} width="100%" variant='large'>
           Create Account
         </Button>
       </VStack>
