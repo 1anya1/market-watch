@@ -33,14 +33,7 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState({ username: "", uid: "" });
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      console.log(user);
-      fetch(`${window.location.origin}/api/liked/${user.name}`)
-        .then((res) => res.json())
-        .then((data) => console.log(data));
-    }
-  }, [user]);
+
 
   useEffect(() => {
     console.log({ userActive }, { userInfo });

@@ -97,6 +97,14 @@ const DataTable = () => {
   const { colorMode } = useColorMode();
   const [favoredItems, setFavored] = useState<string | number[]>([]);
   const { user } = useAuth();
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+      fetch(`${window.location.origin}/api/liked/${user.name}`)
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    }
+  }, [user]);
 
   // useEffect(() => {
   //   fetch("https://api.coingecko.com/api/v3/coins/list")
