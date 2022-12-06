@@ -24,16 +24,21 @@ type FormData = {
 };
 
 const SignUp = (props: any) => {
-  const { signUp } = useAuth();
-  const { setUserActive, setUserInfo, onClose } = props;
+  const { signUp, logIn } = useAuth();
+  const { onClose } = props;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
   const onSubmit = handleSubmit(async (data) => {
+    console.log("handling on submit", { data });
     const { name, email, password } = data;
-    await signUp(email, password, name);
+    try {
+      await signUp(email, password, name);
+    } finally {
+      await logIn(email, password);
+    }
   });
 
   return (

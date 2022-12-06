@@ -39,34 +39,31 @@ export const AuthContextProvider = ({
     });
   }, []);
   const signUp = async (email: string, password: string, name: string) => {
-    const init = async () => {
-      const docRef = doc(database, "users", name);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("the user already exists");
-      } else {
-        console.log("No such document!");
-        const { user } = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        await updateProfile(user, { displayName: name });
-        await setDoc(doc(database, "users", name), {
-          username: name,
-          email: email,
-        });
-      }
-    };
-    await init();
+    // const init = async () => {
+    const docRef = doc(database, "users", name);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("the user already exists");
+    } else {
+      console.log("No such document!");
+      const data = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(data.user, { displayName: name });
+      await setDoc(doc(database, "users", name), {
+        username: name,
+        email: email,
+      });
+      return data;
+    }
+    // };
+    // await init();
     // const value = await signInWithEmailAndPassword(auth, email, password);
     // console.log(value)
-    // return value;
-    await logIn(email, password);
+    // // return value;
+    // await logIn(email, password);
   };
 
   const logIn = (email: string, password: string) => {
-    console.log('in here')
+    console.log("in here");
     return signInWithEmailAndPassword(auth, email, password);
   };
 
