@@ -38,56 +38,34 @@ export const AuthContextProvider = ({
       return () => unsubscribe();
     });
   }, []);
-  const signUp =  (email: string, password: string, name: string) => {
-    // // const init = async () => {
-    // const docRef = doc(database, "users", name);
-    // const docSnap = await getDoc(docRef);
-    // if (docSnap.exists()) {
-    //   console.log("the user already exists");
-    // } else {
-    //   console.log("No such document!");
-    //   const data = await createUserWithEmailAndPassword(auth, email, password);
-    //   await updateProfile(data.user, { displayName: name });
-    //   await setDoc(doc(database, "users", name), {
-    //     username: name,
-    //     email: email,
-    //   });
-    //   return data;
-
-    // }
+  const signUp = (email: string, password: string, name: string) => {
     const databaseVerification = async () => {
-      const docRef = doc(database, "users", name);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("the user already exists");
-      } else {
-        console.log("No such document!");
-        try {
-          const { user } = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-          await updateProfile(user, { displayName: name });
-          await setDoc(doc(database, "users", name), {
-            username: name,
-            email: email,
-            // uid,
+      try {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await updateProfile(user, { displayName: name });
+        await setDoc(doc(database, "users", name), {
+          username: name,
+          email: email,
+          // uid,
+        });
+      } finally {
+        console.log(auth);
+        await signInWithEmailAndPassword(auth, email, password)
+          .then(async (userCredential) => {
+            console.log(userCredential);
+            const user = userCredential.user;
+            console.log("successfully signed in");
+            setUser({ name: name });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
           });
-        } finally {
-          await signInWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential) => {
-              console.log(userCredential);
-              const user = userCredential.user;
-              console.log("successfully signed in");
-              setUser({ name: name });
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
-            });
-        }
       }
     };
     databaseVerification();
@@ -95,10 +73,12 @@ export const AuthContextProvider = ({
 
   const logIn = (email: string, password: string) => {
     console.log("in here");
+    console.log(auth);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logOut = async () => {
+    console.log(auth);
     setUser({ name: null });
     await signOut(auth);
   };
