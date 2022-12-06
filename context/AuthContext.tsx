@@ -38,28 +38,59 @@ export const AuthContextProvider = ({
       return () => unsubscribe();
     });
   }, []);
-  const signUp = async (email: string, password: string, name: string) => {
-    // const init = async () => {
-    const docRef = doc(database, "users", name);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log("the user already exists");
-    } else {
-      console.log("No such document!");
-      const data = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(data.user, { displayName: name });
-      await setDoc(doc(database, "users", name), {
-        username: name,
-        email: email,
-      });
-      return data;
-    }
-    // };
-    // await init();
-    // const value = await signInWithEmailAndPassword(auth, email, password);
-    // console.log(value)
-    // // return value;
-    // await logIn(email, password);
+  const signUp =  (email: string, password: string, name: string) => {
+    // // const init = async () => {
+    // const docRef = doc(database, "users", name);
+    // const docSnap = await getDoc(docRef);
+    // if (docSnap.exists()) {
+    //   console.log("the user already exists");
+    // } else {
+    //   console.log("No such document!");
+    //   const data = await createUserWithEmailAndPassword(auth, email, password);
+    //   await updateProfile(data.user, { displayName: name });
+    //   await setDoc(doc(database, "users", name), {
+    //     username: name,
+    //     email: email,
+    //   });
+    //   return data;
+
+    // }
+    const databaseVerification = async () => {
+      const docRef = doc(database, "users", name);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("the user already exists");
+      } else {
+        console.log("No such document!");
+        try {
+          const { user } = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          await updateProfile(user, { displayName: name });
+          await setDoc(doc(database, "users", name), {
+            username: name,
+            email: email,
+            // uid,
+          });
+        } finally {
+          await signInWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+              console.log(userCredential);
+              const user = userCredential.user;
+              console.log("successfully signed in");
+              setUser({ name: name });
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+            });
+        }
+      }
+    };
+    databaseVerification();
   };
 
   const logIn = (email: string, password: string) => {

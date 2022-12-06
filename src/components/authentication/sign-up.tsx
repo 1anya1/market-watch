@@ -24,21 +24,60 @@ type FormData = {
 };
 
 const SignUp = (props: any) => {
-  const { signUp, logIn } = useAuth();
-  const { onClose } = props;
+  const { signUp } = useAuth();
+  console.log(useAuth());
+  const router = useRouter();
+  const { setUserActive, setUserInfo, onClose } = props;
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
   const onSubmit = handleSubmit(async (data) => {
-    console.log("handling on submit", { data });
-    const { name, email, password } = data;
-    try {
-      await signUp(email, password, name);
-    } finally {
-      await logIn(email, password);
-    }
+
+      await signUp(data.email, data.password, data.name);
+    
+    // const databaseVerification = async () => {
+    //   const docRef = doc(database, "users", name);
+    //   const docSnap = await getDoc(docRef);
+    //   if (docSnap.exists()) {
+    //     console.log("the user already exists");
+    //   } else {
+    //     console.log("No such document!");
+
+    //     const auth = getAuth();
+    //     try {
+    //       const { user } = await createUserWithEmailAndPassword(
+    //         auth,
+    //         email,
+    //         password
+    //       );
+    //       await updateProfile(user, { displayName: name });
+    //       await setDoc(doc(database, "users", name), {
+    //         username: name,
+    //         email: email,
+    //         // uid,
+    //       });
+    //     } finally {
+    //       await signInWithEmailAndPassword(auth, email, password)
+    //         .then(async (userCredential) => {
+    //           console.log(userCredential);
+    //           const user = userCredential.user;
+    //           console.log("successfully signed in");
+    //           setUserActive(true);
+    //           setUserInfo({ username: name });
+    //           localStorage.setItem("username", JSON.stringify(name));
+    //         })
+    //         .catch((error) => {
+    //           const errorCode = error.code;
+    //           const errorMessage = error.message;
+    //           console.log(errorCode, errorMessage);
+    //         });
+    //     }
+    //   }
+    // };
+    // databaseVerification();
   });
 
   return (
@@ -56,7 +95,7 @@ const SignUp = (props: any) => {
           <FormLabel margin="0">Password</FormLabel>
           <Input {...register("password")} />
         </VStack>
-        <Button type="submit" onClick={onClose} width="100%" variant="large">
+        <Button type="submit" onClick={onClose} width="100%" variant='large'>
           Create Account
         </Button>
       </VStack>
