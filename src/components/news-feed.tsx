@@ -44,15 +44,14 @@ const NewsFeed = () => {
           Crypto News
         </Text>
         <HStack flexWrap="wrap" gap="60px">
-          {newsData.map((el) => (
+          {newsData.map((el, idx) => (
             <Stack
               flexDir={{ base: "column", lg: "row" }}
               gap="20px"
-              key={el.link}
+              key={`${el.link}=${idx}`}
               margin="0 !important"
               justifyContent="space-between"
               w="100%"
-              
             >
               <Box
                 backgroundImage={`url("${el.urlToImage}")`}
@@ -60,7 +59,7 @@ const NewsFeed = () => {
                 h={{ base: "260px", lg: "240px" }}
                 w={{ base: "100%", lg: "475px" }}
                 margin="0 !important"
-                borderRadius='11px'
+                borderRadius="11px"
               />
               <VStack
                 width={{ base: "100%", lg: "calc(100% - 475px - 60px)" }}
@@ -82,7 +81,7 @@ const NewsFeed = () => {
                   </Text>
                   <Text fontWeight="bold">{dateParser(el.publishedAt)}</Text>
                 </Link>
-                <Text lineHeight="1.5" fontSize="18px" maxW='100%'>
+                <Text lineHeight="1.5" fontSize="18px" maxW="100%">
                   {el.description.replace(/(<([^>]+)>)/gi, "")}
                 </Text>
               </VStack>

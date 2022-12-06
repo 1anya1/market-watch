@@ -688,7 +688,7 @@ const ChartComponent = (props: any) => {
         </HStack>
       </VStack>
     );
-  }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax]);
+  }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax, timeFrames]);
   const toast = useToast();
   return (
     <>

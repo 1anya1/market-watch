@@ -38,6 +38,8 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { NumericFormat } from "react-number-format";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import dynamic from "next/dynamic";
+import DataTable from "../../src/components/table/table";
+import Favorite from "../../src/components/table/nameColumn";
 
 const TableChartComponent = dynamic(
   () => import("../../src/components/table-chart"),
@@ -61,6 +63,7 @@ const LikedItems = () => {
     "Circulating Supply",
     "Last 7 Days",
   ];
+
   useEffect(() => {
     const liked = async () => {
       if (user.name) {
@@ -72,6 +75,8 @@ const LikedItems = () => {
             arr.push(doc.id);
           });
           setLiked(arr);
+        } else {
+          setLiked([]);
         }
       }
     };
@@ -147,40 +152,7 @@ const LikedItems = () => {
           // maxW={{ base: "150px", sm: "unset" }}
         >
           <HStack flexWrap="wrap">
-            <FaStar
-            // onClick={() =>
-            //   liked.indexOf(coin.id) !== -1
-            //     ? deleteFromDatabase(coin.id)
-            //     : addToDatabase(coin.id, coin.symbol)
-            // }
-            // fill={liked.indexOf(coin.id) !== -1 ? "yellow" : "white"}
-            // strokeWidth="1px"
-            // stroke={favoredItems.indexOf(coin.id) !== -1 ? "yellow" : "white"}
-            />
-            <Box
-              h="25px"
-              w="25px"
-              backgroundImage={coin.image}
-              backgroundSize="contain"
-            />
-
-            <Link href={`/coins/${coin.id}`}>
-              <Stack
-                alignItems={{
-                  base: "flex-start",
-                  sm: "baseline",
-                }}
-                flexDir={{ base: "column", sm: "row" }}
-                columnGap="8px"
-              >
-                <Text fontSize="14px" fontWeight="bold" margin="0 !important">
-                  {coin.name}
-                </Text>
-                <Text fontSize="10px" fontWeight="medium" margin="0 !important">
-                  {coin.symbol.toUpperCase()}
-                </Text>
-              </Stack>
-            </Link>
+            <Favorite coin={coin} setLiked={setLiked} liked={liked} />
           </HStack>
         </Td>
         <Td padding="5px 10px">
@@ -241,46 +213,11 @@ const LikedItems = () => {
         </Td>
       </Tr>
     ));
-  }, [colorMode, data]);
+  }, [colorMode, data, liked]);
   return (
     <>
       <Text variant="h-3">Watchlist</Text>
-      <TableContainer mt="40px">
-        <Table>
-          <TableCaption fontSize="10px" textAlign="right">
-            Powered by CoinGecko API
-          </TableCaption>
-          <Thead>
-            <Tr
-              bg={colorMode === "light" ? "#f5f6fa" : "#133364"}
-              fontSize="10px"
-            >
-              {tableColumns.map((el, idx) => (
-                <Th
-                  //   textTransform="capitalize"
-                  key={el}
-                  fontSize="12px"
-                  position={idx === 0 ? "sticky" : "unset"}
-                  left={idx === 0 ? "-1" : "unset"}
-                  zIndex={idx === 0 ? "2" : "unset"}
-                  borderRadius={idx === 0 ? "8px 0 0 0" : "unset"}
-                  bgColor={colorMode === "light" ? "#f5f6fa" : "#103363"}
-                  bg={
-                    idx === 0
-                      ? colorMode === "light"
-                        ? "linear-gradient(to left , rgba(245,246,250, 0) 3%, rgba(245,246,250, 1) 14%)"
-                        : "linear-gradient(to left , rgba(17,51,99, 0) 3%, rgba(17,51,99, 1) 14%)"
-                      : "unset"
-                  }
-                >
-                  {el}
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>{data.length > 0 ? renderTableRow() : "undefiend"}</Tbody>
-        </Table>
-      </TableContainer>
+      <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
     </>
   );
 };

@@ -14,48 +14,25 @@ type FormData = {
 };
 
 const SignIn = (props: any) => {
-  const { setUserActive, onClose } = props;
+  const { onClose } = props;
   const {
     register,
-    setValue,
+
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
   const { logIn } = useAuth();
-
   const onSubmit = handleSubmit(async (data) => {
-    // const { email, password } = data;
-
-    // const router = useRouter();
     try {
       await logIn(data.email, data.password);
-      // router.push("/dashboard");
     } catch (error: any) {
       console.log(error.message);
     }
-
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user: any = userCredential.user;
-    //     // setUserInfo({ username: name, uid: userCredential.user.uid });
-    //     localStorage.setItem("username", JSON.stringify(user.displayName));
-    //     setUserActive(true);
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode, errorMessage);
-    //   });
   });
 
   return (
     <form onSubmit={onSubmit}>
       <VStack spacing={0} gap="20px" pt="40px">
-        {/* <VStack spacing={0} gap="4px" width="100%">
-            <FormLabel margin="0">Name</FormLabel>
-            <Input {...register("name")} />
-          </VStack> */}
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Email Address</FormLabel>
           <Input {...register("email")} />

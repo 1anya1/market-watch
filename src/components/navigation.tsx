@@ -14,7 +14,7 @@ import Link from "next/link";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useRouter } from "next/router";
 import Logo from "../images/logo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import SignUp from "./authentication/sign-up";
 import SignIn from "./authentication/log-in";
@@ -27,6 +27,11 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useAuth();
+
+  useEffect(()=>{
+    console.log('user in the nav', user)
+    
+  },[user])
   return (
     <>
       <HStack pt="20px" justifyContent="space-between" gap="20px">
@@ -51,22 +56,6 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
               fontWeight={700}
             >
               Home
-            </Text>
-          </Link>
-
-          <Link href="/coins">
-            <Text
-              color={
-                router.pathname === "/crypto"
-                  ? "#4983c6"
-                  : colorMode === "light"
-                  ? "black"
-                  : "#a0aec0"
-              }
-              fontSize="14px"
-              fontWeight={700}
-            >
-              Crypto
             </Text>
           </Link>
 
@@ -105,7 +94,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 Log In
               </Button>
               <Button
-                variant="medium"
+                  variant="medium"
                 onClick={() => {
                   onOpen();
                   setUserLogin("sign-up");

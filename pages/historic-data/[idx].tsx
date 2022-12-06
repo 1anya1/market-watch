@@ -1,13 +1,6 @@
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
   Tr,
-  Th,
   Td,
-  TableCaption,
-  TableContainer,
   Text,
   useColorMode,
   Box,
@@ -22,28 +15,17 @@ import {
   Button,
   MenuList,
   Collapse,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/react";
-import {
-  createChart,
-  ColorType,
-  ISeriesApi,
-  SeriesOptionsMap,
-} from "lightweight-charts";
+
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BiTimeFive } from "react-icons/bi";
 import { NumericFormat } from "react-number-format";
-import {
-  HiChevronDoubleDown,
-  HiArrowCircleDown,
-  HiArrowCircleUp,
-} from "react-icons/hi";
-import { BsChevronDoubleDown } from "react-icons/bs";
-import LikedItems from "../liked";
+import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import { AiOutlineDown } from "react-icons/ai";
+import FormattedNumber from "../../src/components/number-formatter";
+import DataTable from "../../src/components/table/table";
 const Chart = dynamic(() => import("../../src/components/mini-chart"), {
   ssr: false,
 });
@@ -60,15 +42,13 @@ type DataPoints = {
 };
 const HistoricData = () => {
   const [days, setDays] = useState<string | number>(30);
-  // const [chartType, setChartType] = useState("Line");
   const router = useRouter();
   const coin = router.query.idx;
   const [data, setData] = useState<DataPoints[] | []>([]);
   const { colorMode } = useColorMode();
   const [dataFetched, setDataFetched] = useState(false);
-  // const [tooltipDate, setTooltipData] = useState<JSX.Element | null>(null);
   const [onDay, setOnDay] = useState<any[] | []>([]);
-  const [chartFeedback, setChartFeedback] = useState(false);
+
   const timeFrameOptions = [
     { query: "7 Days", val: "7" },
     { query: "14 Days", val: 14 },
@@ -108,7 +88,6 @@ const HistoricData = () => {
         })
         .then(async ([ohlc, market]) => {
           const data: any = [];
-          console.log({market})
           market.forEach((el: any) => {
             const [time, open, high, low, close] = el;
             const t = new Date(time).toISOString().split("T")[0];
@@ -203,31 +182,45 @@ const HistoricData = () => {
               ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
               : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
           }
-          // padding="5px 30px 5px 10px"
-          // maxW={{ base: "150px", sm: "unset" }}
         >
-          {formatTime(el.time, true)}
+          <span style={{ fontSize: "14px", fontWeight: "600" }}>
+            {formatTime(el.time, true)}
+          </span>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.value} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.value} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.open} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.open} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.high} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.high} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.low} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.low} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.close} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.close} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.volume} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.volume} prefix="$" />
+          </Box>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={el.marketCap} prefix="$" />
+          <Box fontSize="14px" fontWeight="500">
+            <FormattedNumber value={el.marketCap} prefix="$" />
+          </Box>
         </Td>
       </Tr>
     ));
@@ -251,27 +244,6 @@ const HistoricData = () => {
     return withYear
       ? `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
       : `${month[date.getMonth()]} ${date.getDate()}`;
-  };
-  const FormattedNumber = (props: any) => {
-    let { value, prefix, sufffix, weight } = props;
-    if (value < 1) {
-      value = value.toFixed(6);
-    } else {
-      value = value.toFixed(2);
-    }
-    return (
-      <NumericFormat
-        value={value}
-        prefix={prefix}
-        suffix={sufffix}
-        displayType="text"
-        thousandSeparator=","
-        style={{
-          fontSize: "inherit",
-          fontWeight: weight ? weight : "500",
-        }}
-      />
-    );
   };
 
   const [heightShow, setHeightShow] = useState(false);
@@ -355,7 +327,7 @@ const HistoricData = () => {
         <Text textTransform="capitalize" variant="h-3" pb="0">
           {coin} Historic Data
         </Text>
-        <Menu variant='button'>
+        <Menu variant="button">
           <MenuButton as={Button}>
             <HStack>
               <Text>Date Range</Text>
@@ -383,19 +355,16 @@ const HistoricData = () => {
             overflow="hidden"
             height="max-content"
           >
-            <Chart data={data} setChartFeedback={setChartFeedback} />
+            <Chart data={data} />
           </Container>
         ) : (
           <Box
             padding="6"
             boxShadow="lg"
-            bg="white"
+            bg={colorMode === "light" ? "white" : "#133364"}
             width={{ base: "100%", xl: "calc(100% - 400px)" }}
             h="503px"
-          >
-            <SkeletonCircle size="10" />
-            <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-          </Box>
+          />
         )}
         {onDay.length > 0 ? (
           <Container
@@ -438,57 +407,15 @@ const HistoricData = () => {
           <Box
             padding="6"
             boxShadow="lg"
-            bg="white"
             width={{ base: "100%", xl: "400px" }}
             h="503px"
-          >
-            <SkeletonCircle size="10" />
-            <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
-          </Box>
+            bg={colorMode === "light" ? "white" : "#133364"}
+          />
         )}
       </Stack>
-
-      <TableContainer mt="40px">
-        <Table>
-          <TableCaption fontSize="10px" textAlign="right">
-            Powered by CoinGecko API
-          </TableCaption>
-          <Thead>
-            <Tr
-              bg={colorMode === "light" ? "#f5f6fa" : "#133364"}
-              fontSize="10px"
-            >
-              {columnNames.map((el, idx) => (
-                <Th
-                  //   textTransform="capitalize"
-                  key={el}
-                  fontSize="12px"
-                  position={idx === 0 ? "sticky" : "unset"}
-                  left={idx === 0 ? "-1" : "unset"}
-                  zIndex={idx === 0 ? "2" : "unset"}
-                  borderRadius={idx === 0 ? "8px 0 0 0" : "unset"}
-                  bgColor={colorMode === "light" ? "#f5f6fa" : "#103363"}
-                  bg={
-                    idx === 0
-                      ? colorMode === "light"
-                        ? "linear-gradient(to left , rgba(245,246,250, 0) 3%, rgba(245,246,250, 1) 14%)"
-                        : "linear-gradient(to left , rgba(17,51,99, 0) 3%, rgba(17,51,99, 1) 14%)"
-                      : "unset"
-                  }
-                >
-                  {el}
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>{data.length > 0 ? renderTableRow() : "undefiend"}</Tbody>
-        </Table>
-      </TableContainer>
+      <DataTable tableColumns={columnNames} renderData={renderTableRow} />
     </>
   );
 };
 
 export default HistoricData;
-function callback() {
-  throw new Error("Function not implemented.");
-}

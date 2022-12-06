@@ -25,6 +25,7 @@ export const AuthContextProvider = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    console.log("here on auth change");
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({
@@ -38,13 +39,13 @@ export const AuthContextProvider = ({
     });
   }, []);
   const signUp = async (email: string, password: string, name: string) => {
-    const docRef = doc(database, "users", name);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log("the user already exists");
-    } else {
-      console.log("No such document!");
-      try {
+    const init = async () => {
+      const docRef = doc(database, "users", name);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("the user already exists");
+      } else {
+        console.log("No such document!");
         const { user } = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -54,15 +55,18 @@ export const AuthContextProvider = ({
         await setDoc(doc(database, "users", name), {
           username: name,
           email: email,
-          // uid,
         });
-      } finally {
-        await logIn(email, password);
       }
-    }
+    };
+    await init();
+    // const value = await signInWithEmailAndPassword(auth, email, password);
+    // console.log(value)
+    // return value;
+    await logIn(email, password);
   };
 
   const logIn = (email: string, password: string) => {
+    console.log('in here')
     return signInWithEmailAndPassword(auth, email, password);
   };
 

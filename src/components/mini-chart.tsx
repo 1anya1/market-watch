@@ -33,7 +33,7 @@ const MiniChart = (props: any) => {
     left: "unset",
   });
   const { colorMode } = useColorMode();
-  const { data, setChartFeedback } = props;
+  const { data } = props;
   const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
@@ -161,7 +161,7 @@ const MiniChart = (props: any) => {
               crosshairMarkerRadius: 6,
             });
             newSeries.setData(data);
-            setChartFeedback(true);
+
             break;
 
           case "Candle":
@@ -175,7 +175,7 @@ const MiniChart = (props: any) => {
             });
 
             newSeries.setData(data);
-            setChartFeedback(true);
+
             break;
         }
 
@@ -431,7 +431,7 @@ const MiniChart = (props: any) => {
             {tooltipDate}
           </Box>
         </Box>
-      ) :(
+      ) : (
         <Text>Hello there</Text>
       )}
     </>

@@ -16,7 +16,7 @@ const colors = {
 };
 
 const TableChartComponent = (props: any) => {
-  const { id, change, data } = props;
+  const { id, change, data, responsive } = props;
   const { user } = useAuth();
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -102,7 +102,7 @@ const TableChartComponent = (props: any) => {
     }
   }, [change, colorMode, cryptoData]);
 
-  return <Box ref={chartContainerRef} height="50px" width="140px" />;
+  return <Box ref={chartContainerRef} height="50px" width={ responsive? {base:'260px', lg:'140px'}: "140px"} />;
 };
 
 export default TableChartComponent;

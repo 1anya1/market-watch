@@ -1,51 +1,35 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
-import {
-  Box,
-  Button,
-  Container,
-  FormLabel,
-  HStack,
-  Input,
-  Stack,
-  Text,
-  useColorMode,
-  VStack,
-} from "@chakra-ui/react";
-import DataTable from "../src/components/table";
+import { Box, HStack, Text, useColorMode, Stack } from "@chakra-ui/react";
+import HomepageTable from "../src/components/homepage-table";
 import NewsFeed from "../src/components/news-feed";
 import Navigation from "../src/components/navigation";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";
 import { BsFillTriangleFill } from "react-icons/bs";
 import { useAuth } from "../context/AuthContext";
+import FormattedNumber from "../src/components/number-formatter";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { arrayBuffer } from "stream/consumers";
+import { NumericFormat } from "react-number-format";
+
+const TableChartComponent = dynamic(
+  () => import("../src/components/table-chart"),
+  {
+    ssr: false,
+  }
+);
 
 const Home = () => {
   const [data, setData] = useState<any[]>([]);
   const [width, setWidth] = useState(0);
   const [slides, setSlides] = useState(1.25);
   const { colorMode } = useColorMode();
-  const [userActive, setUserActive] = useState(false);
-  const [userInfo, setUserInfo] = useState({ username: "", uid: "" });
-  const { user } = useAuth();
 
-
-
-  useEffect(() => {
-    console.log({ userActive }, { userInfo });
-  }, [userActive, userInfo]);
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    // const loggedIn = localStorage.getItem("loggedIn");
-    if (username) {
-      setUserActive(true);
-      // setActive("true" === loggedIn);
-    }
-  }, [userActive]);
   useEffect(() => {
     fetch(
       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=24h"
@@ -53,7 +37,40 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
-  useEffect(() => console.log(data, width), [data, width]);
+  const [globalValues, setGlobalValues] = useState<any>(null);
+  const [topMovers, setTopMovers] = useState<any[]>([]);
+  useEffect(() => {
+    Promise.all([
+      fetch(
+        "https://price-api.crypto.com/price/v1/top-movers?depth=10&tradable_on=EXCHANGE-OR-APP"
+      ),
+      fetch("https://price-api.crypto.com/price/v1/global-metrics"),
+    ])
+
+      .then(async ([resMovers, resGlobal]) => {
+        const movers = await resMovers.json();
+        const global = await resGlobal.json();
+        return [movers, global];
+      })
+      .then(([movers, global]) => {
+        setGlobalValues(global.data);
+        const arr: string[] = [];
+        movers.forEach((el: { name: string }) =>
+          arr.push(el.name.replace(/[\. ,:-]+/g, "-").toLowerCase())
+        );
+
+        const str = arr.join("%2C");
+        fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${str}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            
+            setTopMovers(data);
+          });
+      });
+  }, []);
+
   useEffect(() => {
     setWidth(window.innerWidth);
     window.addEventListener("resize", () => setWidth(window.innerWidth));
@@ -61,24 +78,38 @@ const Home = () => {
 
   useEffect(() => {
     if (width >= 2100) {
-      setSlides(5);
+      setSlides(3.5);
     } else if (width >= 1600) {
-      setSlides(4);
-    } else if (width >= 1100) {
       setSlides(3);
+    } else if (width >= 1100) {
+      setSlides(2.5);
     } else if (width >= 800) {
-      setSlides(2.25);
+      setSlides(2.5);
+    } else if (width >= 600) {
+      setSlides(2);
     } else if (width >= 300) {
-      setSlides(1.18);
+      setSlides(1.2);
     } else {
       setSlides(1);
     }
   }, [width]);
 
+  const turnicateText = (el: string, limit: number) => {
+    if (el.length <= limit) {
+      return el;
+    } else {
+      const turn = el.slice(0, limit);
+      return `${turn}...s`;
+    }
+  };
+
   return (
     <>
+      <Text variant="h-3" pt="40px">
+        Top Movers
+      </Text>
       {data.length > 0 && (
-        <Box pt="40px">
+        <Box>
           <Swiper
             slidesPerView={slides}
             spaceBetween={30}
@@ -92,65 +123,84 @@ const Home = () => {
             }}
             modules={[Autoplay]}
           >
-            {data.map((el) => (
+            {topMovers.map((el) => (
               <SwiperSlide key={el.name}>
-                <Stack
+                <HStack
                   backgroundColor={
                     colorMode === "light" ? "#f5f6fa" : "#133364"
                   }
                   p="10px 21px"
+                  pb={{ base: "71px", lg: "21px" }}
                   borderRadius="11px"
+                  justifyContent="space-between"
+                  position="relative"
                 >
-                  <HStack>
-                    <Box
-                      background={`url(${el.image})`}
-                      h="30px"
-                      w="30px"
-                      backgroundSize="contain"
-                    />
-                    <Text fontSize="16px" fontWeight="500">
-                      {el.name}
-                    </Text>
-                    <Text fontSize="16px" fontWeight="700">
-                      {el.symbol.toUpperCase()}
-                    </Text>
-                  </HStack>
-                  <HStack gap="10px">
-                    <Text
-                      fontSize={{ base: "20px", md: "24px" }}
-                      fontWeight="500"
-                    >
-                      ${el.current_price}
-                    </Text>
+                  <Stack>
                     <HStack>
-                      <Box
-                        transform={
-                          el.price_change_percentage_24h < 0
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)"
-                        }
-                      >
-                        {el.price_change_percentage_24h !== 0 && (
-                          <BsFillTriangleFill
-                            size={8}
-                            fill={
-                              el.price_change_percentage_24h < 0
-                                ? "var(--red)"
-                                : "var(--green)"
-                            }
-                          />
-                        )}
+                      <Box>
+                        <Image
+                          src={el.image}
+                          height="25px"
+                          width="25px"
+                          alt={el.name}
+                        />
                       </Box>
-                      <Text
-                        color={
-                          el.price_change_percentage_24h < 0 ? "red" : "green"
-                        }
-                      >
-                        {Math.abs(el.price_change_percentage_24h).toFixed(2)}%
+                      <Text fontSize="16px" fontWeight="500">
+                        {turnicateText(el.name, 14)}
+                      </Text>
+                      <Text fontSize="16px" fontWeight="700">
+                        {el.symbol.toUpperCase()}
                       </Text>
                     </HStack>
-                  </HStack>
-                </Stack>
+                    <HStack gap="10px">
+                      <Box
+                        fontSize={{ base: "20px", md: "24px" }}
+                        fontWeight="500"
+                      >
+                        <FormattedNumber value={el.current_price} prefix="$" />
+                      </Box>
+                      <HStack>
+                        <Box
+                          transform={
+                            el.price_change_percentage_24h < 0
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)"
+                          }
+                        >
+                          {el.price_change_percentage_24h !== 0 && (
+                            <BsFillTriangleFill
+                              size={8}
+                              fill={
+                                el.price_change_percentage_24h < 0
+                                  ? "var(--red)"
+                                  : "var(--green)"
+                              }
+                            />
+                          )}
+                        </Box>
+                        <Text
+                          color={
+                            el.price_change_percentage_24h < 0 ? "red" : "green"
+                          }
+                        >
+                          {Math.abs(el.price_change_percentage_24h).toFixed(2)}%
+                        </Text>
+                      </HStack>
+                    </HStack>
+                  </Stack>
+                  <Box
+                    position="absolute"
+                    right="20px"
+                    bottom={{ base: "21px", lg: "unset" }}
+                  >
+                    <TableChartComponent
+                      id={el.id}
+                      change={el.price_change_percentage_24h}
+                      data={el.sparkline_in_7d.price}
+                      responsive={true}
+                    />
+                  </Box>
+                </HStack>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -165,7 +215,7 @@ const Home = () => {
         </Head>
 
         {/* <Chart coinId="bitcoin" /> */}
-        <DataTable />
+        <HomepageTable />
         <NewsFeed />
       </Box>
     </>
