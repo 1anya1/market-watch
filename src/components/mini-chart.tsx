@@ -354,9 +354,9 @@ const MiniChart = (props: any) => {
             <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
               <NumericFormat
                 value={
-                  data[0].value > 0
-                    ? data[0].value.toFixed(2)
-                    : data[0].value.toFixed(6)
+                  data[data.length-1].value > 0
+                    ? data[data.length-1].value.toFixed(2)
+                    : data[data.length-1].value.toFixed(6)
                 }
                 prefix={"$"}
                 suffix=" USD"

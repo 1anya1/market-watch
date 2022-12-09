@@ -129,8 +129,11 @@ const HistoricData = () => {
         .then((res) => res.json())
         .then((allTimeData) => {
           // getting the year difference in order
+          console.log(allTimeData);
           const startingPoint = new Date(allTimeData.prices[0][0]);
-          const endingPoint = new Date(data[0].time * 1000);
+          const endingPoint = new Date(
+            allTimeData.prices[allTimeData.prices.length - 1][0]
+          );
           let timeDifference =
             endingPoint.getFullYear() - startingPoint.getFullYear();
 
@@ -158,7 +161,9 @@ const HistoricData = () => {
           const thisDay: { time: any; value: any }[] = [];
           allTimeData.prices.forEach((frame: any[]) => {
             const t = new Date(frame[0]).toISOString().split("T")[0];
+            // console.log(t, frame[1])
             if (timeFrames.indexOf(t) !== -1 && !obj[t]) {
+              console.log("in this plave");
               obj[t] = 1;
               thisDay.push({ time: frame[0], value: frame[1] });
             }
@@ -166,7 +171,7 @@ const HistoricData = () => {
           setOnDay(thisDay);
         });
     }
-  }, [coin, data, onDay, days]);
+  }, [coin, data, onDay]);
 
   const renderTableRow = useCallback(() => {
     const d = [...data];
@@ -251,7 +256,7 @@ const HistoricData = () => {
   // using callback to memoize already present data
   const renderOnDay = useCallback(() => {
     const d = [...onDay];
-    console.log('here', d)
+    console.log("here", d);
     return d.reverse().map((el, idx) => (
       <VStack
         key={`${el.time}`}
@@ -292,7 +297,7 @@ const HistoricData = () => {
         </HStack>
       </VStack>
     ));
-  },[onDay]);
+  }, [onDay]);
   const [hxCompoentnHeight, sethxCompoentnHeight] = useState(0);
   const [maxHX, setMaxHX] = useState(0);
   useEffect(() => {
@@ -345,7 +350,12 @@ const HistoricData = () => {
           </MenuList>
         </Menu>
       </HStack>
-      <Stack flexDir={{ base: "column", xl: "row" }} spacing="0" gap="20px" pb='20px'>
+      <Stack
+        flexDir={{ base: "column", xl: "row" }}
+        spacing="0"
+        gap="20px"
+        pb="20px"
+      >
         {dataFetched ? (
           <Container
             variant="box-component"
@@ -413,8 +423,8 @@ const HistoricData = () => {
             bg={colorMode === "light" ? "white" : "#133364"}
           />
         )}
-      </Stack> 
-      <DataTable  tableColumns={columnNames} renderData={renderTableRow} />
+      </Stack>
+      <DataTable tableColumns={columnNames} renderData={renderTableRow} />
     </>
   );
 };
