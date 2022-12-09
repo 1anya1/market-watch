@@ -66,6 +66,7 @@ const LikedItems = () => {
 
   useEffect(() => {
     const liked = async () => {
+      console.log('here in the effect')
       if (user.name) {
         const arr: string[] = [];
         const docRef = collection(database, "users", user.name, "liked");
@@ -83,6 +84,7 @@ const LikedItems = () => {
     liked();
   }, [user]);
   useEffect(() => {
+    console.log({liked})
     if (liked.length > 0) {
       const query = liked.join(",").replaceAll(",", "%2C");
       fetch(
@@ -90,6 +92,9 @@ const LikedItems = () => {
       )
         .then((res) => res.json())
         .then((data) => setData(data));
+    }
+    else{
+      setData([])
     }
   }, [liked]);
 
@@ -215,10 +220,10 @@ const LikedItems = () => {
     ));
   }, [colorMode, data, liked]);
   return (
-    <>
+    <Box pt='40px'>
       <Text variant="h-3">Watchlist</Text>
       <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
-    </>
+    </Box>
   );
 };
 

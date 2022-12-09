@@ -130,7 +130,7 @@ const HistoricData = () => {
         .then((allTimeData) => {
           // getting the year difference in order
           const startingPoint = new Date(allTimeData.prices[0][0]);
-          const endingPoint = new Date(data[data.length - 1].time * 1000);
+          const endingPoint = new Date(data[0].time * 1000);
           let timeDifference =
             endingPoint.getFullYear() - startingPoint.getFullYear();
 
@@ -166,7 +166,7 @@ const HistoricData = () => {
           setOnDay(thisDay);
         });
     }
-  }, [coin, data, onDay.length]);
+  }, [coin, data, onDay, days]);
 
   const renderTableRow = useCallback(() => {
     const d = [...data];
@@ -251,6 +251,7 @@ const HistoricData = () => {
   // using callback to memoize already present data
   const renderOnDay = useCallback(() => {
     const d = [...onDay];
+    console.log('here', d)
     return d.reverse().map((el, idx) => (
       <VStack
         key={`${el.time}`}
@@ -291,7 +292,7 @@ const HistoricData = () => {
         </HStack>
       </VStack>
     ));
-  }, [onDay]);
+  },[onDay]);
   const [hxCompoentnHeight, sethxCompoentnHeight] = useState(0);
   const [maxHX, setMaxHX] = useState(0);
   useEffect(() => {
@@ -344,7 +345,7 @@ const HistoricData = () => {
           </MenuList>
         </Menu>
       </HStack>
-      <Stack flexDir={{ base: "column", xl: "row" }} spacing="0" gap="20px">
+      <Stack flexDir={{ base: "column", xl: "row" }} spacing="0" gap="20px" pb='20px'>
         {dataFetched ? (
           <Container
             variant="box-component"
@@ -412,8 +413,8 @@ const HistoricData = () => {
             bg={colorMode === "light" ? "white" : "#133364"}
           />
         )}
-      </Stack>
-      <DataTable tableColumns={columnNames} renderData={renderTableRow} />
+      </Stack> 
+      <DataTable  tableColumns={columnNames} renderData={renderTableRow} />
     </>
   );
 };

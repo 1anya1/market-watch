@@ -59,6 +59,22 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             </Text>
           </Link>
 
+          <Link href="/global">
+            <Text
+              color={
+                router.pathname === "/global"
+                  ? "#4983c6"
+                  : colorMode === "light"
+                  ? "black"
+                  : "#a0aec0"
+              }
+              fontSize="14px"
+              fontWeight={700}
+            >
+            Global Market
+            </Text>
+          </Link>
+
           {user?.name && (
             <>
               <Link href="/liked">

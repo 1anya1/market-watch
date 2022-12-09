@@ -114,3 +114,32 @@ a {
   position: fixed;
   z-index: 10;
 }
+/* .recharts-legend-wrapper {
+  width: max-content;
+  right: 0;
+  position: relative !important;
+}
+
+g.recharts-layer.recharts-pie {
+  width: 100% !important;
+  height: 100% !important;
+}
+g.recharts-layer {
+  width: 100% !important;
+  height: 100% !important;
+} */
+
+.recharts-wrapper {
+  position: relative;
+  cursor: default;
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+}
+.recharts-legend-wrapper{
+  position:relative;
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+

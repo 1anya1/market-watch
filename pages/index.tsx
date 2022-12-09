@@ -11,6 +11,8 @@ import { Autoplay } from "swiper";
 import { BsFillTriangleFill } from "react-icons/bs";
 import { useAuth } from "../context/AuthContext";
 import FormattedNumber from "../src/components/number-formatter";
+import { GetStaticProps } from "next";
+
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -24,7 +26,8 @@ const TableChartComponent = dynamic(
   }
 );
 
-const Home = () => {
+const Home = (props: any) => {
+
   const [data, setData] = useState<any[]>([]);
   const [width, setWidth] = useState(0);
   const [slides, setSlides] = useState(1.25);
@@ -65,7 +68,6 @@ const Home = () => {
         )
           .then((res) => res.json())
           .then((data) => {
-            
             setTopMovers(data);
           });
       });
@@ -223,3 +225,16 @@ const Home = () => {
 };
 
 export default Home;
+// export const getStaticProps: GetStaticProps<any> = async (context) => {
+//   const res = await fetch(`${window.location.origin}/api/newsfeed`);
+//   console.log(res);
+//   const topMovers = await res.text();
+//   console.log(topMovers);
+
+//   return {
+//     props: {
+//       topMovers,
+//     },
+//     revalidate: 120,
+//   };
+// };
