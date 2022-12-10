@@ -137,9 +137,15 @@ g.recharts-layer {
   display: flex;
   flex-direction: column;
 }
-.recharts-legend-wrapper{
-  position:relative;
-  padding-top: 50px;
-  padding-bottom: 20px;
+.recharts-legend-wrapper {
+  position: relative;
+  /* padding-top: 50px;
+  padding-bottom: 20px; */
+ 
 }
-
+g:focus {
+  outline: unset !important;
+}
+.recharts-sector:focus{
+  outline: unset !important;
+}

@@ -347,9 +347,18 @@ import {
   useColorMode,
   VStack,
   Text,
+  Button,
+  textDecoration,
 } from "@chakra-ui/react";
-import { useCallback } from "react";
+import { SetStateAction, useCallback, useState } from "react";
 import { RiCopperCoinFill } from "react-icons/ri";
+import Image from "next/image";
+import Link from "next/link";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import dynamic from "next/dynamic";
+const Chart = dynamic(() => import("../../src/components/simple-chart"), {
+  ssr: false,
+});
 
 const COLORS = [
   "rgba(255, 99, 132, 0.9)",
@@ -363,10 +372,93 @@ const COLORS = [
   "rgba(51, 138, 248, 0.9)",
   "rgba(153, 102, 255, 0.9)",
 ];
+
+const renderActiveShape = (props: any) => {
+  const RADIAN = Math.PI / 180;
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value,
+    topTen,
+    name,
+  } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+  const idx = topTen.findIndex(
+    (el: { symbol: any }) => el.symbol === name.split("-")[0]
+  );
+
+  return (
+    <g>
+      <foreignObject
+        x={cx - 50}
+        y={cy - 50}
+        dy={8}
+        height="110px"
+        width="100px"
+      >
+        <Link
+          href={`${window.location.origin}/coins/${topTen[idx].id}`}
+          passHref
+          scroll
+        >
+          <VStack spacing="0" cursor="pointer">
+            <Box mb="10px" bg="#fefeff17" borderRadius="50%" h="50px" w="50px">
+              <Image
+                src={topTen[idx].image}
+                alt="coin logo"
+                height="50px"
+                width="50px"
+              />
+            </Box>
+            <Text textTransform="capitalize" variant="h-5">
+              {topTen[idx].symbol.toUpperCase()}
+            </Text>
+            <Text textTransform="capitalize" variant="h-5">
+              {value.toFixed(2)}%
+            </Text>
+          </VStack>
+        </Link>
+      </foreignObject>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={fill}
+      />
+    </g>
+  );
+};
 const CustomTooltip = ({ active, payload, label }: any) => {
   const { colorMode } = useColorMode();
   if (active && payload && payload.length) {
-    console.log({ active }, { label }, { payload });
     return (
       <HStack
         bg={colorMode === "light" ? "#e7ecf0" : "#081c3b"}
@@ -392,6 +484,10 @@ const CustomLegend = (props: any) => {
       variable?.setAttribute("fill", currentColor?.replace("0.9", "0.6"));
       variable?.setAttribute("stroke", currentColor);
     }
+    const idDisplay = val.split("-")[0];
+    const idx = arrVal.findIndex((el: string[]) => el[0] === idDisplay);
+
+    setActiveIndexMarketCap(idx);
   };
 
   const handleMouseLeave = (val: string) => {
@@ -402,28 +498,52 @@ const CustomLegend = (props: any) => {
       variable?.setAttribute("stroke", "white");
     }
   };
-  const { payload } = props;
+  const {
+    payload,
+    id,
+    onPieEnter,
+    arrVal,
+    setActiveIndexMarketCap,
+    topTen,
+    renderTokenData,
+  } = props;
+
+  const handleClick = (idDisplay: string) => {
+    const idx = arrVal.findIndex((el: string[]) => el[0] === idDisplay);
+
+    setActiveIndexMarketCap(idx);
+  };
 
   return (
-    <Box width="max-content" maxW="100%">
-      <HStack gap="10px" spacing="0" flexWrap="wrap" justifyContent="center">
+    <Box width="max-content" maxW="100%" key={id} zIndex="-1">
+      {renderTokenData()}
+      <HStack
+        gap={{ base: "4px", sm: "10px" }}
+        spacing="0"
+        flexWrap="wrap"
+        justifyContent="center"
+      >
         {payload.map((entry: { value: string }, index: string | number) => {
+          const idDisplay = entry.value.split("-")[0];
+
           return (
             <HStack
-              key={entry.value.toUpperCase()}
+              key={`${id}-${entry.value.toUpperCase()}`}
               bg={colorMode === "light" ? "#e7ecf0" : "#081c3b"}
-              p="10px 20px 10px 14px"
+              p={{ base: "8px 16px 8px 10px", md: "10px 20px 10px 14px" }}
               border={
                 colorMode === "light"
                   ? "0.5px solid #e7ecf0"
                   : "0.5px solid #081c3b"
               }
               borderRadius="8px"
-              w="90px"
+              w={{ base: "80px", sm: "90px" }}
               spacing="0"
               gap="6px"
+              //   onClick={onPieEnter}
               onMouseEnter={() => handleMouseEnter(entry.value)}
               onMouseLeave={() => handleMouseLeave(entry.value)}
+              onClick={() => handleClick(idDisplay)}
               cursor="pointer"
               _hover={{
                 bg: colorMode === "light" ? "#e7ecf085" : "rgba(8, 28,59, .7)",
@@ -436,7 +556,7 @@ const CustomLegend = (props: any) => {
               <Box>
                 <RiCopperCoinFill fill={COLORS[Number(index)]} size={16} />
               </Box>
-              <Text variant="toast">{entry.value.toUpperCase()}</Text>
+              <Text variant="toast">{idDisplay.toUpperCase()}</Text>
             </HStack>
           );
         })}
@@ -446,46 +566,103 @@ const CustomLegend = (props: any) => {
 };
 
 const DoughnutChart = (props: any) => {
-  const { global } = props;
-  const marketCap = Object.entries(global.market_cap_percentage);
-  const { colorMode } = useColorMode();
-  console.log(Object.keys(global.market_cap_percentage));
+  const { global, topTen } = props;
 
-  console.log(marketCap);
-  const data: any[] = [];
+  const marketCap = Object.entries(global.market_cap_percentage);
+  const totalVolume = Object.entries(global.total_volume);
+  const { colorMode } = useColorMode();
+
+  const marketCapData: any[] = [];
   Object.keys(marketCap).forEach((key, idx) => {
-    console.log(key);
-    data.push({ name: marketCap[idx][0], value: marketCap[idx][1] });
+    marketCapData.push({
+      name: `${marketCap[idx][0]}-market`,
+      value: marketCap[idx][1],
+    });
+  });
+  const totalVolumeData: any[] = [];
+  Object.keys(totalVolume).forEach((key, idx) => {
+    totalVolumeData.push({
+      name: `${totalVolume[idx][0]}-volume`,
+      value: totalVolume[idx][1],
+    });
   });
 
-  console.log({ data });
-  const renderLegend = useCallback((props: { payload: any }) => {
-    const { payload } = props;
-    return (
-      <Box width="max-content" maxW="100%">
-        <HStack gap="10px" spacing="0" flexWrap="wrap" justifyContent="center">
-          {payload.map((entry: { value: string }, index: number) => {
-            return (
-              <HStack
-                key={entry.value.toUpperCase()}
-                bg={colorMode === "light" ? "#e7ecf0" : "#081c3b"}
-                p="10px 20px 10px 14px"
-                borderRadius="8px"
-                w="90px"
-                spacing="0"
-                gap="6px"
-              >
-                <Box>
-                  <RiCopperCoinFill fill={COLORS[index]} size={16} />
-                </Box>
-                <Text variant="toast">{entry.value.toUpperCase()}</Text>
-              </HStack>
-            );
-          })}
+  const [activeIndexMarketCap, setActiveIndexMarketCap] = useState(0);
+  const onPieEnter = useCallback((_: any, index: SetStateAction<number>) => {
+    setActiveIndexMarketCap(index);
+  }, []);
+
+  const renderTokenData = useCallback(() => {
+    return activeIndexMarketCap !== undefined ? (
+      <Box bottom={{ base: "20px", md: "20px" }}>
+        <HStack
+          spacing={0}
+          alignItems="center"
+          gap="14px"
+          pb="20px"
+          justifyContent="center"
+        >
+          <Link
+            href={`${window.location.origin}/coins/${topTen[activeIndexMarketCap].id}`}
+            passHref
+            scroll
+          >
+            <Text
+              cursor="pointer"
+              variant="h-5"
+              textTransform="capitalize"
+              _hover={{ textDecoration: "underline" }}
+            >
+              {topTen[activeIndexMarketCap]?.id} Stats:
+            </Text>
+          </Link>
+
+          <HStack spacing="0" gap="3px">
+            {topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
+            0 ? (
+              <AiFillCaretDown fill="var(--red)" />
+            ) : (
+              <AiFillCaretUp fill="var(--green)" />
+            )}
+
+            <Text
+              variant="text-bold"
+              color={
+                topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
+                0
+                  ? "red"
+                  : "green"
+              }
+            >
+              {Math.abs(
+                topTen[
+                  activeIndexMarketCap
+                ].market_cap_change_percentage_24h.toFixed(2)
+              )}
+              %
+            </Text>
+          </HStack>
+          <Text
+            variant="text-bold"
+            color={
+              topTen[activeIndexMarketCap].market_cap_change_percentage_24h < 0
+                ? "red"
+                : topTen[activeIndexMarketCap]
+                    .market_cap_change_percentage_24h > 0
+                ? "green"
+                : "inherit"
+            }
+          >
+            {`$${
+              Math.abs(topTen[activeIndexMarketCap].price_change_24h) > 1
+                ? topTen[activeIndexMarketCap].price_change_24h.toFixed(2)
+                : topTen[activeIndexMarketCap].price_change_24h.toFixed(6)
+            }`}
+          </Text>
         </HStack>
       </Box>
-    );
-  }, []);
+    ) : null;
+  }, [activeIndexMarketCap, topTen]);
 
   return (
     <Stack
@@ -499,24 +676,26 @@ const DoughnutChart = (props: any) => {
         h="600px"
         variant="box-component"
         position="relative"
-        stroke={colorMode === "light" ? "#dddfe1" : "white"}
+        // stroke={colorMode === "light" ? "#dddfe1" : "white"}
+        pt="20px"
       >
-        <Text variant="h-5">Market Cap</Text>
         {/* <Box height='100%' w='100%'> */}
         <ResponsiveContainer>
           <PieChart>
             <Pie
-              data={data}
+              data={marketCapData}
               cx="50%"
               cy="50%"
-              innerRadius="70%"
-              outerRadius="100%"
-              //   fill="#8884d8"
+              innerRadius="50%"
+              outerRadius="90%"
               stroke="inherit"
               paddingAngle={3}
               dataKey="value"
+              activeIndex={activeIndexMarketCap}
+              activeShape={(props) => renderActiveShape({ ...props, topTen })}
+              onMouseEnter={onPieEnter}
             >
-              {marketCap.map((entry, index) => (
+              {marketCapData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
@@ -524,9 +703,24 @@ const DoughnutChart = (props: any) => {
               ))}
             </Pie>
 
-            <Tooltip content={<CustomTooltip />} />
+            {/* <Tooltip
+              content={<CustomTooltip />}
+
+             //  position={{ y: 56, x: -150 }} wrapperStyle={{visibility: 'visible'}}
+            /> 
             {/* <Legend content={renderLegend}  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}/> */}
-            <Legend content={<CustomLegend />} />
+
+            <Legend
+              content={
+                <CustomLegend
+                  id="market-cap"
+                  arrVal={marketCap}
+                  setActiveIndexMarketCap={setActiveIndexMarketCap}
+                  topTen={topTen}
+                  renderTokenData={renderTokenData}
+                />
+              }
+            />
           </PieChart>
         </ResponsiveContainer>
         {/* </Box> */}
@@ -536,40 +730,108 @@ const DoughnutChart = (props: any) => {
         h="600px"
         variant="box-component"
         position="relative"
-        stroke={colorMode === "light" ? "#dddfe1" : "white"}
+        // stroke={colorMode === "light" ? "#dddfe1" : "white"}
+        pt="20px"
       >
-        <Text variant="h-5">Market Cap</Text>
-        {/* <Box height='100%' w='100%'> */}
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius="70%"
-              outerRadius="100%"
-              //   fill="#8884d8"
-              stroke="inherit"
-              paddingAngle={3}
-              dataKey="value"
-            >
-              {marketCap.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-
-            <Tooltip content={<CustomTooltip />} />
-            {/* <Legend content={renderLegend}  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}/> */}
-            <Legend content={<CustomLegend />} />
-          </PieChart>
-        </ResponsiveContainer>
-        {/* </Box> */}
+        {activeIndexMarketCap !== undefined && (
+          <Chart
+              data={topTen[activeIndexMarketCap].sparkline_in_7d.price}
+            // data={topTen}
+          />
+        )}
       </Container>
     </Stack>
   );
 };
 
 export default DoughnutChart;
+
+// <Container
+// w={{ base: "100%", lg: "calc(50% - 20px)" }}
+// h="600px"
+// variant="box-component"
+// position="relative"
+// stroke={colorMode === "light" ? "#dddfe1" : "white"}
+// >
+// <Text variant="h-5">Market Cap</Text>
+// {/* <Box height='100%' w='100%'> */}
+// <ResponsiveContainer>
+//   <PieChart>
+//     <Pie
+//       data={totalVolumeData}
+//       cx="50%"
+//       cy="50%"
+//       innerRadius="70%"
+//       outerRadius="80%"
+//       //   fill="#8884d8"
+//       stroke="inherit"
+//       paddingAngle={3}
+//       dataKey="value"
+//       activeIndex={activeIndexMarketCap}
+//       activeShape={renderActiveShape}
+//       onMouseEnter={onPieEnter}
+//     >
+//       {totalVolumeData.map((entry, index) => (
+//         <Cell
+//           key={`cell-${index}`}
+//           fill={COLORS[index % COLORS.length]}
+//         />
+//       ))}
+//     </Pie>
+
+//     <Tooltip content={<CustomTooltip />} />
+//     {/* <Legend content={renderLegend}  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}/> */}
+//     <Legend
+//       content={
+//         <CustomLegend id="total-volume" onPieEnter={onPieEnter} />
+//       }
+//     />
+//   </PieChart>
+// </ResponsiveContainer>
+// {/* </Box> */}
+// </Container>
+
+{
+  /* <path
+          d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+          stroke={fill}
+          fill="none"
+        />
+        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" /> */
+}
+{
+  /* <foreignObject
+          // x={ex + (cos >= 0 ? 10: -0) }
+          // y={ey}
+          x={cos >= 0 ? ex - 110 : ex}
+          y={ey + 10}
+          height="200px"
+          width="110px"
+        >
+          {/* <foreignObject x={cx + 10} y={ey} height="150px" width="300px"> 
+        </foreignObject> 
+
+       <Box>
+        <VStack
+          background="#3b547d"
+          width="110px"
+          height="max-content"
+          padding="10px"
+          borderRadius="6px"
+          spacing={0}
+          alignItems="flex-start"
+        >
+          <Text variant="text-bold" textTransform="capitalize">
+            {topTen[idx].id}
+          </Text>
+          <Text variant="text-bold">
+            <span style={{ fontWeight: "600", fontSize: "12px" }}>MV: </span>
+            {value.toFixed(2)}%
+          </Text>
+          <Text variant="text-bold">
+            <span style={{ fontWeight: "600", fontSize: "12px" }}> 24h%: </span>
+            {topTen[idx].market_cap_change_percentage_24h.toFixed(2)}%
+          </Text>
+        </VStack>
+      </Box> */
+}

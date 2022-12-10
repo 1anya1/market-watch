@@ -148,7 +148,7 @@ const theme = extendTheme({
               : "2px solid #133364",
           // backgroundColor: props.colorMode === "dark" ? "#123364" : "#f5f6fa",
           backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
-          padding: "20px",
+          padding: { base: "10px", md: "20px" },
           borderRadius: "11px",
           maxW: "unset",
         }),
@@ -213,7 +213,7 @@ const theme = extendTheme({
       },
     },
     Popover: {
-      baseStyle:(props: StyleFunctionProps) => ({ 
+      baseStyle: (props: StyleFunctionProps) => ({
         content: {
           fontWeight: "700",
           bg: props.colorMode === "light" ? "#e7ecf1" : "#133364",
