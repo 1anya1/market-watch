@@ -148,7 +148,7 @@ const theme = extendTheme({
               : "2px solid #133364",
           // backgroundColor: props.colorMode === "dark" ? "#123364" : "#f5f6fa",
           backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
-          padding: { base: "10px", md: "20px" },
+          padding: { base: "14px", md: "20px" },
           borderRadius: "11px",
           maxW: "unset",
         }),

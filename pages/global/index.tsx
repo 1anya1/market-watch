@@ -38,9 +38,9 @@ const GlobalData = () => {
   }, [global, topTen]);
   return (
     <>
-      <Text variant="h3">Global Data</Text>
+      <Text variant="h-3" pt='40px'>Global Data</Text>
       {global && topTen && <DoughnutChart global={global} topTen={topTen} />}
-      
+
     </>
   );
 };

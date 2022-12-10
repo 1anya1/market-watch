@@ -673,14 +673,15 @@ const DoughnutChart = (props: any) => {
     >
       <Container
         w={{ base: "100%", lg: "calc(50% - 20px)" }}
-        h="600px"
+        h="640px"
         variant="box-component"
         position="relative"
         // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
       >
+        <Text variant="h-4">Market Cap</Text>
         {/* <Box height='100%' w='100%'> */}
-        <ResponsiveContainer>
+        <ResponsiveContainer height="95%">
           <PieChart>
             <Pie
               data={marketCapData}
@@ -733,12 +734,29 @@ const DoughnutChart = (props: any) => {
         // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
       >
+        <HStack>
+            <Image height='30px' width='30px' src={topTen[activeIndexMarketCap].image} alt='coin logo' />
+          <Text variant="h-4" textTransform="capitalize">
+            {topTen[activeIndexMarketCap].id}   7 Day Trend
+          </Text>
+        </HStack>
+       
         {activeIndexMarketCap !== undefined && (
           <Chart
-              data={topTen[activeIndexMarketCap].sparkline_in_7d.price}
+            data={topTen[activeIndexMarketCap].sparkline_in_7d.price}
             // data={topTen}
           />
         )}
+         <Text variant="h-4" textTransform="capitalize">
+            {topTen[activeIndexMarketCap].market_cap} Market Cap  
+          </Text>
+          <Text variant="h-4" textTransform="capitalize">
+            {topTen[activeIndexMarketCap].market_cap_rank
+}  Market Cap Rank
+          </Text>
+          <Text variant="h-4" textTransform="capitalize">
+            {topTen[activeIndexMarketCap].total_volume}   Total Volume
+          </Text>
       </Container>
     </Stack>
   );
