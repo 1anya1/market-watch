@@ -269,7 +269,7 @@ const ChartComponent = (props: any) => {
           // const findId = data.data.filter(
           //   (el: { symbol: any }) => el.symbol.toLowerCase() === coinInfo.symbol
           // );
-          console.log(findId);
+          console.log(findId.id);
           setCryptoId(findId.id);
         });
     }
@@ -1254,167 +1254,158 @@ const ChartComponent = (props: any) => {
               </Container>
             </VStack>
           </Stack>
-          {news?.articles?.length > 0 ||
-            (news?.video?.length > 0 && (
-              <Container
-                variant="box-component"
-                width="100%"
-                h="max-content"
-                mt="20px"
+
+          <Container
+            variant="box-component"
+            width="100%"
+            h="max-content"
+            mt="20px"
+          >
+            <Tabs width="100%">
+              <TabList
+                borderBottom="unset"
+                pb="20px"
+                gap={{ base: "20px", md: "28px" }}
               >
-                <Tabs width="100%">
-                  <TabList
-                    borderBottom="unset"
+                {news?.articles.length > 0 ? (
+                  <Tab
+                    fontSize={{ base: "24px", sm: "26px" }}
+                    fontWeight="700"
                     pb="20px"
-                    gap={{ base: "20px", md: "28px" }}
+                    className="tab"
                   >
-                    {news?.articles.length > 0 ? (
-                      <Tab
-                        fontSize={{ base: "24px", sm: "26px" }}
-                        fontWeight="700"
-                        pb="20px"
-                        className="tab"
+                    News
+                  </Tab>
+                ) : null}
+                {news?.videos.length > 0 ? (
+                  <Tab
+                    fontSize={{ base: "24px", sm: "26px" }}
+                    fontWeight="700"
+                    pb="20px"
+                    className="tab"
+                  >
+                    Videos
+                  </Tab>
+                ) : null}
+              </TabList>
+              <TabPanels padding="0">
+                <TabPanel padding="0">
+                  {news?.articles.length > 0 && individualPage && (
+                    <Box overflow="scroll" className="container">
+                      <HStack
+                        columnGap="20px"
+                        overflow="hidden"
+                        width="max-content"
+                        alignItems="flex-start"
                       >
-                        News
-                      </Tab>
-                    ) : null}
-                    {news?.videos.length > 0 ? (
-                      <Tab
-                        fontSize={{ base: "24px", sm: "26px" }}
-                        fontWeight="700"
-                        pb="20px"
-                        className="tab"
-                      >
-                        Videos
-                      </Tab>
-                    ) : null}
-                  </TabList>
-                  <TabPanels padding="0">
-                    <TabPanel padding="0">
-                      {news?.articles.length > 0 && individualPage && (
-                        <Box overflow="scroll" className="container">
-                          <HStack
-                            columnGap="20px"
-                            overflow="hidden"
-                            width="max-content"
-                            alignItems="flex-start"
+                        {news.articles.map((el: any) => (
+                          <Stack
+                            flexDir={{ base: "column" }}
+                            // gap="20px"
+                            key={el.link}
+                            margin="0 !important"
+                            justifyContent="space-between"
+                            width={{
+                              base: "80vw",
+                              xs: "70vw",
+                              sm: "60vw",
+                              md: "50vw",
+                              lg: "40vw",
+                            }}
+                            maxW="400px"
                           >
-                            {news.articles.map((el: any) => (
-                              <Stack
-                                flexDir={{ base: "column" }}
-                                // gap="20px"
-                                key={el.link}
-                                margin="0 !important"
-                                justifyContent="space-between"
-                                width={{
-                                  base: "80vw",
-                                  xs: "70vw",
-                                  sm: "60vw",
-                                  md: "50vw",
-                                  lg: "40vw",
-                                }}
-                                maxW="400px"
-                              >
-                                <Box
-                                  backgroundImage={`url("${el.thumbnail}")`}
-                                  borderRadius="8px"
-                                  backgroundSize="cover"
-                                  sx={{
-                                    aspectRatio: "16/9",
-                                  }}
-                                  w="100%"
-                                  margin="0 !important"
-                                />
-                                <VStack
-                                  width="100%"
-                                  justifyContent="center"
-                                  alignItems="flex-start"
-                                >
-                                  <a href={el.link}>
-                                    <Text
-                                      variant="h-4"
-                                      fontWeight="700"
-                                      pb="6px"
-                                    >
-                                      {50 < el.title.length
-                                        ? `${el.title
-                                            .replace(/[^a-zA-Z ]/g, "")
-                                            .substring(0, 50)}...`
-                                        : el.title.replace(/[^a-zA-Z ]/g, "")}
-                                      <span
-                                        style={{
-                                          display: "inline-block",
-                                          marginLeft: "8px",
-                                          lineHeight: "1.5",
-                                        }}
-                                      >
-                                        <BiLinkExternal
-                                          size={24}
-                                          fill="#4983c7"
-                                        />
-                                      </span>
-                                    </Text>
-                                    <Text fontWeight="bold">
-                                      {dateParse(el.publication_time)}
-                                    </Text>
-                                  </a>
-                                  <Text
-                                    lineHeight="1.5"
-                                    fontSize="16px"
-                                    maxW="100%"
+                            <Box
+                              backgroundImage={`url("${el.thumbnail}")`}
+                              borderRadius="8px"
+                              backgroundSize="cover"
+                              sx={{
+                                aspectRatio: "16/9",
+                              }}
+                              w="100%"
+                              margin="0 !important"
+                            />
+                            <VStack
+                              width="100%"
+                              justifyContent="center"
+                              alignItems="flex-start"
+                            >
+                              <a href={el.link}>
+                                <Text variant="h-4" fontWeight="700" pb="6px">
+                                  {50 < el.title.length
+                                    ? `${el.title
+                                        .replace(/[^a-zA-Z ]/g, "")
+                                        .substring(0, 50)}...`
+                                    : el.title.replace(/[^a-zA-Z ]/g, "")}
+                                  <span
+                                    style={{
+                                      display: "inline-block",
+                                      marginLeft: "8px",
+                                      lineHeight: "1.5",
+                                    }}
                                   >
-                                    {150 < el.description.length
-                                      ? `${el.description.substring(0, 150)}...`
-                                      : el.description}
-                                  </Text>
-                                </VStack>
-                              </Stack>
-                            ))}
-                          </HStack>
-                        </Box>
-                      )}
-                    </TabPanel>
-                    <TabPanel padding="0">
-                      {news?.videos.length > 0 && individualPage && (
-                        <Box overflow="scroll" className="container">
-                          <HStack
-                            gap="20px"
-                            overflow="hidden"
-                            width="max-content"
-                            alignItems="flex-start"
-                          >
-                            {news.videos.map((el: any) => (
-                              <VStack
-                                key={el.id}
-                                width={{
-                                  base: "80vw",
-                                  xs: "70vw",
-                                  sm: "60vw",
-                                  md: "50vw",
-                                  lg: "40vw",
-                                }}
-                                maxW="400px"
+                                    <BiLinkExternal size={24} fill="#4983c7" />
+                                  </span>
+                                </Text>
+                                <Text fontWeight="bold">
+                                  {dateParse(el.publication_time)}
+                                </Text>
+                              </a>
+                              <Text
+                                lineHeight="1.5"
+                                fontSize="16px"
+                                maxW="100%"
                               >
-                                <Box
-                                  borderRadius="8px"
-                                  as="iframe"
-                                  src={`https://www.youtube.com/embed/${el.id}`}
-                                  width="100%"
-                                  sx={{
-                                    aspectRatio: "16/9",
-                                  }}
-                                />
-                                <Text variant="h-4">{el.title}</Text>
-                              </VStack>
-                            ))}
-                          </HStack>
-                        </Box>
-                      )}
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </Container>
-            ))}
+                                {150 < el.description.length
+                                  ? `${el.description.substring(0, 150)}...`
+                                  : el.description}
+                              </Text>
+                            </VStack>
+                          </Stack>
+                        ))}
+                      </HStack>
+                    </Box>
+                  )}
+                </TabPanel>
+                <TabPanel padding="0">
+                  {news?.videos.length > 0 && individualPage && (
+                    <Box overflow="scroll" className="container">
+                      <HStack
+                        gap="20px"
+                        overflow="hidden"
+                        width="max-content"
+                        alignItems="flex-start"
+                      >
+                        {news.videos.map((el: any) => (
+                          <VStack
+                            key={el.id}
+                            width={{
+                              base: "80vw",
+                              xs: "70vw",
+                              sm: "60vw",
+                              md: "50vw",
+                              lg: "40vw",
+                            }}
+                            maxW="400px"
+                          >
+                            <Box
+                              borderRadius="8px"
+                              as="iframe"
+                              src={`https://www.youtube.com/embed/${el.id}`}
+                              width="100%"
+                              sx={{
+                                aspectRatio: "16/9",
+                              }}
+                            />
+                            <Text variant="h-4">{el.title}</Text>
+                          </VStack>
+                        ))}
+                      </HStack>
+                    </Box>
+                  )}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </Container>
         </Box>
       ) : null}
     </>
