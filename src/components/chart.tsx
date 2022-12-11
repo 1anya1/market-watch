@@ -259,14 +259,18 @@ const ChartComponent = (props: any) => {
 
   useEffect(() => {
     if (coinInfo.symbol && individualPage) {
-      fetch(`https://api.coingecko.com/api/v3/coins/list`)
+      fetch(`https://price-api.crypto.com/meta/v1/all-tokens`)
         .then((res) => res.json())
         .then((data) => {
-          const findId =data.filter(
-            (el: { symbol: any }) => el.symbol.toLowerCase() === coinInfo.symbol
+          const findId = data.data.find(
+            (el: { symbol: string }) =>
+              el.symbol.toLowerCase() === coinInfo.symbol
           );
-
-          setCryptoId(findId[0].token_id);
+          // const findId = data.data.filter(
+          //   (el: { symbol: any }) => el.symbol.toLowerCase() === coinInfo.symbol
+          // );
+          console.log(findId);
+          setCryptoId(findId.id);
         });
     }
   }, [coinId, coinInfo, individualPage]);
@@ -688,7 +692,14 @@ const ChartComponent = (props: any) => {
         </HStack>
       </VStack>
     );
-  }, [colorMode, movingAverage, timeFrame, timeFrameLow, timeFrameMax, timeFrames]);
+  }, [
+    colorMode,
+    movingAverage,
+    timeFrame,
+    timeFrameLow,
+    timeFrameMax,
+    timeFrames,
+  ]);
   const toast = useToast();
   return (
     <>
@@ -709,8 +720,7 @@ const ChartComponent = (props: any) => {
               </Text>
             </HStack>
             <HStack>
-              <Button variant='medium'>
-                
+              <Button variant="medium">
                 <FaStar
                   size={18}
                   onClick={liked ? deleteFromDatabase : addToDatabase}
@@ -718,7 +728,7 @@ const ChartComponent = (props: any) => {
                 />
               </Button>
 
-              <Button variant='medium'>
+              <Button variant="medium">
                 <FaShareAlt
                   size={18}
                   onClick={() => {
@@ -749,7 +759,7 @@ const ChartComponent = (props: any) => {
                   }}
                 />
               </Button>
-              <Button variant='medium'>Buy/Sell</Button>
+              <Button variant="medium">Buy/Sell</Button>
             </HStack>
           </HStack>
 
@@ -1157,12 +1167,7 @@ const ChartComponent = (props: any) => {
                   <Text fontSize="12px">
                     This is not real time data. To use for approximation only*
                   </Text>
-                  <Button
-                   variant='large'
-                   width='100%'
-                   mt='10px'
-                  >
-
+                  <Button variant="large" width="100%" mt="10px">
                     Buy
                   </Button>
                 </Container>
@@ -1177,7 +1182,7 @@ const ChartComponent = (props: any) => {
                       href={coinInfo.url}
                       className="links"
                     >
-                      <Button w="100%" p="20px" variant='medium'>
+                      <Button w="100%" p="20px" variant="medium">
                         <HStack>
                           <TbWorld size={22} />
                           <Text>Website</Text>
@@ -1192,7 +1197,7 @@ const ChartComponent = (props: any) => {
                       href={`https://www.facebook.com/${coinInfo.facebook}`}
                       className="links"
                     >
-                      <Button w="100%" p="20px" variant='medium'>
+                      <Button w="100%" p="20px" variant="medium">
                         <HStack>
                           <BsFacebook size={20} />
                           <Text>Facebook</Text>
@@ -1207,7 +1212,7 @@ const ChartComponent = (props: any) => {
                       href={`https://www.twitter.com/${coinInfo.twitter}`}
                       className="links"
                     >
-                      <Button w="100%" p="20px" variant='medium'>
+                      <Button w="100%" p="20px" variant="medium">
                         <HStack>
                           <AiFillTwitterCircle size="22.5px" />
                           <Text>Twitter</Text>
@@ -1222,7 +1227,7 @@ const ChartComponent = (props: any) => {
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w="100%" variant='medium'>
+                      <Button w="100%" variant="medium">
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
@@ -1237,7 +1242,7 @@ const ChartComponent = (props: any) => {
                       href={coinInfo.github}
                       className="links"
                     >
-                      <Button w="100%" variant='medium'>
+                      <Button w="100%" variant="medium">
                         <HStack>
                           <FaGithub size="20px" />
                           <Text>Github</Text>
@@ -1249,157 +1254,167 @@ const ChartComponent = (props: any) => {
               </Container>
             </VStack>
           </Stack>
-          <Container
-            variant="box-component"
-            width="100%"
-            h="max-content"
-            mt="20px"
-          >
-            <Tabs width="100%">
-              <TabList
-                borderBottom="unset"
-                pb="20px"
-                gap={{ base: "20px", md: "28px" }}
+          {news?.articles?.length > 0 ||
+            (news?.video?.length > 0 && (
+              <Container
+                variant="box-component"
+                width="100%"
+                h="max-content"
+                mt="20px"
               >
-                {news?.articles.length > 0 ? (
-                  <Tab
-                    fontSize={{ base: "24px", sm: "26px" }}
-                    fontWeight="700"
+                <Tabs width="100%">
+                  <TabList
+                    borderBottom="unset"
                     pb="20px"
-                    className="tab"
+                    gap={{ base: "20px", md: "28px" }}
                   >
-                    News
-                  </Tab>
-                ) : null}
-                {news?.videos.length > 0 ? (
-                  <Tab
-                    fontSize={{ base: "24px", sm: "26px" }}
-                    fontWeight="700"
-                    pb="20px"
-                    className="tab"
-                  >
-                    Videos
-                  </Tab>
-                ) : null}
-              </TabList>
-              <TabPanels padding="0">
-                <TabPanel padding="0">
-                  {news?.articles.length > 0 && individualPage && (
-                    <Box overflow="scroll" className="container">
-                      <HStack
-                        columnGap="20px"
-                        overflow="hidden"
-                        width="max-content"
-                        alignItems="flex-start"
+                    {news?.articles.length > 0 ? (
+                      <Tab
+                        fontSize={{ base: "24px", sm: "26px" }}
+                        fontWeight="700"
+                        pb="20px"
+                        className="tab"
                       >
-                        {news.articles.map((el: any) => (
-                          <Stack
-                            flexDir={{ base: "column" }}
-                            // gap="20px"
-                            key={el.link}
-                            margin="0 !important"
-                            justifyContent="space-between"
-                            width={{
-                              base: "80vw",
-                              xs: "70vw",
-                              sm: "60vw",
-                              md: "50vw",
-                              lg: "40vw",
-                            }}
-                            maxW="400px"
+                        News
+                      </Tab>
+                    ) : null}
+                    {news?.videos.length > 0 ? (
+                      <Tab
+                        fontSize={{ base: "24px", sm: "26px" }}
+                        fontWeight="700"
+                        pb="20px"
+                        className="tab"
+                      >
+                        Videos
+                      </Tab>
+                    ) : null}
+                  </TabList>
+                  <TabPanels padding="0">
+                    <TabPanel padding="0">
+                      {news?.articles.length > 0 && individualPage && (
+                        <Box overflow="scroll" className="container">
+                          <HStack
+                            columnGap="20px"
+                            overflow="hidden"
+                            width="max-content"
+                            alignItems="flex-start"
                           >
-                            <Box
-                              backgroundImage={`url("${el.thumbnail}")`}
-                              borderRadius="8px"
-                              backgroundSize="cover"
-                              sx={{
-                                aspectRatio: "16/9",
-                              }}
-                              w="100%"
-                              margin="0 !important"
-                            />
-                            <VStack
-                              width="100%"
-                              justifyContent="center"
-                              alignItems="flex-start"
-                            >
-                              <a href={el.link}>
-                                <Text variant="h-4" fontWeight="700" pb="6px">
-                                  {50 < el.title.length
-                                    ? `${el.title
-                                        .replace(/[^a-zA-Z ]/g, "")
-                                        .substring(0, 50)}...`
-                                    : el.title.replace(/[^a-zA-Z ]/g, "")}
-                                  <span
-                                    style={{
-                                      display: "inline-block",
-                                      marginLeft: "8px",
-                                      lineHeight: "1.5",
-                                    }}
-                                  >
-                                    <BiLinkExternal size={24} fill="#4983c7" />
-                                  </span>
-                                </Text>
-                                <Text fontWeight="bold">
-                                  {dateParse(el.publication_time)}
-                                </Text>
-                              </a>
-                              <Text
-                                lineHeight="1.5"
-                                fontSize="16px"
-                                maxW="100%"
+                            {news.articles.map((el: any) => (
+                              <Stack
+                                flexDir={{ base: "column" }}
+                                // gap="20px"
+                                key={el.link}
+                                margin="0 !important"
+                                justifyContent="space-between"
+                                width={{
+                                  base: "80vw",
+                                  xs: "70vw",
+                                  sm: "60vw",
+                                  md: "50vw",
+                                  lg: "40vw",
+                                }}
+                                maxW="400px"
                               >
-                                {150 < el.description.length
-                                  ? `${el.description.substring(0, 150)}...`
-                                  : el.description}
-                              </Text>
-                            </VStack>
-                          </Stack>
-                        ))}
-                      </HStack>
-                    </Box>
-                  )}
-                </TabPanel>
-                <TabPanel padding="0">
-                  {news?.videos.length > 0 && individualPage && (
-                    <Box overflow="scroll" className="container">
-                      <HStack
-                        gap="20px"
-                        overflow="hidden"
-                        width="max-content"
-                        alignItems="flex-start"
-                      >
-                        {news.videos.map((el: any) => (
-                          <VStack
-                            key={el.id}
-                            width={{
-                              base: "80vw",
-                              xs: "70vw",
-                              sm: "60vw",
-                              md: "50vw",
-                              lg: "40vw",
-                            }}
-                            maxW="400px"
+                                <Box
+                                  backgroundImage={`url("${el.thumbnail}")`}
+                                  borderRadius="8px"
+                                  backgroundSize="cover"
+                                  sx={{
+                                    aspectRatio: "16/9",
+                                  }}
+                                  w="100%"
+                                  margin="0 !important"
+                                />
+                                <VStack
+                                  width="100%"
+                                  justifyContent="center"
+                                  alignItems="flex-start"
+                                >
+                                  <a href={el.link}>
+                                    <Text
+                                      variant="h-4"
+                                      fontWeight="700"
+                                      pb="6px"
+                                    >
+                                      {50 < el.title.length
+                                        ? `${el.title
+                                            .replace(/[^a-zA-Z ]/g, "")
+                                            .substring(0, 50)}...`
+                                        : el.title.replace(/[^a-zA-Z ]/g, "")}
+                                      <span
+                                        style={{
+                                          display: "inline-block",
+                                          marginLeft: "8px",
+                                          lineHeight: "1.5",
+                                        }}
+                                      >
+                                        <BiLinkExternal
+                                          size={24}
+                                          fill="#4983c7"
+                                        />
+                                      </span>
+                                    </Text>
+                                    <Text fontWeight="bold">
+                                      {dateParse(el.publication_time)}
+                                    </Text>
+                                  </a>
+                                  <Text
+                                    lineHeight="1.5"
+                                    fontSize="16px"
+                                    maxW="100%"
+                                  >
+                                    {150 < el.description.length
+                                      ? `${el.description.substring(0, 150)}...`
+                                      : el.description}
+                                  </Text>
+                                </VStack>
+                              </Stack>
+                            ))}
+                          </HStack>
+                        </Box>
+                      )}
+                    </TabPanel>
+                    <TabPanel padding="0">
+                      {news?.videos.length > 0 && individualPage && (
+                        <Box overflow="scroll" className="container">
+                          <HStack
+                            gap="20px"
+                            overflow="hidden"
+                            width="max-content"
+                            alignItems="flex-start"
                           >
-                            <Box
-                              borderRadius="8px"
-                              as="iframe"
-                              src={`https://www.youtube.com/embed/${el.id}`}
-                              width="100%"
-                              sx={{
-                                aspectRatio: "16/9",
-                              }}
-                            />
-                            <Text variant="h-4">{el.title}</Text>
-                          </VStack>
-                        ))}
-                      </HStack>
-                    </Box>
-                  )}
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </Container>
+                            {news.videos.map((el: any) => (
+                              <VStack
+                                key={el.id}
+                                width={{
+                                  base: "80vw",
+                                  xs: "70vw",
+                                  sm: "60vw",
+                                  md: "50vw",
+                                  lg: "40vw",
+                                }}
+                                maxW="400px"
+                              >
+                                <Box
+                                  borderRadius="8px"
+                                  as="iframe"
+                                  src={`https://www.youtube.com/embed/${el.id}`}
+                                  width="100%"
+                                  sx={{
+                                    aspectRatio: "16/9",
+                                  }}
+                                />
+                                <Text variant="h-4">{el.title}</Text>
+                              </VStack>
+                            ))}
+                          </HStack>
+                        </Box>
+                      )}
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </Container>
+            ))}
         </Box>
       ) : null}
     </>

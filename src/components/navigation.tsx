@@ -17,6 +17,7 @@ import {
   DrawerContent,
   DrawerCloseButton,
   Input,
+  VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
@@ -107,7 +108,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   fontSize="14px"
                   fontWeight={700}
                 >
-                  My Items
+                  Watchlist
                 </Text>
               </Link>
               <HStack>
@@ -186,14 +187,16 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           onClick={onOpenNav}
           display={{ base: "box", md: "none" }}
         > */}
+
         <Box
           // ref={btnRef}
           onClick={onOpenNav}
           display={{ base: "box", md: "none" }}
-          cursor='pointer'
+          cursor="pointer"
         >
           <HiMenuAlt3 size={30} />
         </Box>
+
         {/* </Button> */}
         <Drawer
           isOpen={navOpen}
@@ -202,155 +205,144 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           // finalFocusRef={btnRef}
         >
           <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Create your account</DrawerHeader>
-
-            <DrawerBody>
-              <Box>
-                <Link href="/" passHref>
-                  <Box onClick={onCloseNav}>
-                    <Logo />
-                  </Box>
-                </Link>
-              </Box>
-
-              <Link href="/">
-                <Text
-                  color={
-                    router.pathname === "/"
-                      ? "#4983c6"
-                      : colorMode === "light"
-                      ? "black"
-                      : "#a0aec0"
-                  }
-                  fontSize="14px"
-                  fontWeight={700}
-                  onClick={onCloseNav}
-                >
-                  Home
-                </Text>
-              </Link>
-
-              <Link href="/global">
-                <Text
-                onClick={onCloseNav}
-                  color={
-                    router.pathname === "/global"
-                      ? "#4983c6"
-                      : colorMode === "light"
-                      ? "black"
-                      : "#a0aec0"
-                  }
-                  fontSize="14px"
-                  fontWeight={700}
-                >
-                  Global Market
-                </Text>
-              </Link>
-
-              {user?.name && (
-                <>
-                  <Link href="/liked">
-                    <Text
-                      color={
-                        router.pathname === "/crypto"
-                          ? "#4983c6"
-                          : colorMode === "light"
-                          ? "black"
-                          : "#a0aec0"
-                      }
-                      fontSize="14px"
-                      fontWeight={700}
-                      onClick={onCloseNav}
-                    >
-                      My Items
-                    </Text>
+          <DrawerContent bg={colorMode === "light" ? "white" : "#081c3b"}>
+            <DrawerHeader>
+              <HStack justifyContent="space-between">
+                <Box>
+                  <Link href="/" passHref>
+                    <Box onClick={onCloseNav}>
+                      <Logo />
+                    </Box>
                   </Link>
-                  <HStack>
-                    <Text>Hi, {user.name}</Text>
-                    <CgProfile />
-                  </HStack>
-                </>
-              )}
-              {!user.name ? (
-                <>
-                  <Button
-                    variant="medium"
-                    onClick={() => {
-                      onOpen();
-                      setUserLogin("log-in");
-                      onCloseNav();
-                    }}
-                  >
-                    Log In
-                  </Button>
-                  <Button
-                    variant="medium"
-                    onClick={() => {
-                      onOpen();
-                      setUserLogin("sign-up");
-                      onCloseNav();
-                    }}
-                  >
-                    Sign Up
-                  </Button>
-                </>
-              ) : (
-                <SignOut />
-              )}
-              <Modal
-                isOpen={isOpen}
-                onClose={onClose}
-                isCentered
-                size="lg"
-               
-              >
-                <ModalOverlay />
-                <ModalContent zIndex="100">
-                  <Box p="20px" borderRadius="11px" className="inhere">
-                    <Button
-                      variant="authentication"
-                      onClick={() => setUserLogin("log-in")}
-                      borderBottom={
-                        userLogin === "log-in" ? "1px solid white" : "unset"
-                      }
-                    >
-                      Log In
-                    </Button>
-                    <Button
-                      variant="authentication"
-                      onClick={() => setUserLogin("sign-up")}
-                      borderBottom={
-                        userLogin !== "log-in" ? "1px solid white" : "unset"
-                      }
-                    >
-                      Sign Up
-                    </Button>
-                    <ModalCloseButton />
-                    {userLogin === "log-in" ? (
-                      <SignIn onClose={onClose} />
-                    ) : (
-                      <SignUp onClose={onClose} />
-                    )}
-                  </Box>
-                </ModalContent>
-              </Modal>
-              <HStack>
+                </Box>
+
                 {colorMode === "light" ? (
                   <MdDarkMode size={20} onClick={toggleColorMode} />
                 ) : (
                   <MdLightMode size={20} onClick={toggleColorMode} />
                 )}
               </HStack>
-            </DrawerBody>
+            </DrawerHeader>
 
-            <DrawerFooter>
-              <Button variant="outline" mr={3} onClick={onCloseNav}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue">Save</Button>
-            </DrawerFooter>
+            <DrawerBody>
+              <VStack spacing="0" alignItems="flex-start" gap="10px">
+                <Link href="/">
+                  <Text
+                    color={
+                      router.pathname === "/"
+                        ? "#4983c6"
+                        : colorMode === "light"
+                        ? "black"
+                        : "#a0aec0"
+                    }
+                    fontSize="14px"
+                    fontWeight={700}
+                    onClick={onCloseNav}
+                  >
+                    Home
+                  </Text>
+                </Link>
+
+                <Link href="/global">
+                  <Text
+                    onClick={onCloseNav}
+                    color={
+                      router.pathname === "/global"
+                        ? "#4983c6"
+                        : colorMode === "light"
+                        ? "black"
+                        : "#a0aec0"
+                    }
+                    fontSize="14px"
+                    fontWeight={700}
+                  >
+                    Global Market
+                  </Text>
+                </Link>
+
+                {user?.name && (
+                  <>
+                    <Link href="/liked">
+                      <Text
+                        color={
+                          router.pathname === "/crypto"
+                            ? "#4983c6"
+                            : colorMode === "light"
+                            ? "black"
+                            : "#a0aec0"
+                        }
+                        fontSize="14px"
+                        fontWeight={700}
+                        onClick={onCloseNav}
+                      >
+                        Watchlist
+                      </Text>
+                    </Link>
+                    <HStack>
+                      <Text>Hi, {user.name}</Text>
+                      <CgProfile />
+                    </HStack>
+                  </>
+                )}
+                {!user.name ? (
+                  <VStack alignItems="flex-start" spacing="0" gap="10px">
+                    <Button
+                      variant="medium"
+                      onClick={() => {
+                        onOpen();
+                        setUserLogin("log-in");
+                        onCloseNav();
+                      }}
+                    >
+                      Log In
+                    </Button>
+                    <Button
+                      variant="medium"
+                      onClick={() => {
+                        onOpen();
+                        setUserLogin("sign-up");
+                        onCloseNav();
+                      }}
+                    >
+                      Sign Up
+                    </Button>
+                  </VStack>
+                ) : (
+                  <SignOut />
+                )}
+                <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+                  <ModalOverlay />
+                  <ModalContent zIndex="100">
+                    <Box p="20px" borderRadius="11px" className="inhere">
+                      <Button
+                        variant="authentication"
+                        onClick={() => setUserLogin("log-in")}
+                        borderBottom={
+                          userLogin === "log-in" ? "1px solid white" : "unset"
+                        }
+                      >
+                        Log In
+                      </Button>
+                      <Button
+                        variant="authentication"
+                        onClick={() => setUserLogin("sign-up")}
+                        borderBottom={
+                          userLogin !== "log-in" ? "1px solid white" : "unset"
+                        }
+                      >
+                        Sign Up
+                      </Button>
+                      <ModalCloseButton />
+                      {userLogin === "log-in" ? (
+                        <SignIn onClose={onClose} />
+                      ) : (
+                        <SignUp onClose={onClose} />
+                      )}
+                    </Box>
+                  </ModalContent>
+                </Modal>
+              </VStack>
+            </DrawerBody>
           </DrawerContent>
         </Drawer>
       </HStack>
