@@ -45,7 +45,13 @@ const theme = extendTheme({
   },
   breakpoints: {
     xs: "320px",
+    xxs:'24rem',
     ms: "490px",
+    sm: "30em",
+    md: "48em",
+    lg: "62em",
+    xl: "80em",
+    "2xl": "96em",
   },
   components: {
     InputLeftAddon: {

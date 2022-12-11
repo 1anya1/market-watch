@@ -14,7 +14,7 @@ const GlobalData = () => {
         "https://api.coingecko.com/api/v3/global/decentralized_finance_defi"
       ),
       fetch(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=24h"
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=24h%2C7d%2C30d"
       ),
     ])
       .then(async ([resGlobal, resDefi, resTopTen]) => {
@@ -38,7 +38,7 @@ const GlobalData = () => {
   }, [global, topTen]);
   return (
     <>
-      <Text variant="h-3" pt='40px'>Global Data</Text>
+      <Text variant="h-2" pt='40px' pb='20px'>Global Data</Text>
       {global && topTen && <DoughnutChart global={global} topTen={topTen} />}
 
     </>

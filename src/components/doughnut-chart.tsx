@@ -349,12 +349,14 @@ import {
   Text,
   Button,
   textDecoration,
+  Grid,
 } from "@chakra-ui/react";
 import { SetStateAction, useCallback, useState } from "react";
 import { RiCopperCoinFill } from "react-icons/ri";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import FormattedNumber from "./number-formatter";
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("../../src/components/simple-chart"), {
   ssr: false,
@@ -516,7 +518,7 @@ const CustomLegend = (props: any) => {
 
   return (
     <Box width="max-content" maxW="100%" key={id} zIndex="-1">
-      {renderTokenData()}
+      {/* {renderTokenData()} */}
       <HStack
         gap={{ base: "4px", sm: "10px" }}
         spacing="0"
@@ -592,77 +594,95 @@ const DoughnutChart = (props: any) => {
     setActiveIndexMarketCap(index);
   }, []);
 
-  const renderTokenData = useCallback(() => {
-    return activeIndexMarketCap !== undefined ? (
-      <Box bottom={{ base: "20px", md: "20px" }}>
-        <HStack
-          spacing={0}
-          alignItems="center"
-          gap="14px"
-          pb="20px"
-          justifyContent="center"
+  //   const renderTokenData = useCallback(() => {
+  //     return activeIndexMarketCap !== undefined ? (
+  //       <Box bottom={{ base: "20px", md: "20px" }}>
+  //         <HStack
+  //           spacing={0}
+  //           alignItems="center"
+  //           gap="14px"
+  //           pb="20px"
+  //           justifyContent="center"
+  //         >
+  //           <Link
+  //             href={`${window.location.origin}/coins/${topTen[activeIndexMarketCap].id}`}
+  //             passHref
+  //             scroll
+  //           >
+  //             <Text
+  //               cursor="pointer"
+  //               variant="h-5"
+  //               textTransform="capitalize"
+  //               _hover={{ textDecoration: "underline" }}
+  //             >
+  //               {topTen[activeIndexMarketCap]?.id} Stats:
+  //             </Text>
+  //           </Link>
+
+  //           <HStack spacing="0" gap="3px">
+  //             {topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
+  //             0 ? (
+  //               <AiFillCaretDown fill="var(--red)" />
+  //             ) : (
+  //               <AiFillCaretUp fill="var(--green)" />
+  //             )}
+
+  //             <Text
+  //               variant="text-bold"
+  //               color={
+  //                 topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
+  //                 0
+  //                   ? "red"
+  //                   : "green"
+  //               }
+  //             >
+  //               {Math.abs(
+  //                 topTen[
+  //                   activeIndexMarketCap
+  //                 ].market_cap_change_percentage_24h.toFixed(2)
+  //               )}
+  //               %
+  //             </Text>
+  //           </HStack>
+  //           <Text
+  //             variant="text-bold"
+  //             color={
+  //               topTen[activeIndexMarketCap].market_cap_change_percentage_24h < 0
+  //                 ? "red"
+  //                 : topTen[activeIndexMarketCap]
+  //                     .market_cap_change_percentage_24h > 0
+  //                 ? "green"
+  //                 : "inherit"
+  //             }
+  //           >
+  //             {`$${
+  //               Math.abs(topTen[activeIndexMarketCap].price_change_24h) > 1
+  //                 ? topTen[activeIndexMarketCap].price_change_24h.toFixed(2)
+  //                 : topTen[activeIndexMarketCap].price_change_24h.toFixed(6)
+  //             }`}
+  //           </Text>
+  //         </HStack>
+  //       </Box>
+  //     ) : null;
+  //   }, [activeIndexMarketCap, topTen]);
+
+  const renderStats = (name: string, value: number, prefix: string) => {
+    return (
+      <VStack alignItems="flex-start" spacing="0">
+        <Text
+          variant="h-4"
+          fontWeight="500"
+          textTransform="capitalize"
+          color="#97a5b9"
         >
-          <Link
-            href={`${window.location.origin}/coins/${topTen[activeIndexMarketCap].id}`}
-            passHref
-            scroll
-          >
-            <Text
-              cursor="pointer"
-              variant="h-5"
-              textTransform="capitalize"
-              _hover={{ textDecoration: "underline" }}
-            >
-              {topTen[activeIndexMarketCap]?.id} Stats:
-            </Text>
-          </Link>
-
-          <HStack spacing="0" gap="3px">
-            {topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
-            0 ? (
-              <AiFillCaretDown fill="var(--red)" />
-            ) : (
-              <AiFillCaretUp fill="var(--green)" />
-            )}
-
-            <Text
-              variant="text-bold"
-              color={
-                topTen[activeIndexMarketCap].market_cap_change_percentage_24h <
-                0
-                  ? "red"
-                  : "green"
-              }
-            >
-              {Math.abs(
-                topTen[
-                  activeIndexMarketCap
-                ].market_cap_change_percentage_24h.toFixed(2)
-              )}
-              %
-            </Text>
-          </HStack>
-          <Text
-            variant="text-bold"
-            color={
-              topTen[activeIndexMarketCap].market_cap_change_percentage_24h < 0
-                ? "red"
-                : topTen[activeIndexMarketCap]
-                    .market_cap_change_percentage_24h > 0
-                ? "green"
-                : "inherit"
-            }
-          >
-            {`$${
-              Math.abs(topTen[activeIndexMarketCap].price_change_24h) > 1
-                ? topTen[activeIndexMarketCap].price_change_24h.toFixed(2)
-                : topTen[activeIndexMarketCap].price_change_24h.toFixed(6)
-            }`}
-          </Text>
-        </HStack>
-      </Box>
-    ) : null;
-  }, [activeIndexMarketCap, topTen]);
+          {name}
+        </Text>
+        <Text variant="h-4">
+          <FormattedNumber value={value} prefix={prefix} />
+        </Text>
+      </VStack>
+    );
+  };
 
   return (
     <Stack
@@ -676,11 +696,11 @@ const DoughnutChart = (props: any) => {
         h="640px"
         variant="box-component"
         position="relative"
-        // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
       >
-        <Text variant="h-4">Market Cap</Text>
-        {/* <Box height='100%' w='100%'> */}
+        <Text variant="h-3" pb="unset">
+          Market Cap
+        </Text>
         <ResponsiveContainer height="95%">
           <PieChart>
             <Pie
@@ -718,7 +738,7 @@ const DoughnutChart = (props: any) => {
                   arrVal={marketCap}
                   setActiveIndexMarketCap={setActiveIndexMarketCap}
                   topTen={topTen}
-                  renderTokenData={renderTokenData}
+                  //   renderTokenData={renderTokenData}
                 />
               }
             />
@@ -728,35 +748,113 @@ const DoughnutChart = (props: any) => {
       </Container>
       <Container
         w={{ base: "100%", lg: "calc(50% - 20px)" }}
-        h="600px"
+        height="max-content"
         variant="box-component"
         position="relative"
         // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
       >
         <HStack>
-            <Image height='30px' width='30px' src={topTen[activeIndexMarketCap].image} alt='coin logo' />
-          <Text variant="h-4" textTransform="capitalize">
-            {topTen[activeIndexMarketCap].id}   7 Day Trend
+          <Image
+            height="30px"
+            width="30px"
+            src={topTen[activeIndexMarketCap].image}
+            alt="coin logo"
+          />
+          <Text variant="h-3" pb="none" textTransform="capitalize">
+            {topTen[activeIndexMarketCap].id}
           </Text>
+          <Text variant="h-5">(7 Day Trend)</Text>
         </HStack>
-       
+
         {activeIndexMarketCap !== undefined && (
           <Chart
             data={topTen[activeIndexMarketCap].sparkline_in_7d.price}
-            // data={topTen}
+            // data={topTen}s
           />
         )}
-         <Text variant="h-4" textTransform="capitalize">
-            {topTen[activeIndexMarketCap].market_cap} Market Cap  
-          </Text>
-          <Text variant="h-4" textTransform="capitalize">
-            {topTen[activeIndexMarketCap].market_cap_rank
-}  Market Cap Rank
-          </Text>
-          <Text variant="h-4" textTransform="capitalize">
-            {topTen[activeIndexMarketCap].total_volume}   Total Volume
-          </Text>
+        {/* <Text variant="h-4" pb="none" textTransform="capitalize">
+            Stats
+          </Text> */}
+        <Grid
+          gridTemplateColumns={{
+            base: "1fr",
+            xxs: "auto auto",
+            md: "auto auto auto",
+            lg: "auto auto",
+            xl: "auto auto auto",
+          }}
+          gap="6px"
+          justifyContent="space-around"
+          pb="20px"
+          rowGap={{ base: "14px", sm: "20px" }}
+        >
+          {renderStats(
+            "Market Cap",
+            topTen[activeIndexMarketCap].market_cap,
+            "$"
+          )}
+          {renderStats(
+            "Circulating Supply",
+            topTen[activeIndexMarketCap].circulating_supply,
+            ""
+          )}
+          {renderStats(
+            "Total Volume",
+            topTen[activeIndexMarketCap].total_volume,
+            "$"
+          )}
+          {renderStats(
+            "Current Price",
+            topTen[activeIndexMarketCap].current_price,
+            "$"
+          )}
+          {renderStats("24H High", topTen[activeIndexMarketCap].high_24h, "$")}
+          {renderStats("24H Low", topTen[activeIndexMarketCap].low_24h, "$")}
+          {/* {renderStats( 'Market Cap',  topTen[activeIndexMarketCap].market_cap)}
+         {renderStats( 'Market Cap Change %:',  topTen[activeIndexMarketCap].market_cap_change_percentage_24h)}
+         {renderStats( 'Market Cap Change:',  topTen[activeIndexMarketCap].market_cap_change_24h)} */}
+        </Grid>
+
+        {/* <Text variant="h-4" pb="none" textTransform="capitalize">
+          Last 24 Hours
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Current Price:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].current_price}
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Hight:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].high_24h}
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Low:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].low_24h}
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Low:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].low_24h}
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Market Cap Change %:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].market_cap_change_percentage_24h}
+        </Text>
+        <Text variant="h-5" fontWeight="500" textTransform="capitalize">
+          Market Cap Change:
+        </Text>
+        <Text variant="h-5" textTransform="capitalize">
+          {topTen[activeIndexMarketCap].market_cap_change_24h}
+        </Text> */}
       </Container>
     </Stack>
   );
