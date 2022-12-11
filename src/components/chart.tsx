@@ -259,10 +259,10 @@ const ChartComponent = (props: any) => {
 
   useEffect(() => {
     if (coinInfo.symbol && individualPage) {
-      fetch(`https://price-api.crypto.com/price/v1/tokens?page=1&limit=500`)
+      fetch(`https://api.coingecko.com/api/v3/coins/list`)
         .then((res) => res.json())
         .then((data) => {
-          const findId = data.data.filter(
+          const findId =data.filter(
             (el: { symbol: any }) => el.symbol.toLowerCase() === coinInfo.symbol
           );
 

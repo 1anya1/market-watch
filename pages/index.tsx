@@ -12,8 +12,7 @@ import { BsFillTriangleFill } from "react-icons/bs";
 import { useAuth } from "../context/AuthContext";
 import FormattedNumber from "../src/components/number-formatter";
 import { GetStaticProps } from "next";
-
-
+import Link from "next/link";
 import "swiper/css";
 import "swiper/css/pagination";
 import { arrayBuffer } from "stream/consumers";
@@ -27,7 +26,6 @@ const TableChartComponent = dynamic(
 );
 
 const Home = (props: any) => {
-
   const [data, setData] = useState<any[]>([]);
   const [width, setWidth] = useState(0);
   const [slides, setSlides] = useState(1.25);
@@ -86,10 +84,12 @@ const Home = (props: any) => {
     } else if (width >= 1100) {
       setSlides(2.5);
     } else if (width >= 800) {
-      setSlides(2.5);
+      setSlides(2.2);
     } else if (width >= 600) {
       setSlides(2);
-    } else if (width >= 300) {
+    } else if (width >= 490) {
+      setSlides(1.5);
+    } else if (width >= 320) {
       setSlides(1.2);
     } else {
       setSlides(1);
@@ -127,33 +127,40 @@ const Home = (props: any) => {
           >
             {topMovers.map((el) => (
               <SwiperSlide key={el.name}>
-                <HStack
+                <Stack
                   backgroundColor={
                     colorMode === "light" ? "#f5f6fa" : "#133364"
                   }
-                  p="10px 21px"
-                  pb={{ base: "71px", lg: "21px" }}
+                  p="20px"
                   borderRadius="11px"
                   justifyContent="space-between"
                   position="relative"
+                  flexDir={{ base: "column", lg: "row" }}
+                  spacing="0"
                 >
-                  <Stack>
-                    <HStack>
-                      <Box>
-                        <Image
-                          src={el.image}
-                          height="25px"
-                          width="25px"
-                          alt={el.name}
-                        />
-                      </Box>
-                      <Text fontSize="16px" fontWeight="500">
-                        {turnicateText(el.name, 14)}
-                      </Text>
-                      <Text fontSize="16px" fontWeight="700">
-                        {el.symbol.toUpperCase()}
-                      </Text>
-                    </HStack>
+                  <Stack spacing="0">
+                    <Link
+                      href={`${window.location.origin}/coins/${el.id}`}
+                      passHref
+                      scroll
+                    >
+                      <HStack spacing="0" gap="6px">
+                        <Box>
+                          <Image
+                            src={el.image}
+                            height="30px"
+                            width="30px"
+                            alt={el.name}
+                          />
+                        </Box>
+                        <Text variant="h-4" lineHeight="auto">
+                          {turnicateText(el.name, 10)}
+                        </Text>
+                        <Text variant="small-bold" color="#a0aec0">
+                          {el.symbol.toUpperCase()}
+                        </Text>
+                      </HStack>
+                    </Link>
                     <HStack gap="10px">
                       <Box
                         fontSize={{ base: "20px", md: "24px" }}
@@ -191,9 +198,11 @@ const Home = (props: any) => {
                     </HStack>
                   </Stack>
                   <Box
-                    position="absolute"
-                    right="20px"
-                    bottom={{ base: "21px", lg: "unset" }}
+                    width={{ base: "100%", lg: "75%" }}
+                    height={{ base: "50px", lg: "100px" }}
+                    className="imagegoes"
+                    display="flex"
+                    justifyContent="flex-end"
                   >
                     <TableChartComponent
                       id={el.id}
@@ -202,7 +211,7 @@ const Home = (props: any) => {
                       responsive={true}
                     />
                   </Box>
-                </HStack>
+                </Stack>
               </SwiperSlide>
             ))}
           </Swiper>

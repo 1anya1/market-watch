@@ -690,6 +690,7 @@ const DoughnutChart = (props: any) => {
       spacing="0"
       gap="40px"
       width="100%"
+      mb='40px'
     >
       <Container
         w={{ base: "100%", lg: "calc(50% - 20px)" }}
@@ -704,6 +705,7 @@ const DoughnutChart = (props: any) => {
         <ResponsiveContainer height="95%">
           <PieChart>
             <Pie
+            height='50%'
               data={marketCapData}
               cx="50%"
               cy="50%"
@@ -753,6 +755,7 @@ const DoughnutChart = (props: any) => {
         position="relative"
         // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
+        
       >
         <HStack>
           <Image

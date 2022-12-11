@@ -3,8 +3,6 @@ import { NumericFormat } from "react-number-format";
 
 const FormattedNumber = (props: any) => {
   const { value, prefix, sufffix } = props;
-
-  console.log(value)
   let num = Number(value) >= 1 ? Number(value).toFixed(2) : Number(value).toFixed(6);
 
   return (

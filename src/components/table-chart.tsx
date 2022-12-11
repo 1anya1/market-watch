@@ -4,7 +4,6 @@ import { useAuth } from "../../context/AuthContext";
 
 import { Box, useColorMode } from "@chakra-ui/react";
 
-
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
@@ -42,6 +41,15 @@ const TableChartComponent = (props: any) => {
 
   useEffect(() => {
     if (chartContainerRef?.current && cryptoData.length > 0) {
+      const handleResize = () => {
+        if (chartContainerRef?.current?.clientWidth) {
+          chart.applyOptions({
+            width: chartContainerRef?.current?.clientWidth,
+            height: chartContainerRef?.current?.clientHeight,
+          });
+          chart.timeScale().fitContent();
+        }
+      };
       const chart = createChart(chartContainerRef?.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
@@ -96,13 +104,26 @@ const TableChartComponent = (props: any) => {
       });
       newSeries.setData(cryptoData);
 
+      // return () => {
+      //   chart.remove();
+      // };
+      window.addEventListener("resize", handleResize);
+
       return () => {
+        window.removeEventListener("resize", handleResize);
+
         chart.remove();
       };
     }
   }, [change, colorMode, cryptoData]);
 
-  return <Box ref={chartContainerRef} height="50px" width={ responsive? {base:'260px', lg:'140px'}: "140px"} />;
+  return (
+    <Box
+      ref={chartContainerRef}
+      height={responsive ? "inherit" : "50px"}
+      width={responsive ? "inherit" : "140px"}
+    />
+  );
 };
 
 export default TableChartComponent;
