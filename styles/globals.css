@@ -21,12 +21,11 @@ html[data-theme="dark"] {
 }
 
 .chakra-ui-dark {
-  background-color: #081c3b;
-  color: "white";
+  /* background-color: #081c3b; */
+  background-color: #040c19;
 }
 .chakra-ui-light {
   background-color: white;
-  color: "black";
 }
 
 :root {
@@ -49,6 +48,10 @@ Chakra Ui overwrites */
 a {
   color: var(--a-color);
   text-decoration: none;
+}
+.h-3 {
+  font-size: 26px;
+  font-weight: 700;
 }
 
 .h-4 {
@@ -78,6 +81,10 @@ a {
   .h-5 {
     font-weight: 700;
     font-size: 12px;
+  }
+  .h-3 {
+    font-size: 24px;
+    font-weight: 700;
   }
 }
 .input {
@@ -141,11 +148,35 @@ g.recharts-layer {
   position: relative;
   /* padding-top: 50px;
   padding-bottom: 20px; */
- 
 }
 g:focus {
   outline: unset !important;
 }
-.recharts-sector:focus{
+.recharts-sector:focus {
   outline: unset !important;
+}
+
+.toggle-right {
+  animation: toggle-right 0.3s ease-in-out both;
+}
+.toggle-left {
+  animation: toggle-left 0.3s ease-in-out both;
+}
+
+@keyframes toggle-right {
+  0% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(22px) rotate(360deg);
+  }
+}
+
+@keyframes toggle-left {
+  0% {
+    transform: translateX(22px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0px) rotate(-360deg);
+  }
 }

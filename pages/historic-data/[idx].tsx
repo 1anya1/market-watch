@@ -185,7 +185,7 @@ const HistoricData = () => {
           bg={
             colorMode === "light"
               ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
-              : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
+              : "linear-gradient(to left , rgba(8,28,59, 0) 3%, #030c19 14%)"
           }
         >
           <span style={{ fontSize: "14px", fontWeight: "600" }}>

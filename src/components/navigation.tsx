@@ -173,29 +173,63 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             </ModalContent>
           </Modal>
 
-          <HStack>
+          {
+            /* <HStack>
             {colorMode === "light" ? (
               <MdDarkMode size={20} onClick={toggleColorMode} />
             ) : (
               <MdLightMode size={20} onClick={toggleColorMode} />
             )}
-          </HStack>
+          </HStack> */
+            <Box
+              w="50px"
+              h="28px"
+              bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
+              position="relative"
+              cursor='pointer'
+              borderRadius="52px"
+              transition="left 1000ms linear"
+              onClick={toggleColorMode}
+              border={
+                colorMode === "light"
+                  ? "2px solid #e7ecf0"
+                  : " 2px solid #3b547e"
+              }
+            >
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                borderRadius="50%"
+                h="24px"
+                w="24px"
+                bg={colorMode === "light" ? "white" : "#081c3b"}
+                position="absolute"
+               
+                className={
+                  colorMode === "light" ? "toggle-left" : "toggle-right"
+                }
+              >
+                {colorMode === "light" ? (
+                  <MdDarkMode size={20} onClick={toggleColorMode} />
+                ) : (
+                  <MdLightMode size={20} onClick={toggleColorMode} fill='#a0aec0'/>
+                )}
+              </Box>
+            </Box>
+          }
         </HStack>
-        {/* <Button
-          ref={btnRef}
-          colorScheme="teal"
-          onClick={onOpenNav}
-          display={{ base: "box", md: "none" }}
-        > */}
 
-        <Box
-          // ref={btnRef}
-          onClick={onOpenNav}
-          display={{ base: "box", md: "none" }}
-          cursor="pointer"
-        >
-          <HiMenuAlt3 size={30} />
-        </Box>
+        <HStack display={{ base: "flex", md: "none" }} spacing="0" gap="14px">
+          <Box
+            // ref={btnRef}
+            onClick={onOpenNav}
+            // display={{ base: "box", md: "none" }}
+            cursor="pointer"
+          >
+            <HiMenuAlt3 size={30} />
+          </Box>
+        </HStack>
 
         {/* </Button> */}
         <Drawer
@@ -215,17 +249,46 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     </Box>
                   </Link>
                 </Box>
-
-                {colorMode === "light" ? (
-                  <MdDarkMode size={20} onClick={toggleColorMode} />
-                ) : (
-                  <MdLightMode size={20} onClick={toggleColorMode} />
-                )}
+                <DrawerCloseButton />
               </HStack>
             </DrawerHeader>
 
             <DrawerBody>
               <VStack spacing="0" alignItems="flex-start" gap="10px">
+                <Box
+                  w="50px"
+                  h="28px"
+                  bg={colorMode === "light" ? "#e7ecf0" : "#3b547e"}
+                  position="relative"
+                  borderRadius="52px"
+                  transition="left 1000ms linear"
+                  border={
+                    colorMode === "light"
+                      ? "2px solid #e7ecf0"
+                      : " 2px solid #3b547e"
+                  }
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius="50%"
+                    h="24px"
+                    w="24px"
+                    bg={colorMode === "light" ? "white" : "#081c3b"}
+                    position="absolute"
+                    onClick={toggleColorMode}
+                    className={
+                      colorMode === "light" ? "toggle-left" : "toggle-right"
+                    }
+                  >
+                    {colorMode === "light" ? (
+                      <MdDarkMode size={20} onClick={toggleColorMode} />
+                    ) : (
+                      <MdLightMode size={20} onClick={toggleColorMode} />
+                    )}
+                  </Box>
+                </Box>
                 <Link href="/">
                   <Text
                     color={

@@ -62,8 +62,21 @@ import {
   Progress,
   useToast,
   Collapse,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import BuySellModal from "./buy-sell-modal";
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
@@ -598,6 +611,7 @@ const ChartComponent = (props: any) => {
   ]);
 
   //#a1bde2
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
@@ -612,6 +626,7 @@ const ChartComponent = (props: any) => {
     const frame = date.slice(0, 10).split("-");
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const handleChangeCrypto = (event: any) => {
     const value = Number(event.target.value.split(",").join(""));
     setCryptoExchange(value);
@@ -623,7 +638,10 @@ const ChartComponent = (props: any) => {
     setCurrencyExchange(value);
     setCryptoExchange(value / coinInfo.currentPrice.usd);
   };
-
+  // const [cointQuantity, setCoinQuantity] = useState<number>(0);
+  // const handleChange = (e: any) => {
+  //   setCoinQuantity(e.target.value);
+  // };
   const renderRange = useCallback(() => {
     const val = timeFrames.map((el) => {
       if (el.query === timeFrame) return el.name;
@@ -724,10 +742,11 @@ const ChartComponent = (props: any) => {
                 <FaStar
                   size={18}
                   onClick={liked ? deleteFromDatabase : addToDatabase}
-                  fill={liked ? "yellow" : "white"}
+                  fill={
+                    liked ? "yellow" : colorMode === "light" ? "black" : "white"
+                  }
                 />
               </Button>
-
               <Button variant="medium">
                 <FaShareAlt
                   size={18}
@@ -759,7 +778,17 @@ const ChartComponent = (props: any) => {
                   }}
                 />
               </Button>
-              <Button variant="medium">Buy/Sell</Button>
+              <Button variant="medium" onClick={onOpen}>
+                Buy/Sell
+              </Button>
+              <BuySellModal
+                name={coinInfo.name}
+                image={coinInfo.image}
+                currencyExchange={currencyExchange}
+                isOpen={isOpen}
+                onClose={onClose}
+                handleChangeExchange={handleChangeExchange}
+              />
             </HStack>
           </HStack>
 
@@ -884,7 +913,7 @@ const ChartComponent = (props: any) => {
                     ref={toolTipRef}
                     top={coordinates ? coordinates.top : "unset"}
                     left={coordinates ? coordinates.left : "unset"}
-                    bg={colorMode === "light" ? "white" : "#081c3b"}
+                    bg={colorMode === "light" ? "white" : "#030c19"}
                     borderRadius="8px"
                     display={showToolTip ? "block" : "none"}
                     p="10px"
@@ -979,7 +1008,7 @@ const ChartComponent = (props: any) => {
                 </Container>
               )}
               <Link href={`/historic-data/${coinId}`} passHref>
-                <Button width="100%" variant="large">
+                <Button width="100%" variant="large-blue">
                   View Historic Prices
                 </Button>
               </Link>
@@ -1011,7 +1040,7 @@ const ChartComponent = (props: any) => {
                               !viewAllCoin
                                 ? colorMode === "light"
                                   ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
-                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(18, 51, 100) 100%)"
+                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(8 28 59) 100%)"
                                 : "unset"
                             }
                             h="150px"
@@ -1167,7 +1196,7 @@ const ChartComponent = (props: any) => {
                   <Text fontSize="12px">
                     This is not real time data. To use for approximation only*
                   </Text>
-                  <Button variant="large" width="100%" mt="10px">
+                  <Button variant="large-blue" width="100%" mt="10px">
                     Buy
                   </Button>
                 </Container>

@@ -125,11 +125,13 @@ const Home = (props: any) => {
             }}
             modules={[Autoplay]}
           >
+      
+            
             {topMovers.map((el) => (
               <SwiperSlide key={el.name}>
                 <Stack
                   backgroundColor={
-                    colorMode === "light" ? "#f5f6fa" : "#133364"
+                    colorMode === "light" ? "#f5f6fa" : "#081c3b" 
                   }
                   p="20px"
                   borderRadius="11px"

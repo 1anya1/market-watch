@@ -26,7 +26,7 @@ const DataTable = (props: Props) => {
         </TableCaption>
         <Thead>
           <Tr
-            bg={colorMode === "light" ? "#f5f6fa" : "#0b254a"}
+            bg={colorMode === "light" ? "#f5f6fa" : "#081c3b4f"}
             fontSize="10px"
             borderTop="1.25px #ffffff29 solid"
             borderBottom="1.25px #ffffff29 solid"
@@ -43,7 +43,7 @@ const DataTable = (props: Props) => {
                     bg={
                       colorMode === "light"
                         ? "linear-gradient(to left , rgba(245,246,250, 0) 3%, rgba(245,246,250, 1) 14%)"
-                        : "linear-gradient(to left , rgba(11,37,74, 0) 3%, rgba(11,37,74, 1) 14%)"
+                        : "linear-gradient(to left , rgba(11,37,74, 0) 3%, #041124 14%)"
                     }
                   >
                     {el}

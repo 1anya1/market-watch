@@ -36,13 +36,13 @@ const SignIn = (props: any) => {
       <VStack spacing={0} gap="20px" pt="40px" zIndex='100'>
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Email Address</FormLabel>
-          <Input {...register("email")} defaultValue='test'/>
+          <Input {...register("email")} />
         </VStack>
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Password</FormLabel>
           <Input {...register("password")} />
         </VStack>
-        <Button type="submit" onClick={onClose} width="100%" variant="large">
+        <Button type="submit" onClick={onClose} width="100%" variant="large-blue">
           Sign In
         </Button>
       </VStack>

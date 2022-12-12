@@ -1,17 +1,14 @@
-import { Box, HStack, VStack, Text } from "@chakra-ui/react";
+import { Box, HStack, VStack, Text, useColorMode } from "@chakra-ui/react";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 
-import {
-  doc,
-  setDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
 import { database } from "../../../context/clientApp";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 const Favorite = (props: any) => {
+  const { colorMode } = useColorMode();
   const { coin, liked, setLiked } = props;
   const { user } = useAuth();
   const [favoredItems, setFavored] = useState<string | number[]>([]);
@@ -21,7 +18,7 @@ const Favorite = (props: any) => {
     window.addEventListener("resize", () => setWidth(window.innerWidth));
   }, []);
   const deleteFromDatabase = async (id: string) => {
-    console.log('in delete')
+    console.log("in delete");
     if (user.name) {
       await deleteDoc(doc(database, "users", user.name, "liked", id));
       const state = [...liked];
@@ -30,7 +27,7 @@ const Favorite = (props: any) => {
     }
   };
   const addToDatabase = async (name: any, sym: any) => {
-    console.log('in add ')
+    console.log("in add ");
     if (user.name) {
       const data = {
         name,
@@ -42,7 +39,7 @@ const Favorite = (props: any) => {
     }
   };
   return (
-    <HStack gap="20px" spacing="0">
+    <HStack gap={{ base: "10px", lg: "20px" }} spacing="0">
       <Box pl="4px">
         <FaStar
           onClick={() =>
@@ -50,14 +47,24 @@ const Favorite = (props: any) => {
               ? deleteFromDatabase(coin.id)
               : addToDatabase(coin.id, coin.symbol)
           }
-          fill={liked.indexOf(coin.id as never) !== -1 ? "yellow" : "white"}
+          fill={
+            liked.indexOf(coin.id as never) !== -1
+              ? "yellow"
+              : colorMode === "light"
+              ? "#acacaf"
+              : "white"
+          }
           strokeWidth="1px"
           stroke={
-            favoredItems.indexOf(coin.id as never) !== -1 ? "yellow" : "white"
+            favoredItems.indexOf(coin.id as never) !== -1
+              ? "yellow"
+              : colorMode === "light"
+              ? "black"
+              : "white"
           }
         />
       </Box>
-      <HStack spacing="0" gap="14px">
+      <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
         <Box h="30px" w="30px">
           <Image
             src={coin.image}
@@ -72,7 +79,7 @@ const Favorite = (props: any) => {
             <Text
               fontSize="16px"
               fontWeight="bold"
-              maxW={{ base: "75px", lg:'unset' }}
+              maxW={{ base: "75px", lg: "unset" }}
               textOverflow="ellipsis"
               overflow="hidden"
             >

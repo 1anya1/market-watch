@@ -45,7 +45,7 @@ const theme = extendTheme({
   },
   breakpoints: {
     xs: "320px",
-    xxs:'24rem',
+    xxs: "24rem",
     ms: "490px",
     sm: "30em",
     md: "48em",
@@ -151,9 +151,10 @@ const theme = extendTheme({
           border:
             props.colorMode === "light"
               ? ".75px  solid #dddfe1"
-              : "2px solid #133364",
-          // backgroundColor: props.colorMode === "dark" ? "#123364" : "#f5f6fa",
-          backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
+              : "2px solid 081c3b",
+
+          // backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
+          backgroundColor: props.colorMode === "dark" ? "#081c3b" : "white",
           padding: { base: "14px", md: "20px" },
           borderRadius: "11px",
           maxW: "unset",
@@ -201,11 +202,16 @@ const theme = extendTheme({
         },
         large: (props: StyleFunctionProps) => ({
           height: "40px",
-          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#3b547d",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#133364",
+        }),
+        "large-blue": (props: StyleFunctionProps) => ({
+          height: "40px",
+          color: "white",
+          bgColor: props.colorMode === "light" ? "#1099fa" : "#133364",
         }),
         medium: (props: StyleFunctionProps) => ({
           height: "32px",
-          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#3b547d",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#133364",
         }),
       },
     },
@@ -218,14 +224,30 @@ const theme = extendTheme({
         },
       },
     },
+    Modal: {
+      baseStyle: (props: StyleFunctionProps) => ({
+        dialog: {
+          bg: props.colorMode === "light" ? "white" : "#081c3b",
+        },
+        overlay: {
+          bg: props.colorMode === "light" ? "#000000a8" : "#000000db",
+        },
+      }),
+    },
     Popover: {
       baseStyle: (props: StyleFunctionProps) => ({
         content: {
-          fontWeight: "700",
-          bg: props.colorMode === "light" ? "#e7ecf1" : "#133364",
+          fontWeight: "500",
+          bg: props.colorMode === "light" ? "#e7ecf1" : "#123364",
           minW: "max-content",
           outline: "none",
           "--popper-bg": "#133364",
+          _focus_visible: {
+            boxShadow: "none !important",
+            outline: "none !important",
+          },
+        },
+        dialog: {
           _focus_visible: {
             boxShadow: "none !important",
             outline: "none !important",
