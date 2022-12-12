@@ -26,7 +26,7 @@ import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import { AiOutlineDown } from "react-icons/ai";
 import FormattedNumber from "../../src/components/number-formatter";
 import DataTable from "../../src/components/table/table";
-const Chart = dynamic(() => import("../../src/components/mini-chart"), {
+const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
   ssr: false,
 });
 

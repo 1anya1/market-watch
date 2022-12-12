@@ -358,7 +358,7 @@ import Link from "next/link";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import FormattedNumber from "./number-formatter";
 import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("../../src/components/simple-chart"), {
+const Chart = dynamic(() => import("./charts/simple-chart"), {
   ssr: false,
 });
 

@@ -42,7 +42,7 @@ import DataTable from "../../src/components/table/table";
 import Favorite from "../../src/components/table/nameColumn";
 
 const TableChartComponent = dynamic(
-  () => import("../../src/components/table-chart"),
+  () => import("../../src/components/charts/table-chart"),
   {
     ssr: false,
   }
@@ -151,7 +151,7 @@ const LikedItems = () => {
           bg={
             colorMode === "light"
               ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
-              : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgba(8,28,59, 1) 14%)"
+              : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgb(3 12 26) 14%)"
           }
           padding="5px 30px 5px 10px"
           // maxW={{ base: "150px", sm: "unset" }}

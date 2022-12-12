@@ -16,14 +16,14 @@ import dynamic from "next/dynamic";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { BiDotsVerticalRounded } from "react-icons/bi";
-import FormattedNumber from "./number-formatter";
-import DataTable from "./table/table";
-import Favorite from "./table/nameColumn";
+import FormattedNumber from "../number-formatter";
+import DataTable from "./table";
+import Favorite from "./nameColumn";
 import { collection, getDocs } from "firebase/firestore";
-import { useAuth } from "../../context/AuthContext";
-import { database } from "../../context/clientApp";
+import { useAuth } from "../../../context/AuthContext";
+import { database } from "../../../context/clientApp";
 
-const TableChartComponent = dynamic(() => import("./table-chart"), {
+const TableChartComponent = dynamic(() => import("../charts/table-chart"), {
   ssr: false,
 });
 

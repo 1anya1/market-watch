@@ -19,6 +19,7 @@ import {
   FormLabel,
   NumberInput,
   NumberInputField,
+  Stack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { NumericFormat } from "react-number-format";
@@ -41,9 +42,9 @@ const BuySellModal = (props: any) => {
   const time = date.toISOString();
   console.log(time);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} >
-      <ModalOverlay bg='#000000a8' />
-      <ModalContent >
+    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <ModalOverlay bg="#000000a8" />
+      <ModalContent>
         <ModalHeader>
           <Text variant="h-3" pb="10px">
             Add Transaction
@@ -56,7 +57,7 @@ const BuySellModal = (props: any) => {
         <ModalCloseButton />
         <ModalBody>
           <Box>
-            <HStack spacing="0" gap="10px" pb="10px">
+            <HStack spacing="0" gap="10px" pb="20px">
               <Box>
                 <Image
                   src={image}
@@ -69,9 +70,13 @@ const BuySellModal = (props: any) => {
                 {name}
               </Text>
             </HStack>
-            <HStack>
+            <Stack
+              spacing="0"
+              flexDir={{ base: "column", md: "row" }}
+              gap="10px"
+            >
               <FormControl>
-                <FormLabel>Quantity</FormLabel>
+                <Text variant="medium">Quantity</Text>
                 <NumberInput max={50} min={10}>
                   <NumberInputField
                     value={cointQuantity}
@@ -81,7 +86,8 @@ const BuySellModal = (props: any) => {
                 </NumberInput>
               </FormControl>
               <FormControl isDisabled>
-                <FormLabel opacity="1 !important">Price Per Coin USD</FormLabel>
+                <Text variant="medium">Price Per Coin USD</Text>
+              
                 <InputGroup>
                   <InputLeftAddon justifyContent="center">
                     <Text variant="bold-xsmall">$</Text>
@@ -113,7 +119,7 @@ const BuySellModal = (props: any) => {
                   </Box>
                 </InputGroup>
               </FormControl>
-            </HStack>
+            </Stack>
 
             <VStack
               p="20px"

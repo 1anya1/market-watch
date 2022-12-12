@@ -1,7 +1,7 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Box, HStack, Text, useColorMode, Stack } from "@chakra-ui/react";
-import HomepageTable from "../src/components/homepage-table";
+import HomepageTable from "../src/components/table/homepage-table";
 import NewsFeed from "../src/components/news-feed";
 import Navigation from "../src/components/navigation";
 import Image from "next/image";
@@ -19,7 +19,7 @@ import { arrayBuffer } from "stream/consumers";
 import { NumericFormat } from "react-number-format";
 
 const TableChartComponent = dynamic(
-  () => import("../src/components/table-chart"),
+  () => import("../src/components/charts/table-chart"),
   {
     ssr: false,
   }

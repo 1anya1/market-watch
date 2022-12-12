@@ -121,6 +121,11 @@ const theme = extendTheme({
           fontWeight: 700,
           fontSize: "12px",
         },
+        medium: {
+          fontWeight: 600,
+          fontSize: "12px",
+          textTransform:'uppercase'
+        },
       },
     },
     Stack: {
@@ -209,9 +214,22 @@ const theme = extendTheme({
           color: "white",
           bgColor: props.colorMode === "light" ? "#1099fa" : "#133364",
         }),
+
         medium: (props: StyleFunctionProps) => ({
           height: "32px",
           bgColor: props.colorMode === "light" ? "#e7ecf1" : "#133364",
+          border:
+            props.colorMode === "light"
+              ? "1px solid #e7ecf1"
+              : " 1px solid #133364",
+        }),
+        "medium-hollow": (props: StyleFunctionProps) => ({
+          height: "32px",
+          border:
+            props.colorMode === "light"
+              ? "1px solid #e7ecf1"
+              : " 1px solid #133364",
+          bgColor: "transparent",
         }),
       },
     },
@@ -228,6 +246,8 @@ const theme = extendTheme({
       baseStyle: (props: StyleFunctionProps) => ({
         dialog: {
           bg: props.colorMode === "light" ? "white" : "#081c3b",
+          width: { base: "97vw", lg: "550px" },
+          maxWidth: "550px !important",
         },
         overlay: {
           bg: props.colorMode === "light" ? "#000000a8" : "#000000db",

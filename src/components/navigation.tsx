@@ -111,16 +111,33 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   Watchlist
                 </Text>
               </Link>
+              <Link href="/portfolio">
+                <Text
+                  color={
+                    router.pathname === "/crypto"
+                      ? "#4983c6"
+                      : colorMode === "light"
+                      ? "black"
+                      : "#a0aec0"
+                  }
+                  fontSize="14px"
+                  fontWeight={700}
+                  onClick={onCloseNav}
+                >
+                  Portfolio
+                </Text>
+              </Link>
               <HStack>
                 <Text>Hi, {user.name}</Text>
                 <CgProfile />
               </HStack>
             </>
           )}
+
           {!user.name ? (
             <>
               <Button
-                variant="medium"
+                variant="medium-hollow"
                 onClick={() => {
                   onOpen();
                   setUserLogin("log-in");
@@ -173,51 +190,41 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             </ModalContent>
           </Modal>
 
-          {
-            /* <HStack>
-            {colorMode === "light" ? (
-              <MdDarkMode size={20} onClick={toggleColorMode} />
-            ) : (
-              <MdLightMode size={20} onClick={toggleColorMode} />
-            )}
-          </HStack> */
+          <Box
+            w="50px"
+            h="28px"
+            bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
+            position="relative"
+            cursor="pointer"
+            borderRadius="52px"
+            transition="left 1000ms linear"
+            onClick={toggleColorMode}
+            border={
+              colorMode === "light" ? "2px solid #e7ecf0" : " 2px solid #123364"
+            }
+          >
             <Box
-              w="50px"
-              h="28px"
-              bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
-              position="relative"
-              cursor='pointer'
-              borderRadius="52px"
-              transition="left 1000ms linear"
-              onClick={toggleColorMode}
-              border={
-                colorMode === "light"
-                  ? "2px solid #e7ecf0"
-                  : " 2px solid #3b547e"
-              }
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              borderRadius="50%"
+              h="24px"
+              w="24px"
+              bg={colorMode === "light" ? "white" : "#081c3b"}
+              position="absolute"
+              className={colorMode === "light" ? "toggle-left" : "toggle-right"}
             >
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                borderRadius="50%"
-                h="24px"
-                w="24px"
-                bg={colorMode === "light" ? "white" : "#081c3b"}
-                position="absolute"
-               
-                className={
-                  colorMode === "light" ? "toggle-left" : "toggle-right"
-                }
-              >
-                {colorMode === "light" ? (
-                  <MdDarkMode size={20} onClick={toggleColorMode} />
-                ) : (
-                  <MdLightMode size={20} onClick={toggleColorMode} fill='#a0aec0'/>
-                )}
-              </Box>
+              {colorMode === "light" ? (
+                <MdDarkMode size={20} onClick={toggleColorMode} />
+              ) : (
+                <MdLightMode
+                  size={20}
+                  onClick={toggleColorMode}
+                  fill="#a0aec0"
+                />
+              )}
             </Box>
-          }
+          </Box>
         </HStack>
 
         <HStack display={{ base: "flex", md: "none" }} spacing="0" gap="14px">
@@ -258,14 +265,14 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 <Box
                   w="50px"
                   h="28px"
-                  bg={colorMode === "light" ? "#e7ecf0" : "#3b547e"}
+                  bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
                   position="relative"
                   borderRadius="52px"
                   transition="left 1000ms linear"
                   border={
                     colorMode === "light"
                       ? "2px solid #e7ecf0"
-                      : " 2px solid #3b547e"
+                      : " 2px solid #123364"
                   }
                 >
                   <Box
@@ -289,6 +296,12 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     )}
                   </Box>
                 </Box>
+                {user.name && (
+                  <HStack>
+                    <Text>Hi, {user.name}</Text>
+                    <CgProfile />
+                  </HStack>
+                )}
                 <Link href="/">
                   <Text
                     color={
@@ -341,16 +354,33 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                         Watchlist
                       </Text>
                     </Link>
-                    <HStack>
-                      <Text>Hi, {user.name}</Text>
-                      <CgProfile />
-                    </HStack>
+                  </>
+                )}
+                {user?.name && (
+                  <>
+                    <Link href="/portfolio">
+                      <Text
+                        color={
+                          router.pathname === "/crypto"
+                            ? "#4983c6"
+                            : colorMode === "light"
+                            ? "black"
+                            : "#a0aec0"
+                        }
+                        fontSize="14px"
+                        fontWeight={700}
+                        onClick={onCloseNav}
+                      >
+                        Portfolio
+                      </Text>
+                    </Link>
                   </>
                 )}
                 {!user.name ? (
                   <VStack alignItems="flex-start" spacing="0" gap="10px">
                     <Button
-                      variant="medium"
+                      w="80px"
+                      variant="medium-hollow"
                       onClick={() => {
                         onOpen();
                         setUserLogin("log-in");
