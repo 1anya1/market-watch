@@ -126,6 +126,11 @@ const theme = extendTheme({
           fontSize: "12px",
           textTransform:'uppercase'
         },
+        'xxs-text':{
+          fontSize:'10px',
+          fontWeight:600,
+          color:'#2e394c'
+        }
       },
     },
     Stack: {
@@ -218,7 +223,7 @@ const theme = extendTheme({
 
         medium: (props: StyleFunctionProps) => ({
           height: "32px",
-          // bgColor: props.colorMode === "light" ? "#e7ecf1" : "#051329",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#133364",
           border:
             props.colorMode === "light"
               ? "1.5px solid #e7ecf1"
