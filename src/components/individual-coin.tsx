@@ -541,7 +541,7 @@ const IndividualCoin = (props: any) => {
                               !viewAllCoin
                                 ? colorMode === "light"
                                   ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
-                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(8 28 59) 100%)"
+                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(5 19 41) 100%)"
                                 : "unset"
                             }
                             h="150px"
@@ -757,7 +757,7 @@ const IndividualCoin = (props: any) => {
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w="100%" variant="medium">
+                      <Button w="100%" p='20px' variant="medium">
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
@@ -772,7 +772,7 @@ const IndividualCoin = (props: any) => {
                       href={coinInfo.github}
                       className="links"
                     >
-                      <Button w="100%" variant="medium">
+                      <Button w="100%" p='20px' variant="medium">
                         <HStack>
                           <FaGithub size="20px" />
                           <Text>Github</Text>

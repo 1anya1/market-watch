@@ -131,7 +131,7 @@ const Home = (props: any) => {
               <SwiperSlide key={el.name}>
                 <Stack
                   backgroundColor={
-                    colorMode === "light" ? "#f5f6fa" : "#081c3b" 
+                    colorMode === "light" ? "#f5f6fa" : "#051329" 
                   }
                   p="20px"
                   borderRadius="11px"

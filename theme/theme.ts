@@ -157,9 +157,10 @@ const theme = extendTheme({
             props.colorMode === "light"
               ? ".75px  solid #dddfe1"
               : "2px solid 081c3b",
-
+         
+      
           // backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
-          backgroundColor: props.colorMode === "dark" ? "#081c3b" : "white",
+          backgroundColor: props.colorMode === "dark" ? "  #051329" : "white",
           padding: { base: "14px", md: "20px" },
           borderRadius: "11px",
           maxW: "unset",
@@ -217,11 +218,11 @@ const theme = extendTheme({
 
         medium: (props: StyleFunctionProps) => ({
           height: "32px",
-          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#133364",
+          // bgColor: props.colorMode === "light" ? "#e7ecf1" : "#051329",
           border:
             props.colorMode === "light"
-              ? "1px solid #e7ecf1"
-              : " 1px solid #133364",
+              ? "1.5px solid #e7ecf1"
+              : " 1.5px solid #133364",
         }),
         "medium-hollow": (props: StyleFunctionProps) => ({
           height: "32px",
