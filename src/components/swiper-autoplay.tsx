@@ -77,6 +77,7 @@ const SwiperAutoplayComponent = (props: any) => {
           delay: 2500,
           disableOnInteraction: false,
         }}
+        loop={true}
         modules={[Autoplay]}
       >
         {data.length > 0
