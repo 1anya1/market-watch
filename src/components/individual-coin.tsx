@@ -643,7 +643,7 @@ const IndividualCoin = (props: any) => {
                     <InputLeftAddon
                       minW={{ base: "70px", sm: "100px" }}
                       justifyContent="center"
-                      background={colorMode === "light" ? "#edf2f8" : "#3b547d"}
+                      background={colorMode === "light" ? "#edf2f8" : "#123364"}
                     >
                       <Text variant="bold-xsmall">
                         {coinInfo.symbol.toUpperCase()}
@@ -673,7 +673,7 @@ const IndividualCoin = (props: any) => {
                     <InputLeftAddon
                       minW={{ base: "70px", sm: "100px" }}
                       justifyContent="center"
-                      background={colorMode === "light" ? "#edf2f8" : "#3b547d"}
+                      background={colorMode === "light" ? "#edf2f8" : "#123364"}
                     >
                       <Text variant="bold-xsmall">USD</Text>
                     </InputLeftAddon>

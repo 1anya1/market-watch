@@ -154,10 +154,10 @@ const SwiperAutoplayComponent = (props: any) => {
                           }
                         >
                           {el.price_change_percentage_24h !== 0 && (
-                            <BsFillTriangleFill size={6} fill="white" />
+                            <BsFillTriangleFill size={8} fill="white" />
                           )}
                         </Box>
-                        <Text variant="xxs-text" color="white">
+                        <Text variant="chart-percent" color="white">
                           {Math.abs(el.price_change_percentage_24h).toFixed(2)}%
                         </Text>
                       </HStack>
@@ -185,11 +185,11 @@ const SwiperAutoplayComponent = (props: any) => {
               <SwiperSlide key={idx}>
                 <Box
                   padding="20px"
-                  boxShadow="lg"
+                  border= {colorMode === "dark" ? " 1.5px solid#051329" : "1.5px solid #dddfe1"}
                   bg={colorMode === "dark" ? "#051329" : "white"}
                   h={{ base: "98px", lg: "116px" }}
                   borderRadius="11px"
-                  mb="10px"
+                
                 >
                   <SkeletonCircle size="10" />
                   <SkeletonText

@@ -764,7 +764,9 @@ const DoughnutChart = (props: any) => {
             {topTen[activeIndexMarketCap].id}
           </Text>
           {/* <Text variant="h-5">(7 Day Trend)</Text> */}
+          <Link href={`/coins/${topTen[activeIndexMarketCap].id}`} passHref>
           <Button variant='medium'>View More</Button>
+          </Link>
         </HStack>
 
         {activeIndexMarketCap !== undefined && (
