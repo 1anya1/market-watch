@@ -48,46 +48,38 @@ const Favorite = (props: any) => {
               : addToDatabase(coin.id, coin.symbol)
           }
           fill={
-            liked.indexOf(coin.id as never) !== -1
-              ? "yellow"
+            liked.indexOf(coin.id as never) === -1
+              ? "#d3d5ea"
               : colorMode === "light"
-              ? "#acacaf"
-              : "white"
-          }
-          strokeWidth="1px"
-          stroke={
-            favoredItems.indexOf(coin.id as never) !== -1
-              ? "yellow"
-              : colorMode === "light"
-              ? "black"
-              : "white"
+              ? "#1099fa"
+              : "yellow"
           }
         />
       </Box>
       <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
-        <Box h="30px" w="30px">
+        <Box
+          h={width < 575 ? "20px" : "26px"}
+          w={width < 575 ? "22px" : "26px"}
+        >
           <Image
             src={coin.image}
             alt={coin.name}
-            height={width < 575 ? "24px" : "30px"}
-            width={width < 575 ? "24px" : "30px"}
+            height={width < 575 ? "22px" : "26px"}
+            width={width < 575 ? "22px" : "26px"}
           />
         </Box>
 
         <Link href={`/coins/${coin.id}`}>
           <VStack spacing="0" gap="4px" alignItems="flex-start">
             <Text
-              fontSize="16px"
-              fontWeight="bold"
+              variant="bold-xsmall"
               maxW={{ base: "75px", lg: "unset" }}
               textOverflow="ellipsis"
               overflow="hidden"
             >
               {coin.name}
             </Text>
-            <Text fontSize="12px" fontWeight="500">
-              {coin.symbol.toUpperCase()}
-            </Text>
+            <Text variant="xxs-text">{coin.symbol.toUpperCase()}</Text>
           </VStack>
         </Link>
       </HStack>

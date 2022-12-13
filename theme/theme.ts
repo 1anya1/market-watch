@@ -103,7 +103,7 @@ const theme = extendTheme({
           fontWeight: 700,
         },
         "bold-xsmall": {
-          fontSize: { base: "12px", sm: "14px", md: "18px" },
+          fontSize: { base: "14px", md: "18px" },
           fontWeight: 700,
         },
         toast: {
@@ -129,7 +129,7 @@ const theme = extendTheme({
         'xxs-text':{
           fontSize:'10px',
           fontWeight:600,
-          color:'#2e394c'
+          color:'#a0aec0'
         }
       },
     },

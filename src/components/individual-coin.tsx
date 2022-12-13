@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { BiLinkExternal } from "react-icons/bi";
 import { FaStar, FaShareAlt, FaRegNewspaper } from "react-icons/fa";
@@ -42,23 +42,29 @@ import {
   useToast,
   Collapse,
   useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogCloseButton,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import BuySellModal from "./buy-sell-modal";
 import dynamic from "next/dynamic";
+import UserAuth from "./authentication/user-auth-modal";
 
-const MainChart = dynamic(
-  () => import("./charts/main-chart"),
-  {
-    ssr: false,
-  }
-);
+const MainChart = dynamic(() => import("./charts/main-chart"), {
+  ssr: false,
+});
 
 // TODO add timestamp to refresh data every 10 minutes
 // it would be better to pull more frequently but this is a free tier with limited call requests per timeframe
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
+  console.log({user})
   const { coinId, individualPage } = props;
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
@@ -243,8 +249,6 @@ const IndividualCoin = (props: any) => {
     }
   }, [cryptoId, individualPage]);
 
-  
-
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
     { query: 7, value: "W", name: "7 Days" },
@@ -276,13 +280,7 @@ const IndividualCoin = (props: any) => {
       if (el.query === timeFrame) return el.name;
     });
     return (
-      <VStack
-        gap="11px"
-        w="100%"
-        alignItems="flex-start"
-        pb="20px"
-        spacing="0"
-      >
+      <VStack gap="11px" w="100%" alignItems="flex-start" pb="20px" spacing="0">
         <Text variant="h-5">{val} High / Low</Text>
         <HStack
           position="relative"
@@ -347,6 +345,12 @@ const IndividualCoin = (props: any) => {
     timeFrames,
   ]);
   const toast = useToast();
+  const cancelRef = useRef();
+  const {
+    isOpen: isOpenLike,
+    onOpen: onOpenLike,
+    onClose: onCloseLike,
+  } = useDisclosure();
   return (
     <>
       {dataRetrieved ? (
@@ -366,7 +370,19 @@ const IndividualCoin = (props: any) => {
               </Text>
             </HStack>
             <HStack>
-              <Button variant="medium">
+              {/* <Button variant="medium-hollow">
+                <FaStar
+                  size={18}
+                  onClick={liked ? deleteFromDatabase : addToDatabase}
+                  fill={
+                    liked ? "yellow" : colorMode === "light" ? "black" : "white"
+                  }
+                />
+              </Button> */}
+              <Button
+                variant="medium-hollow"
+                onClick={user.name ? undefined : onOpenLike}
+              >
                 <FaStar
                   size={18}
                   onClick={liked ? deleteFromDatabase : addToDatabase}
@@ -375,7 +391,9 @@ const IndividualCoin = (props: any) => {
                   }
                 />
               </Button>
-              <Button variant="medium">
+              <UserAuth isOpen={isOpenLike} onClose={onCloseLike} />
+
+              <Button variant="medium-hollow">
                 <FaShareAlt
                   size={18}
                   onClick={() => {
@@ -406,7 +424,7 @@ const IndividualCoin = (props: any) => {
                   }}
                 />
               </Button>
-              <Button variant="medium" onClick={onOpen}>
+              <Button variant="medium-hollow" onClick={onOpen}>
                 Buy/Sell
               </Button>
               <BuySellModal
@@ -509,7 +527,7 @@ const IndividualCoin = (props: any) => {
                 </Container>
               )}
               <Link href={`/historic-data/${coinId}`} passHref>
-                <Button width="100%" variant="large-blue">
+                <Button width="100%" variant="large">
                   View Historic Prices
                 </Button>
               </Link>
@@ -630,6 +648,7 @@ const IndividualCoin = (props: any) => {
                     <InputLeftAddon
                       minW={{ base: "70px", sm: "100px" }}
                       justifyContent="center"
+                      background={colorMode === "light" ? "#edf2f8" : "#3b547d"}
                     >
                       <Text variant="bold-xsmall">
                         {coinInfo.symbol.toUpperCase()}
@@ -659,6 +678,7 @@ const IndividualCoin = (props: any) => {
                     <InputLeftAddon
                       minW={{ base: "70px", sm: "100px" }}
                       justifyContent="center"
+                      background={colorMode === "light" ? "#edf2f8" : "#3b547d"}
                     >
                       <Text variant="bold-xsmall">USD</Text>
                     </InputLeftAddon>
@@ -697,7 +717,7 @@ const IndividualCoin = (props: any) => {
                   <Text fontSize="12px">
                     This is not real time data. To use for approximation only*
                   </Text>
-                  <Button variant="large-blue" width="100%" mt="10px">
+                  <Button variant="large" width="100%" mt="10px">
                     Buy
                   </Button>
                 </Container>
@@ -757,7 +777,7 @@ const IndividualCoin = (props: any) => {
                       href={coinInfo.reddit}
                       className="links"
                     >
-                      <Button w="100%" p='20px' variant="medium">
+                      <Button w="100%" p="20px" variant="medium">
                         <HStack>
                           <FaReddit size={20} />
                           <Text>Reddit</Text>
@@ -772,7 +792,7 @@ const IndividualCoin = (props: any) => {
                       href={coinInfo.github}
                       className="links"
                     >
-                      <Button w="100%" p='20px' variant="medium">
+                      <Button w="100%" p="20px" variant="medium">
                         <HStack>
                           <FaGithub size="20px" />
                           <Text>Github</Text>
@@ -820,7 +840,7 @@ const IndividualCoin = (props: any) => {
               </TabList>
               <TabPanels padding="0">
                 <TabPanel padding="0">
-                  {news?.articles.length > 0 && individualPage && (
+                  {news?.articles?.length > 0 && individualPage && (
                     <Box overflow="scroll" className="container">
                       <HStack
                         columnGap="20px"
@@ -828,11 +848,11 @@ const IndividualCoin = (props: any) => {
                         width="max-content"
                         alignItems="flex-start"
                       >
-                        {news.articles.map((el: any) => (
+                        {news.articles.map((el: any, idx: number) => (
                           <Stack
                             flexDir={{ base: "column" }}
                             // gap="20px"
-                            key={el.link}
+                            key={`${el.link}-${idx}`}
                             margin="0 !important"
                             justifyContent="space-between"
                             width={{
@@ -897,7 +917,7 @@ const IndividualCoin = (props: any) => {
                   )}
                 </TabPanel>
                 <TabPanel padding="0">
-                  {news?.videos.length > 0 && individualPage && (
+                  {news?.videos?.length > 0 && individualPage && (
                     <Box overflow="scroll" className="container">
                       <HStack
                         gap="20px"
@@ -905,9 +925,9 @@ const IndividualCoin = (props: any) => {
                         width="max-content"
                         alignItems="flex-start"
                       >
-                        {news.videos.map((el: any) => (
+                        {news.videos.map((el: any, idx: number) => (
                           <VStack
-                            key={el.id}
+                            key={`${el.id}-${idx}`}
                             width={{
                               base: "80vw",
                               xs: "70vw",
@@ -941,6 +961,5 @@ const IndividualCoin = (props: any) => {
     </>
   );
 };
-
 
 export default IndividualCoin;

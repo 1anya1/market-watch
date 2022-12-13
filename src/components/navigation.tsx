@@ -4,19 +4,13 @@ import {
   Text,
   Box,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
   useDisclosure,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Input,
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -25,11 +19,10 @@ import { useRouter } from "next/router";
 import Logo from "../images/logo";
 import { useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import SignUp from "./authentication/sign-up";
-import SignIn from "./authentication/log-in";
 import SignOut from "./authentication/log-out";
 import { useAuth } from "../../context/AuthContext";
 import { HiMenuAlt3 } from "react-icons/hi";
+import UserAuth from "./authentication/user-auth-modal";
 
 const Navigation = ({ children }: { children: React.ReactNode }) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -158,38 +151,13 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           ) : (
             <SignOut />
           )}
-          <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
-            <ModalOverlay />
-            <ModalContent>
-              <Box p="20px" borderRadius="11px">
-                <Button
-                  variant="authentication"
-                  onClick={() => setUserLogin("log-in")}
-                  borderBottom={
-                    userLogin === "log-in" ? "1px solid white" : "unset"
-                  }
-                >
-                  Log In
-                </Button>
-                <Button
-                  variant="authentication"
-                  onClick={() => setUserLogin("sign-up")}
-                  borderBottom={
-                    userLogin !== "log-in" ? "1px solid white" : "unset"
-                  }
-                >
-                  Sign Up
-                </Button>
-                <ModalCloseButton />
-                {userLogin === "log-in" ? (
-                  <SignIn onClose={onClose} />
-                ) : (
-                  <SignUp onClose={onClose} />
-                )}
-              </Box>
-            </ModalContent>
-          </Modal>
-
+          <UserAuth
+            nav
+            userLogin={userLogin}
+            setUserLogin={setUserLogin}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
           <Box
             w="50px"
             h="28px"
@@ -403,37 +371,13 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 ) : (
                   <SignOut />
                 )}
-                <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
-                  <ModalOverlay />
-                  <ModalContent zIndex="100">
-                    <Box p="20px" borderRadius="11px" className="inhere">
-                      <Button
-                        variant="authentication"
-                        onClick={() => setUserLogin("log-in")}
-                        borderBottom={
-                          userLogin === "log-in" ? "1px solid white" : "unset"
-                        }
-                      >
-                        Log In
-                      </Button>
-                      <Button
-                        variant="authentication"
-                        onClick={() => setUserLogin("sign-up")}
-                        borderBottom={
-                          userLogin !== "log-in" ? "1px solid white" : "unset"
-                        }
-                      >
-                        Sign Up
-                      </Button>
-                      <ModalCloseButton />
-                      {userLogin === "log-in" ? (
-                        <SignIn onClose={onClose} />
-                      ) : (
-                        <SignUp onClose={onClose} />
-                      )}
-                    </Box>
-                  </ModalContent>
-                </Modal>
+                <UserAuth
+                  nav
+                  userLogin={userLogin}
+                  setUserLogin={setUserLogin}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                />
               </VStack>
             </DrawerBody>
           </DrawerContent>
