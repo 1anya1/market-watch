@@ -51,17 +51,17 @@ a {
   text-decoration: none;
 }
 .h-3 {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
 }
 
 .h-4 {
-  font-weight: 500;
-  font-size: 20px;
+  font-weight: 700;
+  font-size: 22px;
 }
 .h-5 {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 18px;
 }
 .price-tip {
   font-weight: 700;
@@ -76,12 +76,12 @@ a {
 }
 @media screen and (max-width: 479px) {
   .h-4 {
-    font-weight: 500;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 18px;
   }
   .h-5 {
     font-weight: 700;
-    font-size: 12px;
+    font-size: 16px;
   }
   .h-3 {
     font-size: 24px;

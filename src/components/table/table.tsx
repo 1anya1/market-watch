@@ -20,7 +20,7 @@ const DataTable = (props: Props) => {
   
   return (
     <TableContainer>
-      <Table>
+      <Table  >
         <TableCaption fontSize="10px" textAlign="right">
           Powered by CoinGecko API
         </TableCaption>
@@ -57,7 +57,7 @@ const DataTable = (props: Props) => {
             })}
           </Tr>
         </Thead>
-        <Tbody>{renderData()}</Tbody>
+        <Tbody id='table-data' >{renderData()}</Tbody>
       </Table>
     </TableContainer>
   );

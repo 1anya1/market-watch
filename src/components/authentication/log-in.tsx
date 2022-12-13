@@ -23,7 +23,7 @@ const SignIn = (props: any) => {
   } = useForm<FormData>();
   const { logIn } = useAuth();
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
+    console.log(data);
     try {
       await logIn(data.email, data.password);
     } catch (error: any) {
@@ -32,8 +32,8 @@ const SignIn = (props: any) => {
   });
 
   return (
-    <form onSubmit={onSubmit} style={{zIndex:'100'}}>
-      <VStack spacing={0} gap="20px" pt="40px" zIndex='100'>
+    <form onSubmit={onSubmit} style={{ zIndex: "100" }}>
+      <VStack spacing={0} gap="20px" pt="40px" zIndex="100">
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Email Address</FormLabel>
           <Input {...register("email")} />
@@ -42,12 +42,16 @@ const SignIn = (props: any) => {
           <FormLabel margin="0">Password</FormLabel>
           <Input {...register("password")} />
         </VStack>
-        <Button type="submit" onClick={onClose} width="100%" variant="large-blue">
+        <Button
+          type="submit"
+          onClick={onClose}
+          width="100%"
+          variant="large-blue"
+        >
           Sign In
         </Button>
       </VStack>
     </form>
-    
   );
 };
 

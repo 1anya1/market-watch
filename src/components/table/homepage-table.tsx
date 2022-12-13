@@ -145,7 +145,7 @@ const HomepageTable = () => {
             >
               <Favorite coin={coin} liked={liked} setLiked={setLiked} />
             </Td>
-            <Td padding="5px 10px">
+            <Td padding="5px 10px"  >
               <Box fontSize="14px">
                 <FormattedNumber value={coin.current_price} prefix="$" />
               </Box>

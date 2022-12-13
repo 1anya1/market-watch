@@ -244,6 +244,7 @@ const IndividualCoin = (props: any) => {
       fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
         .then((res) => res.json())
         .then((data) => {
+          console.log(data)
           setNews(data);
         });
     }

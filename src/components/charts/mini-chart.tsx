@@ -392,10 +392,6 @@ const MiniChart = (props: any) => {
                   <Text color="white" variant="chart-percent">
                     {percentChange.toFixed(2)}%
                   </Text>
-                  {/* {timeFrames.map((el) => {
-                  if (el.query === timeFrame)
-                    return <Text variant="bold-small">{`(${el.value})`}</Text>;
-                })} */}
                 </HStack>
               </HStack>
             </HStack>
@@ -420,7 +416,7 @@ const MiniChart = (props: any) => {
               </MenuList>
             </Menu>
           </HStack>
-          <Box ref={chartContainerRef} height={{ base: "300px", xl: "400px" }}>
+          <Box ref={chartContainerRef} height={{ base: "300px", lg: "400px" }}>
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
               Powered by CoinGecko API
             </Text>

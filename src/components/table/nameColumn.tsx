@@ -16,15 +16,26 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserAuth from "../authentication/user-auth-modal";
 const Favorite = (props: any) => {
+
+  
   const { colorMode } = useColorMode();
   const { coin, liked, setLiked } = props;
   const { user } = useAuth();
   const [favoredItems, setFavored] = useState<string | number[]>([]);
   const [width, setWidth] = useState(0);
+
   useEffect(() => {
     setWidth(window.innerWidth);
     window.addEventListener("resize", () => setWidth(window.innerWidth));
   }, []);
+
+  // useEffect(()=>{
+  //   const onScroll = () => console.log(window.scrollY);
+  //       // window.removeEventListener('scroll', onScroll);
+  //      document.getElementById('table-data').addEventListener('mousewheel', onScroll);
+  //       return () => document.getElementById('table-data').removeEventListener('mousewheel', onScroll)
+  // },[])
+
   const deleteFromDatabase = async (id: string) => {
     console.log("in delete");
     if (user.name) {
@@ -70,7 +81,7 @@ const Favorite = (props: any) => {
         />
         <UserAuth isOpen={isOpenLike} onClose={onCloseLike} />
       </Box>
-      <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
+      <HStack spacing="0" gap={{ base: "8px", lg: "14px" }} >
         <Box
           h={width < 575 ? "20px" : "26px"}
           w={width < 575 ? "22px" : "26px"}

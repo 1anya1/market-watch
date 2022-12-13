@@ -51,20 +51,17 @@ const UserAuth = (props: any) => {
             Sign Up
           </Button>
           <ModalCloseButton />
-          {nav ?
-          userLogin === "log-in" ? (
+          {nav ? (
+            userLogin === "log-in" ? (
+              <SignIn onClose={onClose} />
+            ) : (
+              <SignUp onClose={onClose} />
+            )
+          ) : logIn === "log-in" ? (
             <SignIn onClose={onClose} />
           ) : (
             <SignUp onClose={onClose} />
-          )
-          :
-          logIn === "log-in" ? (
-            <SignIn onClose={onClose} />
-          ) : (
-            <SignUp onClose={onClose} />
-          )
-
-}
+          )}
         </Box>
       </ModalContent>
     </Modal>

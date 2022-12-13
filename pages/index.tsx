@@ -57,10 +57,9 @@ const Home = (props: any) => {
         Top Movers
       </Text>
       <SwiperAutoplayComponent data={topMovers} />
-        <HomepageTable />
-        <NewsFeed />
-      </Box>
-    
+      <HomepageTable />
+      <NewsFeed />
+    </Box>
   );
 };
 

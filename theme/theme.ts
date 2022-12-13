@@ -65,26 +65,38 @@ const theme = extendTheme({
     Text: {
       variants: {
         "h-1": {
-          fontSize: "34px",
+          fontSize: { base: "30px", sm: "34px" },
           fontWeight: 700,
         },
         "h-2": {
-          fontSize: { base: "28px", sm: "34px" },
+          fontSize: { base: "28px", sm: "32px" },
           fontWeight: 700,
         },
         "h-3": {
-          fontSize: { base: "24px", sm: "26px" },
+          fontSize: { base: "24px", sm: "28px" },
           fontWeight: "700",
           pb: "20px",
         },
         "h-4": {
-          fontSize: { base: "16px", sm: "20px" },
+          fontSize: { base: "18px", sm: "22px" },
           fontWeight: "700",
         },
         "h-5": {
-          fontSize: { base: "12px", sm: "16px" },
+          fontSize: { base: "16px", sm: "18px" },
           fontWeight: "600",
         },
+        body: {
+          fontSize: { base: "16px", sm: "18px" },
+        },
+        "chart-percent": {
+          fontSize: { base: "12px", md: "14px" },
+          fontWeight: "500",
+        },
+        "body-gray-bold": (props: StyleFunctionProps) => ({
+          fontSize: { base: "14px", md: "16px" },
+          fontWeight: "600",
+          color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
+        }),
 
         "text-bold": {
           fontSize: "14px",
@@ -110,9 +122,7 @@ const theme = extendTheme({
           fontSize: "12px",
           fontWeight: 600,
         },
-        body: {
-          fontSize: { base: "16px", sm: "18px" },
-        },
+
         "small-font": {
           fontSize: "12px",
           fontWeight: "500",
@@ -125,11 +135,6 @@ const theme = extendTheme({
           fontWeight: 600,
           fontSize: "12px",
           textTransform: "uppercase",
-        },
-
-        "chart-percent": {
-          fontSize: { base: "12px", md: "14px" },
-          fontWeight: "700",
         },
 
         "xxs-text": {
@@ -244,7 +249,7 @@ const theme = extendTheme({
         }),
       },
     },
-   
+
     Modal: {
       baseStyle: (props: StyleFunctionProps) => ({
         dialog: {
@@ -290,28 +295,27 @@ const theme = extendTheme({
         },
       }),
     },
-    Menu:{
-      baseStyle : (props: StyleFunctionProps) => ({
+    Menu: {
+      baseStyle: (props: StyleFunctionProps) => ({
         list: {
           fontWeight: "700",
           bgColor: props.colorMode === "light" ? "#e7ecf1" : "#030c19",
           minW: "max-content",
         },
-        button:{
+        button: {
           border:
-          props.colorMode === "light"
-            ? "1px solid #e7ecf1"
-            : " 1px solid #133364",
-        bgColor: "transparent",
-          borderRadius:'4px',
-          height:'32px',
-          padding: '0 8px',
-          fontSize:'sm',
-          fontWeight:700,
-        }
-
-      })
-    }
+            props.colorMode === "light"
+              ? "1px solid #e7ecf1"
+              : " 1px solid #133364",
+          bgColor: "transparent",
+          borderRadius: "4px",
+          height: "32px",
+          padding: "0 8px",
+          fontSize: "sm",
+          fontWeight: 700,
+        },
+      }),
+    },
   },
 });
 export default theme;
