@@ -282,7 +282,7 @@ const IndividualCoin = (props: any) => {
     });
     return (
       <VStack gap="11px" w="100%" alignItems="flex-start" pb="20px" spacing="0">
-        <Text variant="h-5">{val} High / Low</Text>
+        <Text variant="body-gray-bold">{val} High / Low</Text>
         <HStack
           position="relative"
           w="100%"
@@ -473,7 +473,7 @@ const IndividualCoin = (props: any) => {
                       renderRange()}
 
                     <HStack justifyContent="space-between">
-                      <Text variant="h-5">Market Cap</Text>
+                      <Text variant="body-gray-bold">Market Cap</Text>
 
                       <NumericFormat
                         value={stats.marketCap.toFixed(2)}
@@ -486,7 +486,7 @@ const IndividualCoin = (props: any) => {
                     <Divider orientation="horizontal" />
 
                     <HStack justifyContent="space-between">
-                      <Text variant="h-5">Volume</Text>
+                      <Text variant="body-gray-bold">Volume</Text>
 
                       <NumericFormat
                         value={stats.volume.toFixed(0)}
@@ -497,7 +497,7 @@ const IndividualCoin = (props: any) => {
                     </HStack>
                     <Divider orientation="horizontal" />
                     <HStack justifyContent="space-between">
-                      <Text variant="h-5">24HR Low</Text>
+                      <Text variant="body-gray-bold">24HR Low</Text>
 
                       <NumericFormat
                         value={stats.low_24}
@@ -509,7 +509,7 @@ const IndividualCoin = (props: any) => {
                     </HStack>
                     <Divider orientation="horizontal" />
                     <HStack justifyContent="space-between">
-                      <Text variant="h-5">24HR High</Text>
+                      <Text variant="body-gray-bold">24HR High</Text>
 
                       <NumericFormat
                         value={stats.high_24}
@@ -614,7 +614,7 @@ const IndividualCoin = (props: any) => {
                     />
 
                     <HStack justifyContent="space-between" pt="20px">
-                      <Text variant="h-5">Total Supply</Text>
+                      <Text variant="body-gray-bold">Total Supply</Text>
                       <NumericFormat
                         value={stats.totalSupply?.toFixed(0)}
                         displayType="text"
@@ -624,7 +624,7 @@ const IndividualCoin = (props: any) => {
                     </HStack>
                     <Divider orientation="horizontal" />
                     <HStack justifyContent="space-between">
-                      <Text variant="h-5">Circulating Supply</Text>
+                      <Text variant="body-gray-bold">Circulating Supply</Text>
 
                       <NumericFormat
                         value={stats.circulatingSupply.toFixed(0)}

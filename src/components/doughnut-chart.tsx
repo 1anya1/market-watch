@@ -421,12 +421,11 @@ const renderActiveShape = (props: any) => {
           scroll
         >
           <VStack spacing="0" cursor="pointer">
-            <Box mb="10px" bg="#fefeff17" borderRadius="50%" h="50px" w="50px">
+            <Box mb="10px" bg="#fefeff17" borderRadius="50%" h={{xxs:'40px', md:"50px"}} w={{xxs:'40px', md:"50px"}} position='relative'  >
               <Image
                 src={topTen[idx].image}
                 alt="coin logo"
-                height="50px"
-                width="50px"
+                layout="fill"
               />
             </Box>
             <Text textTransform="capitalize" variant="h-5">
@@ -671,8 +670,8 @@ const DoughnutChart = (props: any) => {
     
     return (
       <>
-        <HStack justifyContent="space-between">
-          <Text variant="h-5">{name}</Text>
+        <HStack justifyContent="space-between" flexDir={{base:'column', xxs:'row'}}>
+          <Text variant="body-gray-bold">{name}</Text>
 
           <FormattedNumber value={value} prefix={prefix} className="h-4" />
         </HStack>

@@ -35,7 +35,7 @@ const MiniChart = (props: any) => {
   });
   const { colorMode } = useColorMode();
   const { data } = props;
-  console.log(data);
+
   const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
