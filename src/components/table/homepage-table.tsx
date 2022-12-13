@@ -189,27 +189,31 @@ const HomepageTable = () => {
                   change={coin.price_change_percentage_7d_in_currency}
                   data={coin.sparkline_in_7d?.price}
                 />
-                <Popover placement="bottom-start">
-                  <PopoverTrigger>
-                    <Box>
-                      <BiDotsVerticalRounded size={20} />
-                    </Box>
-                  </PopoverTrigger>
-                  <div className="chakra-portal chart-popover">
-                    <PopoverContent
-                      width="max-content"
-                      // _focusVisible={{ boxShadow: "unset" }}
-                    >
-                      <PopoverArrow />
-                      <PopoverBody p=" 10px 20px">
-                        <Text>View Charts</Text>
-                        <Link passHref href={`/historic-data/${coin.id}`}>
-                          <Text>Historic Data</Text>
-                        </Link>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </div>
-                </Popover>
+                
+                  <Popover placement="bottom-start">
+                    <PopoverTrigger>
+                      <Box>
+                        <BiDotsVerticalRounded size={20} />
+                      </Box>
+                    </PopoverTrigger>
+                    <div className="chakra-portal chart-popover">
+                      <PopoverContent
+                        width="max-content"
+                        // _focusVisible={{ boxShadow: "unset" }}
+                      >
+                        <PopoverArrow />
+                        <PopoverBody p=" 10px 20px">
+                          <Link passHref href={`/coins/${coin.id}`}>
+                            <Text cursor="pointer">View Charts</Text>
+                          </Link>
+                          <Link passHref href={`/historic-data/${coin.id}`}>
+                            <Text cursor="pointer">Historic Data</Text>
+                          </Link>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </div>
+                  </Popover>
+               
               </HStack>
             </Td>
           </Tr>

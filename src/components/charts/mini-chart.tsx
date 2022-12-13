@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import {
   Box,
+  Button,
   HStack,
   Menu,
   MenuButton,
@@ -34,7 +35,7 @@ const MiniChart = (props: any) => {
   });
   const { colorMode } = useColorMode();
   const { data } = props;
-  console.log(data)
+  console.log(data);
   const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
@@ -351,64 +352,73 @@ const MiniChart = (props: any) => {
     <>
       {data.length > 0 ? (
         <Box>
-          <HStack>
-            <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
-              <NumericFormat
-                value={
-                  data[data.length-1].value > 0
-                    ? data[data.length-1].value.toFixed(2)
-                    : data[data.length-1].value.toFixed(6)
-                }
-                prefix={"$"}
-                suffix=" USD"
-                displayType="text"
-                thousandSeparator=","
-                style={{
-                  fontSize: "inherit",
-                  fontWeight: "bold",
-                }}
-              />
-            </Box>
-            <HStack spacing="0">
-              {percentChange > 0 ? (
-                <AiFillCaretUp fill="var(--green)" size={16} />
-              ) : (
-                <AiFillCaretDown fill="var(--red)" size={16} />
-              )}
-              <HStack margin="0 !important">
-                <Text
-                  color={percentChange > 0 ? "green" : "red"}
-                  variant="bold-small"
-                >
-                  {percentChange.toFixed(2)}%
-                </Text>
-                {/* {timeFrames.map((el) => {
+          <HStack
+            spacing="0"
+            justifyContent="space-between"
+            gap="10px"
+            flexWrap="wrap"
+          >
+            <HStack>
+              <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
+                <NumericFormat
+                  value={
+                    data[data.length - 1].value > 0
+                      ? data[data.length - 1].value.toFixed(2)
+                      : data[data.length - 1].value.toFixed(6)
+                  }
+                  prefix={"$"}
+                  suffix=" USD"
+                  displayType="text"
+                  thousandSeparator=","
+                  style={{
+                    fontSize: "inherit",
+                    fontWeight: "bold",
+                  }}
+                />
+              </Box>
+              <HStack
+                spacing="0"
+                bg={percentChange > 0 ? "green" : "red"}
+                gap="2px"
+                p="2px 4px"
+                borderRadius="4px"
+              >
+                {percentChange > 0 ? (
+                  <AiFillCaretUp fill="white" size={12} />
+                ) : (
+                  <AiFillCaretDown fill="white" size={12} />
+                )}
+                <HStack margin="0 !important">
+                  <Text color="white" variant="chart-percent">
+                    {percentChange.toFixed(2)}%
+                  </Text>
+                  {/* {timeFrames.map((el) => {
                   if (el.query === timeFrame)
                     return <Text variant="bold-small">{`(${el.value})`}</Text>;
                 })} */}
+                </HStack>
               </HStack>
             </HStack>
-            <Box position="relative" zIndex="10" display="flex">
-              <Menu>
-                <MenuButton>
-                  <RiSettings3Fill
-                    fill={
-                      // colorMode === "light" ? colors.gray : colors.blue
-                      // "#4983c6"
-                      colorMode === "light" ? "#1099fa" : "#4983C6"
-                    }
-                    size={20}
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
 
-                  <MenuItem onClick={() => setChartType("Candle")}>
-                    Candlestick
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
+            <Menu >
+              <MenuButton >
+                <RiSettings3Fill
+                  fill={
+                    // colorMode === "light" ? colors.gray : colors.blue
+                    // "#4983c6"
+                    colorMode === "light" ? "#1099fa" : "#4983C6"
+                  }
+                  size={18}
+                />
+              </MenuButton>
+              <MenuList zIndex="10">
+                <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
+
+                <MenuItem onClick={() => setChartType("Candle")}>
+                  Candlestick
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </HStack>
           <Box ref={chartContainerRef} height={{ base: "300px", xl: "400px" }}>
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
@@ -422,7 +432,7 @@ const MiniChart = (props: any) => {
             ref={toolTipRef}
             top={coordinates ? coordinates.top : "unset"}
             left={coordinates ? coordinates.left : "unset"}
-            bg={colorMode === "light" ? "white" : "#081c3b"}
+            bg={colorMode === "light" ? "#f5f6fa" : "#123364"}
             borderRadius="8px"
             display={showToolTip ? "block" : "none"}
             p="10px"

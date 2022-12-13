@@ -350,6 +350,7 @@ import {
   Button,
   textDecoration,
   Grid,
+  Divider,
 } from "@chakra-ui/react";
 import { SetStateAction, useCallback, useState } from "react";
 import { RiCopperCoinFill } from "react-icons/ri";
@@ -666,21 +667,17 @@ const DoughnutChart = (props: any) => {
   //     ) : null;
   //   }, [activeIndexMarketCap, topTen]);
 
-  const renderStats = (name: string, value: number, prefix: string) => {
+  const renderStats = (name: string, value: number, prefix: string, last:boolean) => {
+    
     return (
-      <VStack alignItems="flex-start" spacing="0">
-        <Text
-          variant="h-4"
-          fontWeight="500"
-          textTransform="capitalize"
-          color="#97a5b9"
-        >
-          {name}
-        </Text>
-        <Text variant="h-4">
-          <FormattedNumber value={value} prefix={prefix} />
-        </Text>
-      </VStack>
+      <>
+        <HStack justifyContent="space-between">
+          <Text variant="h-5">{name}</Text>
+
+          <FormattedNumber value={value} prefix={prefix} className="h-4" />
+        </HStack>
+        {last ? "" : <Divider orientation="horizontal" />}
+      </>
     );
   };
 
@@ -688,13 +685,13 @@ const DoughnutChart = (props: any) => {
     <Stack
       flexDir={{ base: "column", lg: "row" }}
       spacing="0"
-      gap="40px"
+      gap="20px"
       width="100%"
-      mb='40px'
+      mb="40px"
     >
       <Container
-        w={{ base: "100%", lg: "calc(50% - 20px)" }}
-        h="640px"
+        w={{ base: "100%", lg: "calc(50% - 10px)" }}
+        h={{base:'490px',md:'650px', lg:"640px"}}
         variant="box-component"
         position="relative"
         pt="20px"
@@ -702,10 +699,10 @@ const DoughnutChart = (props: any) => {
         <Text variant="h-3" pb="unset">
           Market Cap
         </Text>
-        <ResponsiveContainer height="95%">
-          <PieChart>
+        <ResponsiveContainer height="93%">
+          <PieChart style={{paddingBottom:'20px'}}>
             <Pie
-            height='50%'
+              height="50%"
               data={marketCapData}
               cx="50%"
               cy="50%"
@@ -749,13 +746,12 @@ const DoughnutChart = (props: any) => {
         {/* </Box> */}
       </Container>
       <Container
-        w={{ base: "100%", lg: "calc(50% - 20px)" }}
+        w={{ base: "100%", lg: "calc(50% - 10px)" }}
         height="max-content"
         variant="box-component"
         position="relative"
         // stroke={colorMode === "light" ? "#dddfe1" : "white"}
         pt="20px"
-        
       >
         <HStack>
           <Image
@@ -767,7 +763,8 @@ const DoughnutChart = (props: any) => {
           <Text variant="h-3" pb="none" textTransform="capitalize">
             {topTen[activeIndexMarketCap].id}
           </Text>
-          <Text variant="h-5">(7 Day Trend)</Text>
+          {/* <Text variant="h-5">(7 Day Trend)</Text> */}
+          <Button variant='medium'>View More</Button>
         </HStack>
 
         {activeIndexMarketCap !== undefined && (
@@ -776,48 +773,35 @@ const DoughnutChart = (props: any) => {
             // data={topTen}s
           />
         )}
-        {/* <Text variant="h-4" pb="none" textTransform="capitalize">
-            Stats
-          </Text> */}
-        <Grid
-          gridTemplateColumns={{
-            base: "1fr",
-            xxs: "auto auto",
-            md: "auto auto auto",
-            lg: "auto auto",
-            xl: "auto auto auto",
-          }}
-          gap="6px"
-          justifyContent="space-around"
-          pb="20px"
-          rowGap={{ base: "14px", sm: "20px" }}
+        <Stack
+        pb='20px'
         >
           {renderStats(
             "Market Cap",
             topTen[activeIndexMarketCap].market_cap,
-            "$"
+            "$",false
           )}
           {renderStats(
             "Circulating Supply",
             topTen[activeIndexMarketCap].circulating_supply,
-            ""
+            "",false
           )}
           {renderStats(
             "Total Volume",
             topTen[activeIndexMarketCap].total_volume,
-            "$"
+            "$", false
           )}
           {renderStats(
             "Current Price",
             topTen[activeIndexMarketCap].current_price,
-            "$"
+            "$",false
           )}
-          {renderStats("24H High", topTen[activeIndexMarketCap].high_24h, "$")}
-          {renderStats("24H Low", topTen[activeIndexMarketCap].low_24h, "$")}
+          {renderStats("24H High", topTen[activeIndexMarketCap].high_24h, "$", false)}
+          {renderStats("24H Low", topTen[activeIndexMarketCap].low_24h, "$", true)}
           {/* {renderStats( 'Market Cap',  topTen[activeIndexMarketCap].market_cap)}
          {renderStats( 'Market Cap Change %:',  topTen[activeIndexMarketCap].market_cap_change_percentage_24h)}
          {renderStats( 'Market Cap Change:',  topTen[activeIndexMarketCap].market_cap_change_24h)} */}
-        </Grid>
+        </Stack>
 
         {/* <Text variant="h-4" pb="none" textTransform="capitalize">
           Last 24 Hours

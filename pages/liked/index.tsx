@@ -66,7 +66,7 @@ const LikedItems = () => {
 
   useEffect(() => {
     const liked = async () => {
-      console.log('here in the effect')
+      console.log("here in the effect");
       if (user.name) {
         const arr: string[] = [];
         const docRef = collection(database, "users", user.name, "liked");
@@ -84,7 +84,7 @@ const LikedItems = () => {
     liked();
   }, [user]);
   useEffect(() => {
-    console.log({liked})
+    console.log({ liked });
     if (liked.length > 0) {
       const query = liked.join(",").replaceAll(",", "%2C");
       fetch(
@@ -92,9 +92,8 @@ const LikedItems = () => {
       )
         .then((res) => res.json())
         .then((data) => setData(data));
-    }
-    else{
-      setData([])
+    } else {
+      setData([]);
     }
   }, [liked]);
 
@@ -206,7 +205,9 @@ const LikedItems = () => {
                 >
                   <PopoverArrow />
                   <PopoverBody p=" 10px 20px">
-                    <Text>View Charts</Text>
+                    <Link passHref href={`/historic-data/${coin.id}`}>
+                      <Text>View Charts</Text>
+                    </Link>
                     <Link passHref href={`/historic-data/${coin.id}`}>
                       <Text>Historic Data</Text>
                     </Link>
@@ -220,7 +221,7 @@ const LikedItems = () => {
     ));
   }, [colorMode, data, liked]);
   return (
-    <Box pt='40px'>
+    <Box pt="40px">
       <Text variant="h-3">Watchlist</Text>
       <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
     </Box>

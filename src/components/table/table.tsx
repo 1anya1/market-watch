@@ -27,9 +27,7 @@ const DataTable = (props: Props) => {
         <Thead>
           <Tr
             bg={colorMode === "light" ? "#f5f6fa" : "#081c3b4f"}
-            fontSize="10px"
-            borderTop="1.25px #ffffff29 solid"
-            borderBottom="1.25px #ffffff29 solid"
+            
           >
             {tableColumns.map((el, idx) => {
               if (idx === 0) {
@@ -51,7 +49,7 @@ const DataTable = (props: Props) => {
                 );
               } else {
                 return (
-                  <Th key={idx} fontSize="12px" fontWeight="500">
+                  <Th key={idx} fontSize="12px" >
                     {el}
                   </Th>
                 );

@@ -1,4 +1,11 @@
-import { Box, HStack, VStack, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  VStack,
+  Text,
+  useColorMode,
+  useDisclosure,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
 
@@ -7,6 +14,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { database } from "../../../context/clientApp";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import UserAuth from "../authentication/user-auth-modal";
 const Favorite = (props: any) => {
   const { colorMode } = useColorMode();
   const { coin, liked, setLiked } = props;
@@ -38,9 +46,14 @@ const Favorite = (props: any) => {
       setLiked(newState);
     }
   };
+  const {
+    isOpen: isOpenLike,
+    onOpen: onOpenLike,
+    onClose: onCloseLike,
+  } = useDisclosure();
   return (
     <HStack gap={{ base: "10px", lg: "20px" }} spacing="0">
-      <Box pl="4px">
+      <Box pl="4px" onClick={user.name ? undefined : onOpenLike}>
         <FaStar
           onClick={() =>
             liked.indexOf(coin.id as never) !== -1
@@ -55,6 +68,7 @@ const Favorite = (props: any) => {
               : "yellow"
           }
         />
+        <UserAuth isOpen={isOpenLike} onClose={onCloseLike} />
       </Box>
       <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
         <Box

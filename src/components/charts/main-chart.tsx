@@ -383,7 +383,7 @@ const MainChart = (props: any) => {
                 }}
               />
             </Box>
-            <HStack spacing="0">
+            {/* <HStack spacing="0">
               {initialPercent > 0 ? (
                 <AiFillCaretUp fill="var(--green)" size={16} />
               ) : (
@@ -401,7 +401,25 @@ const MainChart = (props: any) => {
                     return <Text variant="bold-small">{`(${el.value})`}</Text>;
                 })}
               </HStack>
-            </HStack>
+            </HStack> */}
+             <HStack
+                spacing="0"
+                bg={initialPercent > 0 ? "green" : "red"}
+                gap="2px"
+                p="2px 4px"
+                borderRadius="4px"
+              >
+                {initialPercent > 0 ? (
+                  <AiFillCaretUp fill="white" size={12} />
+                ) : (
+                  <AiFillCaretDown fill="white" size={12} />
+                )}
+                <HStack margin="0 !important">
+                  <Text color="white" variant="chart-percent">
+                    {initialPercent.toFixed(2)}%
+                  </Text>
+                </HStack>
+              </HStack>
           </HStack>
           <HStack spacing="0" gap="11px">
             {timeFrames.map((el: any) => (
@@ -423,7 +441,7 @@ const MainChart = (props: any) => {
                 {el.value}
               </Text>
             ))}
-            <Box position="relative" zIndex="10" display="flex">
+            {/* <Box position="relative" zIndex="10" display="flex">
               <Menu>
                 <MenuButton>
                   <RiSettings3Fill
@@ -443,7 +461,26 @@ const MainChart = (props: any) => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-            </Box>
+            </Box> */}
+             <Menu >
+              <MenuButton >
+                <RiSettings3Fill
+                  fill={
+                    // colorMode === "light" ? colors.gray : colors.blue
+                    // "#4983c6"
+                    colorMode === "light" ? "#1099fa" : "#4983C6"
+                  }
+                  size={18}
+                />
+              </MenuButton>
+              <MenuList zIndex="10">
+                <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
+
+                <MenuItem onClick={() => setChartType("Candle")}>
+                  Candlestick
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </HStack>
         </HStack>
         <Box>

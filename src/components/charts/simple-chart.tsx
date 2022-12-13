@@ -85,6 +85,7 @@ const MiniChart = (props: any) => {
     };
     if (chartContainerRef?.current) {
       const handleResize = () => {
+
         if (chartContainerRef?.current?.clientWidth) {
           chart.applyOptions({
             width: chartContainerRef?.current?.clientWidth,
@@ -204,7 +205,7 @@ const MiniChart = (props: any) => {
   }, [colorMode, currWidth, data, dataChart]);
 
   return dataChart.length > 0 ? (
-    <Box ref={chartContainerRef} height={{ base: "300px", xl: "400px" }}>
+    <Box ref={chartContainerRef} height='311px'>
       <Text fontSize="10px" position="absolute" bottom="2" right="5">
         Powered by CoinGecko API
       </Text>

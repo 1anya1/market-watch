@@ -23,6 +23,7 @@ html[data-theme="dark"] {
 .chakra-ui-dark {
   /* background-color: #081c3b; */
   background-color: #040c19;
+
 }
 .chakra-ui-light {
   background-color: white;
@@ -119,7 +120,7 @@ a {
 }
 .chart-popover {
   position: fixed;
-  z-index: 10;
+  z-index: 5;
 }
 /* .recharts-legend-wrapper {
   width: max-content;

@@ -282,12 +282,17 @@ const HistoricData = () => {
             gap="10px"
             spacing="0"
             flexDir={{ base: "column", xxs: "row" }}
+            alignItems="flex-start"
           >
             <BiTimeFive size={24} fill="#a0aec0" />
 
             <Text variant="med-text-bold" color="#a0aec0">
               {`${idx > 0 ? idx : ""} ${
-                idx === 1 ? "Year Ago" : idx === 0 ? "Today" : "Years Ago"
+                idx === 1
+                  ? "Year Ago"
+                  : idx === 0
+                  ? formatTime(data[data.length - 1].time, true)
+                  : "Years Ago"
               } `}
             </Text>
           </HStack>
@@ -303,7 +308,7 @@ const HistoricData = () => {
   useEffect(() => {
     const width = window.innerWidth;
     if (width > 1279) {
-      sethxCompoentnHeight(320);
+      sethxCompoentnHeight(340);
       setMaxHX(6);
     } else {
       sethxCompoentnHeight(140);
@@ -312,7 +317,7 @@ const HistoricData = () => {
     const handleResize = () => {
       const width = window.innerWidth;
       if (width > 1279) {
-        sethxCompoentnHeight(320);
+        sethxCompoentnHeight(340);
         setMaxHX(6);
       } else {
         sethxCompoentnHeight(140);
@@ -329,16 +334,16 @@ const HistoricData = () => {
 
   return (
     <>
-      <HStack pb="20px">
-        <Text textTransform="capitalize" variant="h-3" pb="0">
+      <HStack pb="20px" pt='40px'>
+        <Text textTransform="capitalize" variant="h-3" pb="0" >
           {coin} Historic Data
         </Text>
-        <Menu variant="button">
-          <MenuButton as={Button}>
+        <Menu>
+          <MenuButton>
             <HStack>
               <Text>Date Range</Text>
 
-              <AiOutlineDown />
+              <AiOutlineDown  size={12} style={{strokeWidth:'20'}}/>
             </HStack>
           </MenuButton>
           <MenuList zIndex="14">
@@ -379,14 +384,20 @@ const HistoricData = () => {
         )}
         {onDay.length > 0 ? (
           <Container
-            position="relative"
-            mt="20px"
+           
             variant="box-component"
             width={{ base: "100%", xl: "400px" }}
-            pb={onDay.length > maxHX ? "60px" : "20px"}
+            p="20px"
           >
+            <Text variant="h-3" pb="20px" textTransform="capitalize">
+              Historic {coin} Prices
+            </Text>
+
+            <Collapse startingHeight={hxCompoentnHeight} in={heightShow}>
+              <Stack spacing="0">{renderOnDay()}</Stack>
+            </Collapse>
             {onDay.length > maxHX && (
-              <Box position="absolute" bottom="16px" right="0" left="0">
+              <Box  pt='20px'>
                 {!heightShow ? (
                   <HiArrowCircleDown
                     size={40}
@@ -404,15 +415,6 @@ const HistoricData = () => {
                 )}
               </Box>
             )}
-            <Text variant="h-3" pb="0">
-              Prices On {formatTime(data[data.length - 1].time, false)}
-            </Text>
-            <Text variant="h-4" pb="20px" textTransform="capitalize">
-              Historic {coin} Prices
-            </Text>
-            <Collapse startingHeight={hxCompoentnHeight} in={heightShow}>
-              <Stack spacing="0">{renderOnDay()}</Stack>
-            </Collapse>
           </Container>
         ) : (
           <Box

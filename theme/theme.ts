@@ -124,13 +124,19 @@ const theme = extendTheme({
         medium: {
           fontWeight: 600,
           fontSize: "12px",
-          textTransform:'uppercase'
+          textTransform: "uppercase",
         },
-        'xxs-text':{
-          fontSize:'10px',
-          fontWeight:600,
-          color:'#a0aec0'
-        }
+
+        "chart-percent": {
+          fontSize: { base: "12px", md: "14px" },
+          fontWeight: "700",
+        },
+
+        "xxs-text": {
+          fontSize: "10px",
+          fontWeight: 600,
+          color: "#a0aec0",
+        },
       },
     },
     Stack: {
@@ -162,8 +168,7 @@ const theme = extendTheme({
             props.colorMode === "light"
               ? ".75px  solid #dddfe1"
               : "2px solid 081c3b",
-         
-      
+
           // backgroundColor: props.colorMode === "dark" ? "#123364" : "white",
           backgroundColor: props.colorMode === "dark" ? "  #051329" : "white",
           padding: { base: "14px", md: "20px" },
@@ -239,15 +244,7 @@ const theme = extendTheme({
         }),
       },
     },
-    Menu: {
-      baseStyle: {
-        list: {
-          fontWeight: "700",
-          bg: "#081c3b",
-          minW: "max-content",
-        },
-      },
-    },
+   
     Modal: {
       baseStyle: (props: StyleFunctionProps) => ({
         dialog: {
@@ -264,10 +261,10 @@ const theme = extendTheme({
       baseStyle: (props: StyleFunctionProps) => ({
         content: {
           fontWeight: "500",
-          bg: props.colorMode === "light" ? "#e7ecf1" : "#123364",
+          bg: props.colorMode === "light" ? "#f5f6fa" : "#041124",
           minW: "max-content",
           outline: "none",
-          "--popper-bg": "#133364",
+          "--popper-bg": props.colorMode === "light" ? "#f5f6fa" : "#041124",
           _focus_visible: {
             boxShadow: "none !important",
             outline: "none !important",
@@ -279,6 +276,7 @@ const theme = extendTheme({
             outline: "none !important",
           },
         },
+
         body: {
           display: "flex",
           flexDir: "column",
@@ -292,6 +290,28 @@ const theme = extendTheme({
         },
       }),
     },
+    Menu:{
+      baseStyle : (props: StyleFunctionProps) => ({
+        list: {
+          fontWeight: "700",
+          bgColor: props.colorMode === "light" ? "#e7ecf1" : "#030c19",
+          minW: "max-content",
+        },
+        button:{
+          border:
+          props.colorMode === "light"
+            ? "1px solid #e7ecf1"
+            : " 1px solid #133364",
+        bgColor: "transparent",
+          borderRadius:'4px',
+          height:'32px',
+          padding: '0 8px',
+          fontSize:'sm',
+          fontWeight:700,
+        }
+
+      })
+    }
   },
 });
 export default theme;

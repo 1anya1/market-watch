@@ -64,7 +64,7 @@ const MainChart = dynamic(() => import("./charts/main-chart"), {
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
-  console.log({user})
+  console.log({ user });
   const { coinId, individualPage } = props;
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
@@ -370,15 +370,6 @@ const IndividualCoin = (props: any) => {
               </Text>
             </HStack>
             <HStack>
-              {/* <Button variant="medium-hollow">
-                <FaStar
-                  size={18}
-                  onClick={liked ? deleteFromDatabase : addToDatabase}
-                  fill={
-                    liked ? "yellow" : colorMode === "light" ? "black" : "white"
-                  }
-                />
-              </Button> */}
               <Button
                 variant="medium-hollow"
                 onClick={user.name ? undefined : onOpenLike}
@@ -387,7 +378,11 @@ const IndividualCoin = (props: any) => {
                   size={18}
                   onClick={liked ? deleteFromDatabase : addToDatabase}
                   fill={
-                    liked ? "yellow" : colorMode === "light" ? "black" : "white"
+                    !liked
+                      ? "#d3d5ea"
+                      : colorMode === "light"
+                      ? "#1099fa"
+                      : "yellow"  
                   }
                 />
               </Button>
