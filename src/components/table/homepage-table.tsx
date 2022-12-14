@@ -146,9 +146,9 @@ const HomepageTable = () => {
               <Favorite coin={coin} liked={liked} setLiked={setLiked} />
             </Td>
             <Td padding="5px 10px"  >
-              <Box fontSize="14px">
-                <FormattedNumber value={coin.current_price} prefix="$" />
-              </Box>
+              
+                <FormattedNumber value={coin.current_price} prefix="$" className="table-cell"/>
+             
             </Td>
             <Td padding="5px 10px">
               <PercentChange
@@ -164,23 +164,23 @@ const HomepageTable = () => {
               />
             </Td>
             <Td padding="5px 10px">
-              <Box fontSize="14px">
-                <FormattedNumber value={coin.total_volume} prefix="$" />
-              </Box>
+             
+                <FormattedNumber value={coin.total_volume} prefix="$" className="table-cell" />
+             
             </Td>
             <Td padding="5px 10px">
-              <Box fontSize="14px">
-                <FormattedNumber value={coin.market_cap} prefix="$" />
-              </Box>
+              
+                <FormattedNumber value={coin.market_cap} prefix="$" className="table-cell"/>
+              
             </Td>
             <Td padding="5px 10px">
-              <Box fontSize="14px">
+  
                 <FormattedNumber
                   value={coin?.circulating_supply?.toFixed() || null}
                   prefix=""
-                  // sufffix={` ${coin.symbol.toUpperCase()}`}
+                  className="table-cell"
                 />
-              </Box>
+             
             </Td>
             <Td padding="5px 10px">
               <HStack spacing="0" gap="20px">

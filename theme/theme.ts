@@ -97,10 +97,25 @@ const theme = extendTheme({
           fontWeight: "600",
           color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
         }),
-        "body-gray-bold-sm": (props: StyleFunctionProps) => ({
+        "table-cell": (props: StyleFunctionProps) => ({
+          fontSize: '16px',
+          fontWeight: "500",
+          color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
+        }),
+        "table-bold": (props: StyleFunctionProps) => ({
+          fontSize: '16px',
+          fontWeight: "700",
+          // color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
+        }),
+        "table-cell-small": (props: StyleFunctionProps) => ({
+          fontSize: '16px',
+          fontWeight: "500",
+          color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
+        }),
+        "table-cell-bold": (props: StyleFunctionProps) => ({
           fontSize: '12px',
-          fontWeight: "600",
-          color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
+          fontWeight: "700",
+          color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
         }),
 
         "text-bold": {

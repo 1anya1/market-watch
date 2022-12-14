@@ -13,13 +13,13 @@ body {
 }
 
 html[data-theme="light"] {
-  --text-color: "black";
+  --text-color: black;
   --a-color: #1099fa;
-  --price-chart: #77818f;
+  --price-chart: #2c3036;
 }
 
 html[data-theme="dark"] {
-  --text-color: "white";
+  --text-color:#a0aec0;
   --a-color: #4983c6;
   --price-chart: #a0aec0;
 }
@@ -125,12 +125,26 @@ a {
   position: fixed;
   z-index: 5;
 }
-.body-gray-bold-sm {
-  font-size: "12px";
-  font-weight: "600";
+.table-cell {
+  font-size: 16px ;
+  font-weight: 500 ;
   color: var(--price-chart);
 }
-
+.table-cell-bold{
+  font-size: 16px ;
+  font-weight: 700 ;
+  color: var(--text-color);
+}
+.table-cell-small {
+  font-size: 12px ;
+  font-weight: 500;
+  color: var(--price-chart);
+}
+.table-cell-small-bold {
+  font-size: 12px ;
+  font-weight: 700;
+  color: var(--price-chart);
+}
 /* .recharts-legend-wrapper {
   width: max-content;
   right: 0;

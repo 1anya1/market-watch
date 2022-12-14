@@ -113,7 +113,11 @@ const Portfolio = () => {
           </HStack>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={coin.current_price} prefix="$" />
+          <FormattedNumber
+            value={coin.current_price}
+            prefix="$"
+            className="table-cell"
+          />
         </Td>
         <Td padding="5px 10px">
           <PercentChange value={coin.price_change_percentage_1h_in_currency} />
@@ -127,31 +131,35 @@ const Portfolio = () => {
           <PercentChange value={coin.price_change_percentage_7d_in_currency} />
         </Td>
         <Td padding="5px 10px">
-          <Box fontSize="14px">
-            <FormattedNumber value={coin.market_cap} prefix="$" />
-          </Box>
+          <FormattedNumber
+            value={coin.market_cap}
+            prefix="$"
+            className="table-cell"
+          />
         </Td>
         <Td padding="5px 16px">
-          <Box fontSize="14px" w="150px">
+          <Box w="150px">
             <Chart data={coin.sparkline_in_7d.price} table={true} />
           </Box>
         </Td>
         <Td padding="5px 10px">
-          <Box fontSize="14px" w="100px">
-            <Text variant="text-bold" fontWeight={600}>
+          {coins[coin.id.toLowerCase()]?.holdingsValue ? (
+            <Box>
               <FormattedNumber
                 value={coins[coin.id.toLowerCase()]?.holdingsValue}
                 prefix="$"
+                className="table-cell-bold"
               />
-            </Text>
+            </Box>
+          ) : (
+            <Text variant="table-cell-bold">{"---"}</Text>
+          )}
+          <Box>
             <FormattedNumber
               value={coins[coin.id.toLowerCase()]?.holdings}
-              sufffix={`\u00A0${coin.symbol.toUpperCase()}`} 
-              className="body-gray-bold-sm"
+              sufffix={`\u00A0${coin.symbol.toUpperCase()}`}
+              className="table-cell-small-bold "
             />
-            {/* <Text variant="body-gray-bold-sm">{`${
-              coins[coin.id.toLowerCase()]?.holdings
-            } ${coin.symbol.toUpperCase()}`}</Text> */}
           </Box>
         </Td>
         <Td>

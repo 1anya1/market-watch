@@ -64,17 +64,22 @@ const Transactions = () => {
             padding="5px 30px 5px 10px"
             width="160px"
           >
-            <Text>{new Date(date).toLocaleDateString()}</Text>
+            <Text variant='table-cell'>{new Date(date).toLocaleDateString()}</Text>
           </Td>
           <Td padding="5px 10px">
-            <Text>{new Date(date).toLocaleTimeString()}</Text>
+            <Text variant='table-cell'>{new Date(date).toLocaleTimeString()}</Text>
           </Td>
 
           <Td padding="5px 10px">
             <Text>{transactionType.toUpperCase()}</Text>
           </Td>
           <Td padding="5px 10px">
-            <Text>{price}</Text>
+            <FormattedNumber
+              value={price}
+              prefix="$"
+              className="table-cell"
+            />
+            
           </Td>
           <Td
             padding="5px 10px"
@@ -87,10 +92,10 @@ const Transactions = () => {
               <FormattedNumber
                 value={totalValue}
                 prefix="$"
-                className="body-gray-bold-sm"
+                className="table-cell"
               />
             ) : (
-              <Text variant="body-gray-bold-sm"> {"---"}</Text>
+              <Text variant="table-cell"> {"---"}</Text>
             )}
           </Td>
           <Td padding="5px 10px">
@@ -98,10 +103,10 @@ const Transactions = () => {
               <FormattedNumber
                 value={totalValue}
                 prefix="$"
-                className="body-gray-bold-sm"
+                className="table-cell"
               />
             ) : (
-              <Text variant="body-gray-bold-sm"> {"---"}</Text>
+              <Text variant="table-cell"> {"---"}</Text>
             )}
           </Td>
         </Tr>
