@@ -32,9 +32,12 @@ const BuySellModal = (props: any) => {
     handleChangeExchange,
     onClose,
     isOpen,
+    buyPortfolio,
+    sellPortfolio,
   } = props;
   const { colorMode } = useColorMode();
   const [cointQuantity, setCoinQuantity] = useState<number>(0);
+  const [buttonAction, setButtonAction] = useState("buy");
   const handleChange = (e: any) => {
     setCoinQuantity(e.target.value);
   };
@@ -50,8 +53,8 @@ const BuySellModal = (props: any) => {
             Add Transaction
           </Text>
           <HStack spacing="0" gap="10px">
-            <Button>Buy</Button>
-            <Button>Sell</Button>
+            <Button onClick={() => setButtonAction("buy")}>Buy</Button>
+            <Button onClick={() => setButtonAction("sell")}>Sell</Button>
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
@@ -87,7 +90,7 @@ const BuySellModal = (props: any) => {
               </FormControl>
               <FormControl isDisabled>
                 <Text variant="medium">Price Per Coin USD</Text>
-              
+
                 <InputGroup>
                   <InputLeftAddon justifyContent="center">
                     <Text variant="bold-xsmall">$</Text>
@@ -151,7 +154,16 @@ const BuySellModal = (props: any) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="large-blue" onClick={onClose} w="100%">
+          <Button
+            variant="large-blue"
+            onClick={() => {
+              onClose();
+              buttonAction==='buy' ? buyPortfolio(cointQuantity) : sellPortfolio(cointQuantity) 
+
+              
+            }}
+            w="100%"
+          >
             Add Transaction
           </Button>
         </ModalFooter>

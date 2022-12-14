@@ -141,6 +141,55 @@ const IndividualCoin = (props: any) => {
     }
   };
 
+  const buyPortfolio = async (cointQuantity: number) => {
+    if (user.name) {
+      const data = {
+        date: new Date().getTime(),
+        name: coinInfo.name,
+        img: coinInfo.image,
+        price: coinInfo.currentPrice.usd,
+        symbol: coinInfo.symbol,
+        quantity: cointQuantity,
+      };
+      await setDoc(
+        doc(
+          database,
+          "users",
+          user.name,
+          "portfolio",
+          coinInfo.name,
+          "buy",
+          data.date.toString()
+        ),
+        data
+      );
+    }
+  };
+  const sellPortfolio = async (cointQuantity: number) => {
+    if (user.name) {
+      const data = {
+        date: new Date().getTime(),
+        name: coinInfo.name.toLowerCase(),
+        img: coinInfo.image,
+        price: coinInfo.currentPrice.usd,
+        symbol: coinInfo.symbol,
+        quantity: cointQuantity,
+      };
+      await setDoc(
+        doc(
+          database,
+          "users",
+          user.name,
+          "portfolio",
+          coinInfo.name.toLowerCase(),
+          "sell",
+          data.date.toString()
+        ),
+        data
+      );
+    }
+  };
+
   const deleteFromDatabase = async () => {
     if (user.name) {
       await deleteDoc(doc(database, "users", user.name, "liked", coinId));
@@ -244,7 +293,7 @@ const IndividualCoin = (props: any) => {
       fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
+          console.log(data);
           setNews(data);
         });
     }
@@ -383,7 +432,7 @@ const IndividualCoin = (props: any) => {
                       ? "#d3d5ea"
                       : colorMode === "light"
                       ? "#1099fa"
-                      : "yellow"  
+                      : "yellow"
                   }
                 />
               </Button>
@@ -430,6 +479,8 @@ const IndividualCoin = (props: any) => {
                 isOpen={isOpen}
                 onClose={onClose}
                 handleChangeExchange={handleChangeExchange}
+                buyPortfolio={buyPortfolio}
+                sellPortfolio={sellPortfolio}
               />
             </HStack>
           </HStack>
