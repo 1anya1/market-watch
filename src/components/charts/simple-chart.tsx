@@ -206,9 +206,11 @@ const MiniChart = (props: any) => {
       ref={chartContainerRef}
       height={table ? { base: "50px", sm: "75px" } : "311px"}
     >
+      {!table &&
       <Text fontSize="10px" position="absolute" bottom="2" right="5">
         Powered by CoinGecko API
       </Text>
+}
     </Box>
   ) : (
     <Text>Hello there</Text>

@@ -62,11 +62,13 @@ const Portfolio = () => {
         setCoinIDs(coinID);
         const coinString = [...coinID].join("%2C");
         console.log(coinString);
-        await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
-        )
-          .then((resData) => resData.json())
-          .then((data) => setCoinData(data));
+        if (coinID.length > 0) {
+          await fetch(
+            `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
+          )
+            .then((resData) => resData.json())
+            .then((data) => setCoinData(data));
+        }
       };
       getPortfolio();
     }
@@ -136,21 +138,21 @@ const Portfolio = () => {
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" w="100px">
-            <HStack>
-              <Box>
-                <Text variant="h-5">
-                  <FormattedNumber
-                    value={coins[coin.name.toLowerCase()].holdingsValue}
-                    prefix="$"
-                  />
-                </Text>
-                <Text variant="body-gray-bold">{`${
-                  coins[coin.name.toLowerCase()].holdings
-                } ${coin.symbol.toUpperCase()}`}</Text>
-              </Box>
-              <Button variant="medium">View Transactions</Button>
-            </HStack>
+            <Text variant="text-bold" fontWeight={600}>
+              <FormattedNumber
+                value={coins[coin.id.toLowerCase()]?.holdingsValue}
+                prefix="$"
+              />
+            </Text>
+            <Text variant="body-gray-bold-sm">{`${
+              coins[coin.id.toLowerCase()]?.holdings
+            } ${coin.symbol.toUpperCase()}`}</Text>
           </Box>
+        </Td>
+        <Td>
+          <Button variant="medium" width="max-content">
+            View Transactions
+          </Button>
         </Td>
       </Tr>
     ));
@@ -165,6 +167,7 @@ const Portfolio = () => {
     "Market Cap",
     "7 Day Trend",
     "Holdings",
+    "Actions",
   ];
 
   useEffect(() => {

@@ -97,6 +97,11 @@ const theme = extendTheme({
           fontWeight: "600",
           color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
         }),
+        "body-gray-bold-sm": (props: StyleFunctionProps) => ({
+          fontSize: '12px',
+          fontWeight: "600",
+          color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
+        }),
 
         "text-bold": {
           fontSize: "14px",

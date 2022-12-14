@@ -66,8 +66,9 @@ const MainChart = dynamic(() => import("./charts/main-chart"), {
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
-  console.log({ user });
+
   const { coinId, individualPage } = props;
+  console.log({ user }, { coinId });
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
@@ -152,13 +153,7 @@ const IndividualCoin = (props: any) => {
         totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
       };
       const existingData = await getDoc(
-        doc(
-          database,
-          "users",
-          user.name,
-          "portfolio",
-          coinInfo.name.toLowerCase()
-        )
+        doc(database, "users", user.name, "portfolio", coinId)
       );
       const incomingData: any = existingData.data();
       let updatedData: any = {};
@@ -187,13 +182,7 @@ const IndividualCoin = (props: any) => {
         };
       }
       await setDoc(
-        doc(
-          database,
-          "users",
-          user.name,
-          "portfolio",
-          coinInfo.name.toLowerCase()
-        ),
+        doc(database, "users", user.name, "portfolio", coinId),
         updatedData
       );
     }
@@ -207,13 +196,7 @@ const IndividualCoin = (props: any) => {
         totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
       };
       const existingData = await getDoc(
-        doc(
-          database,
-          "users",
-          user.name,
-          "portfolio",
-          coinInfo.name.toLowerCase()
-        )
+        doc(database, "users", user.name, "portfolio", coinId)
       );
       const incomingData: any = existingData.data();
       let updatedData: any = {};
@@ -244,13 +227,7 @@ const IndividualCoin = (props: any) => {
         };
       }
       await setDoc(
-        doc(
-          database,
-          "users",
-          user.name,
-          "portfolio",
-          coinInfo.name.toLowerCase()
-        ),
+        doc(database, "users", user.name, "portfolio", coinId),
         updatedData
       );
     }
