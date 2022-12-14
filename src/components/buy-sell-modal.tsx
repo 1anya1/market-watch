@@ -158,9 +158,9 @@ const BuySellModal = (props: any) => {
             variant="large-blue"
             onClick={() => {
               onClose();
-              buttonAction==='buy' ? buyPortfolio(cointQuantity) : sellPortfolio(cointQuantity) 
-
-              
+              buttonAction === "buy"
+                ? buyPortfolio(cointQuantity)
+                : sellPortfolio(cointQuantity);
             }}
             w="100%"
           >

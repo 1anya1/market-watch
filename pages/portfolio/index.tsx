@@ -150,9 +150,15 @@ const Portfolio = () => {
           </Box>
         </Td>
         <Td>
-          <Button variant="medium" width="max-content">
-            View Transactions
-          </Button>
+          <Link
+            href={`${window.location}/${coin.id}`}
+            passHref
+            scroll
+          >
+            <Button variant="medium" width="max-content">
+              View Transactions
+            </Button>
+          </Link>
         </Td>
       </Tr>
     ));

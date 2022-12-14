@@ -151,6 +151,7 @@ const IndividualCoin = (props: any) => {
         price: coinInfo.currentPrice.usd,
         quantity: Number(cointQuantity),
         totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
+        transactionType: "buy",
       };
       const existingData = await getDoc(
         doc(database, "users", user.name, "portfolio", coinId)
@@ -158,12 +159,10 @@ const IndividualCoin = (props: any) => {
       const incomingData: any = existingData.data();
       let updatedData: any = {};
       if (incomingData) {
-        const { buy, sell, holdings, holdingsValue, totalProceeds } =
+        const { transactions, holdings, holdingsValue, totalProceeds } =
           incomingData;
-        console.log(holdingsValue, data.totalValue);
         updatedData = {
-          buy: buy ? [...buy, data] : [data],
-          sell: sell ? [...sell] : [],
+          transactions: transactions ? [...transactions, data] : [data],
           holdingsValue: holdingsValue
             ? Number(holdingsValue) + Number(data.totalValue)
             : Number(data.totalValue),
@@ -174,8 +173,7 @@ const IndividualCoin = (props: any) => {
         };
       } else {
         updatedData = {
-          buy: [data],
-          sell: [],
+          transactions: [data],
           holdings: Number(data.quantity),
           holdingdValue: Number(data.totalValue),
           totalProceeds: 0,
@@ -194,6 +192,7 @@ const IndividualCoin = (props: any) => {
         price: coinInfo.currentPrice.usd,
         quantity: Number(cointQuantity),
         totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
+        transactionType: "sell",
       };
       const existingData = await getDoc(
         doc(database, "users", user.name, "portfolio", coinId)
@@ -201,12 +200,11 @@ const IndividualCoin = (props: any) => {
       const incomingData: any = existingData.data();
       let updatedData: any = {};
       if (incomingData) {
-        const { buy, sell, holdings, holdingsValue, totalProceeds } =
+        const { transactions, holdings, holdingsValue, totalProceeds } =
           incomingData;
-        console.log(holdingsValue, data.totalValue);
+
         updatedData = {
-          buy: buy ? [...buy] : [],
-          sell: sell ? [...sell, data] : [data],
+          transactions: transactions ? [...transactions, data] : [],
           holdingsValue: holdingsValue
             ? Number(holdingsValue) - Number(data.totalValue)
             : Number(-data.totalValue),
@@ -219,8 +217,7 @@ const IndividualCoin = (props: any) => {
         };
       } else {
         updatedData = {
-          buy: [],
-          sell: [data],
+          transactions: [data],
           holdings: Number(-data.quantity),
           holdingsValue: Number(-data.totalValue),
           totalProceeds: data.totalValue,

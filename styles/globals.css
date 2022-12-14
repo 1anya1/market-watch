@@ -15,11 +15,13 @@ body {
 html[data-theme="light"] {
   --text-color: "black";
   --a-color: #1099fa;
+  --price-chart: #77818f;
 }
 
 html[data-theme="dark"] {
   --text-color: "white";
   --a-color: #4983c6;
+  --price-chart: #a0aec0;
 }
 
 .chakra-ui-dark {
@@ -123,6 +125,12 @@ a {
   position: fixed;
   z-index: 5;
 }
+.body-gray-bold-sm {
+  font-size: "12px";
+  font-weight: "600";
+  color: var(--price-chart);
+}
+
 /* .recharts-legend-wrapper {
   width: max-content;
   right: 0;

@@ -37,6 +37,7 @@ const MiniChart = (props: any) => {
 
   const endingValue = data[data.length - 1];
   const startingValue = data[0];
+  console.log(startingValue, endingValue)
   const [dataChart, setDataChart] = useState<any[]>([]);
   useEffect(() => {
     const dataArr: SetStateAction<any[]> = [];
@@ -199,18 +200,18 @@ const MiniChart = (props: any) => {
         chart.remove();
       };
     }
-  }, [colorMode, currWidth, data, dataChart]);
+  }, [colorMode, currWidth, data, dataChart, endingValue, startingValue]);
 
   return dataChart.length > 0 ? (
     <Box
       ref={chartContainerRef}
       height={table ? { base: "50px", sm: "75px" } : "311px"}
     >
-      {!table &&
-      <Text fontSize="10px" position="absolute" bottom="2" right="5">
-        Powered by CoinGecko API
-      </Text>
-}
+      {!table && (
+        <Text fontSize="10px" position="absolute" bottom="2" right="5">
+          Powered by CoinGecko API
+        </Text>
+      )}
     </Box>
   ) : (
     <Text>Hello there</Text>
