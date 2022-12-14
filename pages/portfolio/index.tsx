@@ -1,4 +1,12 @@
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  collectionGroup,
+  getDoc,
+  doc,
+  get,
+} from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
 import {
@@ -19,7 +27,7 @@ import PercentChange from "../../src/components/percent-change-table";
 const Portfolio = () => {
   const { user } = useAuth();
 
-  const [coins, setCoins] = useState<any>([]);
+  const [coins, setCoins] = useState<any>({});
   const [coinIDs, setCoinIDs] = useState<any>([]);
   const [coinData, setCoinData] = useState<any>([]);
   const { colorMode } = useColorMode();
@@ -30,27 +38,27 @@ const Portfolio = () => {
         const query = await getDocs(
           collection(database, "users", user.name, "portfolio")
         );
-        const docArr: DocumentData[] = [];
+
+        console.log(
+          query,
+          collection(database, "users", user.name, "portfolio")
+        );
+        const coinObj: any = {};
         const coinID: string[] = [];
-        console.log(query);
-        query.forEach((collection) => {
-          console.log(collection.data());
-        });
         query.forEach((doc) => {
-          docArr.push(doc.data());
+          console.log(doc);
+          coinObj[doc.id] = doc.data();
           coinID.push(doc.id);
         });
-        setCoins(docArr);
+        setCoins(coinObj);
         setCoinIDs(coinID);
         const coinString = [...coinID].join("%2C");
         console.log(coinString);
-        if (coinID.length > 0) {
-          await fetch(
-            `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
-          )
-            .then((resData) => resData.json())
-            .then((data) => setCoinData(data));
-        }
+        await fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
+        )
+          .then((resData) => resData.json())
+          .then((data) => setCoinData(data));
       };
       getPortfolio();
     }
