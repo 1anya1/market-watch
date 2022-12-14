@@ -16,6 +16,7 @@ import {
   Box,
   HStack,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import DataTable from "../../src/components/table/table";
@@ -24,9 +25,12 @@ import Image from "next/image";
 import Link from "next/link";
 import PercentChange from "../../src/components/percent-change-table";
 import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("../../src/components/charts/simple-chart"), {
-  ssr: false,
-});
+const Chart = dynamic(
+  () => import("../../src/components/charts/simple-chart"),
+  {
+    ssr: false,
+  }
+);
 
 const Portfolio = () => {
   const { user } = useAuth();
@@ -125,14 +129,32 @@ const Portfolio = () => {
             <FormattedNumber value={coin.market_cap} prefix="$" />
           </Box>
         </Td>
+        <Td padding="5px 16px">
+          <Box fontSize="14px" w="150px">
+            <Chart data={coin.sparkline_in_7d.price} table={true} />
+          </Box>
+        </Td>
         <Td padding="5px 10px">
-          <Box fontSize="14px">
-            <Chart data={coin.sparkline_in_7d.prices} />
+          <Box fontSize="14px" w="100px">
+            <HStack>
+              <Box>
+                <Text variant="h-5">
+                  <FormattedNumber
+                    value={coins[coin.name.toLowerCase()].holdingsValue}
+                    prefix="$"
+                  />
+                </Text>
+                <Text variant="body-gray-bold">{`${
+                  coins[coin.name.toLowerCase()].holdings
+                } ${coin.symbol.toUpperCase()}`}</Text>
+              </Box>
+              <Button variant="medium">View Transactions</Button>
+            </HStack>
           </Box>
         </Td>
       </Tr>
     ));
-  }, [coinData, colorMode]);
+  }, [coinData, coins, colorMode]);
 
   const tableColumns = [
     "Coin",
@@ -141,7 +163,8 @@ const Portfolio = () => {
     "24h%",
     "7d%",
     "Market Cap",
-    "PNL",
+    "7 Day Trend",
+    "Holdings",
   ];
 
   useEffect(() => {

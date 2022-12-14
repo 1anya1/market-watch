@@ -35,6 +35,8 @@ const MiniChart = (props: any) => {
   const { colorMode } = useColorMode();
   const { data, table } = props;
 
+  const endingValue = data[data.length - 1];
+  const startingValue = data[0];
   const [dataChart, setDataChart] = useState<any[]>([]);
   useEffect(() => {
     const dataArr: SetStateAction<any[]> = [];
@@ -182,11 +184,9 @@ const MiniChart = (props: any) => {
         //   newSeries.setData(series);
         // });
         newSeries = chart.addLineSeries({
-          color: colors.blue,
+          color: startingValue > endingValue ? colors.red : colors.green,
           lastValueVisible: false,
           priceLineColor: "transparent",
-          crosshairMarkerVisible: true,
-          crosshairMarkerRadius: 6,
         });
         newSeries.setData(dataChart);
       }
@@ -204,7 +204,7 @@ const MiniChart = (props: any) => {
   return dataChart.length > 0 ? (
     <Box
       ref={chartContainerRef}
-      height={table ? { base: "75px", sm: "100px" } : "311px"}
+      height={table ? { base: "50px", sm: "75px" } : "311px"}
     >
       <Text fontSize="10px" position="absolute" bottom="2" right="5">
         Powered by CoinGecko API
