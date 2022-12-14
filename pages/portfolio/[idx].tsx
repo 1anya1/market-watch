@@ -1,4 +1,4 @@
-import { Text, Tr, Td, useColorMode } from "@chakra-ui/react";
+import { Text, Tr, Td, useColorMode, Box } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { doc, getDoc, collection } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
@@ -6,13 +6,27 @@ import { database } from "../../context/clientApp";
 import { useCallback, useEffect, useState } from "react";
 import DataTable from "../../src/components/table/table";
 import FormattedNumber from "../../src/components/number-formatter";
+import BreadCrums from "../../src/components/breadcrum";
 
+const tableColumns = [
+  "Date",
+  "Time",
+  "Type",
+  "Price",
+  "Quantity",
+  "Cost",
+  "Proceeds",
+];
 const Transactions = () => {
   const { user } = useAuth();
   const router = useRouter();
   const coinId = router.query.idx;
   const [data, setData] = useState<any>([]);
   const { colorMode } = useColorMode();
+  const breadcrums = [
+    { href: "/portfolio", name: "Portfolio" },
+    { href: "", name: coinId },
+  ];
 
   useEffect(() => {
     const getData = async () => {
@@ -32,20 +46,12 @@ const Transactions = () => {
     console.log(data);
   }, [data]);
 
-  const tableColumns = [
-    "Date",
-    "Type",
-    "Price",
-    "Quantity",
-    "Cost",
-    "Proceeds",
-  ];
   const renderData = useCallback(() => {
     return data.transactions.map((transaction: any) => {
       const { date, transactionType, price, quantity, totalValue } =
         transaction;
       return (
-        <Tr key={date} borderTop="unset">
+        <Tr key={date} borderTop="unset" h="64px">
           <Td
             position="sticky"
             left="-1"
@@ -56,17 +62,25 @@ const Transactions = () => {
                 : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgb(3 12 25) 14%);"
             }
             padding="5px 30px 5px 10px"
+            width="160px"
           >
-            <Text>{date}</Text>
+            <Text>{new Date(date).toLocaleDateString()}</Text>
           </Td>
           <Td padding="5px 10px">
-            <Text>{transactionType}</Text>
+            <Text>{new Date(date).toLocaleTimeString()}</Text>
+          </Td>
+
+          <Td padding="5px 10px">
+            <Text>{transactionType.toUpperCase()}</Text>
           </Td>
           <Td padding="5px 10px">
             <Text>{price}</Text>
           </Td>
-          <Td padding="5px 10px">
-            <Text>{quantity}</Text>
+          <Td
+            padding="5px 10px"
+            color={transactionType === "buy" ? "green" : "red"}
+          >
+            <Text>{transactionType === "buy" ? quantity : -quantity}</Text>
           </Td>
           <Td padding="5px 10px">
             {transactionType === "buy" ? (
@@ -93,17 +107,18 @@ const Transactions = () => {
         </Tr>
       );
     });
-  }, [colorMode, data.transactions]);
+  }, [colorMode, data]);
 
   return (
-    <>
-      <Text variant="h-3" pt="40px">
+    <Box pt="40px">
+      <BreadCrums breadcrums={breadcrums} />
+      <Text variant="h-3" pt="10px">
         Transaction History
       </Text>
       {data?.transactions?.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
       )}
-    </>
+    </Box>
   );
 };
 export default Transactions;

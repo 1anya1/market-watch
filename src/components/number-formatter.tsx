@@ -1,10 +1,13 @@
-
 import { NumericFormat } from "react-number-format";
 
 const FormattedNumber = (props: any) => {
   const { value, prefix, sufffix, className } = props;
+  console.log(value);
+
   let num =
-    Number(value) >= 1 ? Number(value).toFixed(2) : Number(value).toFixed(6);
+    Math.abs(Number(value)) >= 1
+      ? Number(value).toFixed(2)
+      : Number(value).toFixed(6);
 
   return (
     <NumericFormat

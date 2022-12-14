@@ -144,17 +144,18 @@ const Portfolio = () => {
                 prefix="$"
               />
             </Text>
-            <Text variant="body-gray-bold-sm">{`${
+            <FormattedNumber
+              value={coins[coin.id.toLowerCase()]?.holdings}
+              sufffix={`\u00A0${coin.symbol.toUpperCase()}`} 
+              className="body-gray-bold-sm"
+            />
+            {/* <Text variant="body-gray-bold-sm">{`${
               coins[coin.id.toLowerCase()]?.holdings
-            } ${coin.symbol.toUpperCase()}`}</Text>
+            } ${coin.symbol.toUpperCase()}`}</Text> */}
           </Box>
         </Td>
         <Td>
-          <Link
-            href={`${window.location}/${coin.id}`}
-            passHref
-            scroll
-          >
+          <Link href={`${window.location}/${coin.id}`} passHref scroll>
             <Button variant="medium" width="max-content">
               View Transactions
             </Button>
