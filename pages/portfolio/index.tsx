@@ -25,6 +25,8 @@ import Image from "next/image";
 import Link from "next/link";
 import PercentChange from "../../src/components/percent-change-table";
 import dynamic from "next/dynamic";
+import {GrTransaction} from 'react-icons/gr'
+import { TbArrowsDoubleSwNe, TbArrowsLeftRight } from "react-icons/tb";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
@@ -163,9 +165,14 @@ const Portfolio = () => {
           </Box>
         </Td>
         <Td>
-          <Link href={`${window.location}/${coin.id}`} passHref scroll>
+          {/* <Link href={`${window.location}/${coin.id}`} passHref scroll>
             <Button variant="medium" width="max-content">
               View Transactions
+            </Button>
+          </Link> */}
+          <Link href={`${window.location}/${coin.id}`} passHref scroll>
+            <Button variant="medium-hollow" width="max-content">
+              <TbArrowsLeftRight  />
             </Button>
           </Link>
         </Td>
