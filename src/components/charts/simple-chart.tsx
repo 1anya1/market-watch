@@ -33,28 +33,27 @@ const MiniChart = (props: any) => {
   //   left: "unset",
   // });
   const { colorMode } = useColorMode();
-  const { data } = props;
-
+  const { data, table } = props;
 
   const [dataChart, setDataChart] = useState<any[]>([]);
-    useEffect(() => {
-      const dataArr: SetStateAction<any[]> = [];
-      data.forEach((el: any, idx: any) => dataArr.push({ value: el, time: idx}));
+  useEffect(() => {
+    const dataArr: SetStateAction<any[]> = [];
+    data.forEach((el: any, idx: any) => dataArr.push({ value: el, time: idx }));
 
-      setDataChart(dataArr);
-    },[data]);
-//   useEffect(() => {
-//     const arr: SetStateAction<any[]> = [];
-//     data.forEach((el: any) => {
-//       const dataArr: SetStateAction<any[]> = [];
-//       console.log(dataArr);
-//       el.sparkline_in_7d.price.forEach((val: any, idx: any) =>
-//         dataArr.push({ value: val, time: idx })
-//       );
-//       arr.push(dataArr);
-//     });
-//     setDataChart(arr);
-//   }, [data]);
+    setDataChart(dataArr);
+  }, [data]);
+  //   useEffect(() => {
+  //     const arr: SetStateAction<any[]> = [];
+  //     data.forEach((el: any) => {
+  //       const dataArr: SetStateAction<any[]> = [];
+  //       console.log(dataArr);
+  //       el.sparkline_in_7d.price.forEach((val: any, idx: any) =>
+  //         dataArr.push({ value: val, time: idx })
+  //       );
+  //       arr.push(dataArr);
+  //     });
+  //     setDataChart(arr);
+  //   }, [data]);
 
   const [currWidth, setWidth] = useState(0);
 
@@ -85,7 +84,6 @@ const MiniChart = (props: any) => {
     };
     if (chartContainerRef?.current) {
       const handleResize = () => {
-
         if (chartContainerRef?.current?.clientWidth) {
           chart.applyOptions({
             width: chartContainerRef?.current?.clientWidth,
@@ -142,22 +140,22 @@ const MiniChart = (props: any) => {
           borderVisible: false,
           barSpacing: 20,
           minBarSpacing: 2,
-          visible:false,
-        
-        //   tickMarkFormatter: (time: number, tickMarkType = 1) => {
-        //     const hours = new Date(time * 1000);
-        //     const withPmAm = hours.toLocaleTimeString("en-US", {
-        //       // en-US can be set to 'default' to use user's browser settings
-        //       hour: "2-digit",
-        //       minute: "2-digit",
-        //     });
+          visible: false,
 
-        //     const date = new Date(time * 1000).toISOString();
-        //     const t = date.slice(0, 10).split("-");
-        //     const month = `${t[1]}/${t[2]}`;
-        //     const year = `${t[1]}/${t[2]}/${t[0]}`;
-        //     return year;
-        //   },
+          //   tickMarkFormatter: (time: number, tickMarkType = 1) => {
+          //     const hours = new Date(time * 1000);
+          //     const withPmAm = hours.toLocaleTimeString("en-US", {
+          //       // en-US can be set to 'default' to use user's browser settings
+          //       hour: "2-digit",
+          //       minute: "2-digit",
+          //     });
+
+          //     const date = new Date(time * 1000).toISOString();
+          //     const t = date.slice(0, 10).split("-");
+          //     const month = `${t[1]}/${t[2]}`;
+          //     const year = `${t[1]}/${t[2]}/${t[0]}`;
+          //     return year;
+          //   },
         },
         leftPriceScale: {
           // visible: chartContainerRef?.current?.clientWidth > 480 ? true : false,
@@ -172,7 +170,6 @@ const MiniChart = (props: any) => {
       chart.timeScale().fitContent();
 
       if (dataChart.length > 0) {
-
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
         // dataChart?.forEach((series: [], index: number) => {
         //   newSeries = chart.addLineSeries({
@@ -185,13 +182,13 @@ const MiniChart = (props: any) => {
         //   newSeries.setData(series);
         // });
         newSeries = chart.addLineSeries({
-            color: colors.blue,
-            lastValueVisible: false,
-            priceLineColor: "transparent",
-            crosshairMarkerVisible: true,
-            crosshairMarkerRadius: 6,
-          });
-          newSeries.setData(dataChart);
+          color: colors.blue,
+          lastValueVisible: false,
+          priceLineColor: "transparent",
+          crosshairMarkerVisible: true,
+          crosshairMarkerRadius: 6,
+        });
+        newSeries.setData(dataChart);
       }
 
       window.addEventListener("resize", handleResize);
@@ -205,7 +202,10 @@ const MiniChart = (props: any) => {
   }, [colorMode, currWidth, data, dataChart]);
 
   return dataChart.length > 0 ? (
-    <Box ref={chartContainerRef} height='311px'>
+    <Box
+      ref={chartContainerRef}
+      height={table ? { base: "75px", sm: "100px" } : "311px"}
+    >
       <Text fontSize="10px" position="absolute" bottom="2" right="5">
         Powered by CoinGecko API
       </Text>

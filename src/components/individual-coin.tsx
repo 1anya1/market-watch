@@ -165,6 +165,7 @@ const IndividualCoin = (props: any) => {
       if (incomingData) {
         const { buy, sell, holdings, holdingsValue, totalProceeds } =
           incomingData;
+        console.log(holdingsValue, data.totalValue);
         updatedData = {
           buy: buy ? [...buy, data] : [data],
           sell: sell ? [...sell] : [],
@@ -181,7 +182,7 @@ const IndividualCoin = (props: any) => {
           buy: [data],
           sell: [],
           holdings: Number(data.quantity),
-          totalHoldings: Number(data.totalValue),
+          holdingdValue: Number(data.totalValue),
           totalProceeds: 0,
         };
       }
@@ -203,7 +204,7 @@ const IndividualCoin = (props: any) => {
         date: new Date().getTime(),
         price: coinInfo.currentPrice.usd,
         quantity: Number(cointQuantity),
-        totalValue: coinInfo.currentPrice.usd * Number(cointQuantity),
+        totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
       };
       const existingData = await getDoc(
         doc(
@@ -219,7 +220,7 @@ const IndividualCoin = (props: any) => {
       if (incomingData) {
         const { buy, sell, holdings, holdingsValue, totalProceeds } =
           incomingData;
-        console.log(holdings);
+        console.log(holdingsValue, data.totalValue);
         updatedData = {
           buy: buy ? [...buy] : [],
           sell: sell ? [...sell, data] : [data],
@@ -238,7 +239,7 @@ const IndividualCoin = (props: any) => {
           buy: [],
           sell: [data],
           holdings: Number(-data.quantity),
-          totalHoldings: Number(-data.totalValue),
+          holdingsValue: Number(-data.totalValue),
           totalProceeds: data.totalValue,
         };
       }

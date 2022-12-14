@@ -5,7 +5,6 @@ import {
   collectionGroup,
   getDoc,
   doc,
-  get,
 } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
@@ -24,6 +23,11 @@ import FormattedNumber from "../../src/components/number-formatter";
 import Image from "next/image";
 import Link from "next/link";
 import PercentChange from "../../src/components/percent-change-table";
+import dynamic from "next/dynamic";
+const Chart = dynamic(() => import("../../src/components/charts/simple-chart"), {
+  ssr: false,
+});
+
 const Portfolio = () => {
   const { user } = useAuth();
 
@@ -65,7 +69,7 @@ const Portfolio = () => {
   }, [user]);
 
   const renderData = useCallback(() => {
-    return coinData.map((coin) => (
+    return coinData.map((coin: any) => (
       <Tr key={coin.id} borderTop="unset">
         <Td
           position="sticky"
@@ -119,6 +123,11 @@ const Portfolio = () => {
         <Td padding="5px 10px">
           <Box fontSize="14px">
             <FormattedNumber value={coin.market_cap} prefix="$" />
+          </Box>
+        </Td>
+        <Td padding="5px 10px">
+          <Box fontSize="14px">
+            <Chart data={coin.sparkline_in_7d.prices} />
           </Box>
         </Td>
       </Tr>
