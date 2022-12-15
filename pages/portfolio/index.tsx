@@ -27,6 +27,7 @@ import PercentChange from "../../src/components/percent-change-table";
 import dynamic from "next/dynamic";
 import {GrTransaction} from 'react-icons/gr'
 import { TbArrowsDoubleSwNe, TbArrowsLeftRight } from "react-icons/tb";
+import NumberCell from "../../src/components/table/number-cell";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
@@ -78,7 +79,7 @@ const Portfolio = () => {
 
   const renderData = useCallback(() => {
     return coinData.map((coin: any) => (
-      <Tr key={coin.id} borderTop="unset">
+      <Tr key={coin.id} borderTop="unset" h='64px'>
         <Td
           position="sticky"
           left="-1"
@@ -157,7 +158,8 @@ const Portfolio = () => {
             <Text variant="table-cell-bold">{"---"}</Text>
           )}
           <Box>
-            <FormattedNumber
+            
+            <FormattedNumber 
               value={coins[coin.id.toLowerCase()]?.holdings}
               sufffix={`\u00A0${coin.symbol.toUpperCase()}`}
               className="table-cell-small-bold "

@@ -421,12 +421,15 @@ const renderActiveShape = (props: any) => {
           scroll
         >
           <VStack spacing="0" cursor="pointer">
-            <Box mb="10px" bg="#fefeff17" borderRadius="50%" h={{xxs:'40px', md:"50px"}} w={{xxs:'40px', md:"50px"}} position='relative'  >
-              <Image
-                src={topTen[idx].image}
-                alt="coin logo"
-                layout="fill"
-              />
+            <Box
+              mb="10px"
+              bg="#fefeff17"
+              borderRadius="50%"
+              h={{ xxs: "40px", md: "50px" }}
+              w={{ xxs: "40px", md: "50px" }}
+              position="relative"
+            >
+              <Image src={topTen[idx].image} alt="coin logo" layout="fill" />
             </Box>
             <Text textTransform="capitalize" variant="h-5">
               {topTen[idx].symbol.toUpperCase()}
@@ -543,8 +546,8 @@ const CustomLegend = (props: any) => {
               spacing="0"
               gap="6px"
               //   onClick={onPieEnter}
-              onMouseEnter={() => handleMouseEnter(entry.value)}
-              onMouseLeave={() => handleMouseLeave(entry.value)}
+              // onMouseEnter={() => handleMouseEnter(entry.value)}
+              // onMouseLeave={() => handleMouseLeave(entry.value)}
               onClick={() => handleClick(idDisplay)}
               cursor="pointer"
               _hover={{
@@ -666,11 +669,18 @@ const DoughnutChart = (props: any) => {
   //     ) : null;
   //   }, [activeIndexMarketCap, topTen]);
 
-  const renderStats = (name: string, value: number, prefix: string, last:boolean) => {
-    
+  const renderStats = (
+    name: string,
+    value: number,
+    prefix: string,
+    last: boolean
+  ) => {
     return (
       <>
-        <HStack justifyContent="space-between" flexDir={{base:'column', xxs:'row'}}>
+        <HStack
+          justifyContent="space-between"
+          flexDir={{ base: "column", xxs: "row" }}
+        >
           <Text variant="body-gray-bold">{name}</Text>
 
           <FormattedNumber value={value} prefix={prefix} className="h-4" />
@@ -690,7 +700,7 @@ const DoughnutChart = (props: any) => {
     >
       <Container
         w={{ base: "100%", lg: "calc(50% - 10px)" }}
-        h={{base:'490px',md:'650px', lg:"640px"}}
+        h={{ base: "490px", md: "650px", lg: "640px" }}
         variant="box-component"
         position="relative"
         pt="20px"
@@ -699,7 +709,7 @@ const DoughnutChart = (props: any) => {
           Market Cap
         </Text>
         <ResponsiveContainer height="93%">
-          <PieChart style={{paddingBottom:'20px'}}>
+          <PieChart style={{ paddingBottom: "20px" }}>
             <Pie
               height="50%"
               data={marketCapData}
@@ -712,7 +722,8 @@ const DoughnutChart = (props: any) => {
               dataKey="value"
               activeIndex={activeIndexMarketCap}
               activeShape={(props) => renderActiveShape({ ...props, topTen })}
-              onMouseEnter={onPieEnter}
+              // onMouseEnter={onPieEnter}
+              onClick={onPieEnter}
             >
               {marketCapData.map((entry, index) => (
                 <Cell
@@ -764,7 +775,7 @@ const DoughnutChart = (props: any) => {
           </Text>
           {/* <Text variant="h-5">(7 Day Trend)</Text> */}
           <Link href={`/coins/${topTen[activeIndexMarketCap].id}`} passHref>
-          <Button variant='medium'>View More</Button>
+            <Button variant="medium">View More</Button>
           </Link>
         </HStack>
 
@@ -774,31 +785,43 @@ const DoughnutChart = (props: any) => {
             // data={topTen}s
           />
         )}
-        <Stack
-        pb='20px'
-        >
+        <Stack pb="20px">
           {renderStats(
             "Market Cap",
             topTen[activeIndexMarketCap].market_cap,
-            "$",false
+            "$",
+            false
           )}
           {renderStats(
             "Circulating Supply",
             topTen[activeIndexMarketCap].circulating_supply,
-            "",false
+            "",
+            false
           )}
           {renderStats(
             "Total Volume",
             topTen[activeIndexMarketCap].total_volume,
-            "$", false
+            "$",
+            false
           )}
           {renderStats(
             "Current Price",
             topTen[activeIndexMarketCap].current_price,
-            "$",false
+            "$",
+            false
           )}
-          {renderStats("24H High", topTen[activeIndexMarketCap].high_24h, "$", false)}
-          {renderStats("24H Low", topTen[activeIndexMarketCap].low_24h, "$", true)}
+          {renderStats(
+            "24H High",
+            topTen[activeIndexMarketCap].high_24h,
+            "$",
+            false
+          )}
+          {renderStats(
+            "24H Low",
+            topTen[activeIndexMarketCap].low_24h,
+            "$",
+            true
+          )}
           {/* {renderStats( 'Market Cap',  topTen[activeIndexMarketCap].market_cap)}
          {renderStats( 'Market Cap Change %:',  topTen[activeIndexMarketCap].market_cap_change_percentage_24h)}
          {renderStats( 'Market Cap Change:',  topTen[activeIndexMarketCap].market_cap_change_24h)} */}

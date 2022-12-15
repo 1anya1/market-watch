@@ -35,7 +35,7 @@ import {
 import { FaStar } from "react-icons/fa";
 import Link from "next/link";
 import { BiDotsVerticalRounded } from "react-icons/bi";
-import { NumericFormat } from "react-number-format";
+import FormattedNumber from "../../src/components/number-formatter";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import DataTable from "../../src/components/table/table";
@@ -97,27 +97,6 @@ const LikedItems = () => {
     }
   }, [liked]);
 
-  const FormattedNumber = (props: any) => {
-    const { value, prefix, sufffix } = props;
-    let num =
-      Number(value) > 0 ? Number(value).toFixed(2) : Number(value).toFixed(6);
-
-    return (
-      <Box>
-        <NumericFormat
-          value={num}
-          prefix={prefix}
-          suffix={sufffix}
-          displayType="text"
-          thousandSeparator=","
-          style={{
-            fontSize: "14px",
-            fontWeight: "500",
-          }}
-        />
-      </Box>
-    );
-  };
   const PercentChange = (props: any) => {
     const { value } = props;
     return (
@@ -142,7 +121,7 @@ const LikedItems = () => {
 
   const renderTableRow = useCallback(() => {
     return data.map((coin, idx) => (
-      <Tr key={coin.id} borderTop="unset">
+      <Tr key={coin.id} borderTop="unset" height="64px">
         <Td
           position="sticky"
           left="-1"
@@ -160,7 +139,11 @@ const LikedItems = () => {
           </HStack>
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={coin.current_price} prefix="$" />
+          <FormattedNumber
+            value={coin.current_price}
+            prefix="$"
+            className="table-cell"
+          />
         </Td>
         <Td padding="5px 10px">
           <PercentChange value={coin.price_change_24h} />
@@ -173,20 +156,29 @@ const LikedItems = () => {
         </Td>
 
         <Td padding="5px 10px">
-          <FormattedNumber value={coin.market_cap} prefix="$" />
+          <FormattedNumber
+            value={coin.market_cap}
+            prefix="$"
+            className="table-cell"
+          />
         </Td>
         <Td padding="5px 10px">
-          <FormattedNumber value={coin.total_volume} prefix="$" />
+          <FormattedNumber
+            value={coin.total_volume}
+            prefix="$"
+            className="table-cell"
+          />
         </Td>
         <Td padding="5px 10px">
           <FormattedNumber
             value={coin?.circulating_supply?.toFixed() || null}
             prefix=""
             // sufffix={` ${coin.symbol.toUpperCase()}`}
+            className="table-cell"
           />
         </Td>
         <Td padding="5px 10px">
-          <HStack spacing="0" gap="20px">
+          <HStack spacing="0" gap="20px" w='100%'>
             <TableChartComponent
               id={coin.id}
               change={coin.price_change_percentage_7d_in_currency}

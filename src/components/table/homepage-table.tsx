@@ -131,7 +131,7 @@ const HomepageTable = () => {
     return data.map((coin, idx) => {
       if (idx <= 25)
         return (
-          <Tr key={coin.id} borderTop="unset">
+          <Tr key={coin.id} borderTop="unset" h='54px'>
             <Td
               position="sticky"
               left="-1"
@@ -183,7 +183,7 @@ const HomepageTable = () => {
              
             </Td>
             <Td padding="5px 10px">
-              <HStack spacing="0" gap="20px">
+              <HStack spacing="0" gap="20px" width='100%'>
                 <TableChartComponent
                   id={coin.id}
                   change={coin.price_change_percentage_7d_in_currency}

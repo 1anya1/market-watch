@@ -90,7 +90,7 @@ const theme = extendTheme({
         },
         "chart-percent": {
           fontSize: { base: "12px", md: "14px" },
-          fontWeight: "500",
+          fontWeight: "700",
         },
         "body-gray-bold": (props: StyleFunctionProps) => ({
           fontSize: { base: "14px", md: "16px" },
@@ -98,22 +98,22 @@ const theme = extendTheme({
           color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
         }),
         "table-cell": (props: StyleFunctionProps) => ({
-          fontSize: '16px',
+          fontSize: "16px",
           fontWeight: "500",
           color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
         }),
         "table-bold": (props: StyleFunctionProps) => ({
-          fontSize: '16px',
+          fontSize: "16px",
           fontWeight: "700",
           // color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
         }),
         "table-cell-small": (props: StyleFunctionProps) => ({
-          fontSize: '16px',
+          fontSize: "16px",
           fontWeight: "500",
           color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
         }),
         "table-cell-bold": (props: StyleFunctionProps) => ({
-          fontSize: '12px',
+          fontSize: "12px",
           fontWeight: "700",
           color: props.colorMode === "light" ? "#2c3036" : "#a0aec0",
         }),

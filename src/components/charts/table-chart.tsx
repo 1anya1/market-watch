@@ -57,7 +57,7 @@ const TableChartComponent = (props: any) => {
         },
         width: chartContainerRef?.current?.clientWidth,
         height: chartContainerRef?.current?.clientHeight,
-        
+
         grid: {
           vertLines: {
             visible: false,
@@ -122,7 +122,8 @@ const TableChartComponent = (props: any) => {
     <Box
       ref={chartContainerRef}
       height={responsive ? "inherit" : "50px"}
-      width={responsive ? "inherit" : "140px"}
+      // width={responsive ? "inherit" : "140px"}
+      width="inherit"
     />
   );
 };
