@@ -12,12 +12,13 @@ import {
   DrawerContent,
   DrawerCloseButton,
   VStack,
+  Container,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useRouter } from "next/router";
 import Logo from "../images/logo";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import SignOut from "./authentication/log-out";
 import { useAuth } from "../../context/AuthContext";
@@ -36,12 +37,9 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
     onOpen: onOpenNav,
     onClose: onCloseNav,
   } = useDisclosure();
-  const btnRef = useRef();
-  useEffect(() => {
-    console.log("user in the nav", user);
-  }, [user]);
+
   return (
-    <>
+    <Container variant="page">
       <HStack pt="20px" justifyContent="space-between" gap="20px">
         <Box>
           <Link href="/" passHref>
@@ -384,7 +382,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
         </Drawer>
       </HStack>
       {children}
-    </>
+    </Container>
   );
 };
 

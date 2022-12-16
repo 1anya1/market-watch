@@ -1,11 +1,4 @@
-import {
-  collection,
-  DocumentData,
-  getDocs,
-  collectionGroup,
-  getDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
 import {
@@ -17,6 +10,7 @@ import {
   HStack,
   VStack,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import DataTable from "../../src/components/table/table";
@@ -25,9 +19,9 @@ import Image from "next/image";
 import Link from "next/link";
 import PercentChange from "../../src/components/percent-change-table";
 import dynamic from "next/dynamic";
-import {GrTransaction} from 'react-icons/gr'
-import { TbArrowsDoubleSwNe, TbArrowsLeftRight } from "react-icons/tb";
-import NumberCell from "../../src/components/table/number-cell";
+import { TbArrowsLeftRight } from "react-icons/tb";
+import { AiFillDelete } from "react-icons/ai";
+import DeleteModal from "../../src/components/modals/delete-modal";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
@@ -37,7 +31,6 @@ const Chart = dynamic(
 
 const Portfolio = () => {
   const { user } = useAuth();
-
   const [coins, setCoins] = useState<any>({});
   const [coinIDs, setCoinIDs] = useState<any>([]);
   const [coinData, setCoinData] = useState<any>([]);
@@ -49,22 +42,15 @@ const Portfolio = () => {
         const query = await getDocs(
           collection(database, "users", user.name, "portfolio")
         );
-
-        console.log(
-          query,
-          collection(database, "users", user.name, "portfolio")
-        );
         const coinObj: any = {};
         const coinID: string[] = [];
         query.forEach((doc) => {
-          console.log(doc);
           coinObj[doc.id] = doc.data();
           coinID.push(doc.id);
         });
         setCoins(coinObj);
         setCoinIDs(coinID);
         const coinString = [...coinID].join("%2C");
-        console.log(coinString);
         if (coinID.length > 0) {
           await fetch(
             `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
@@ -77,9 +63,43 @@ const Portfolio = () => {
     }
   }, [user]);
 
+  const Modal = (props: any) => {
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    const { delteteFunction, text } = props;
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen}>
+          <AiFillDelete size={18} />
+        </Button>
+        {isOpen && (
+          <DeleteModal
+            isOpen={isOpen}
+            onClose={onClose}
+            delteteFunction={delteteFunction}
+            text={text}
+          />
+        )}
+      </>
+    );
+  };
+
   const renderData = useCallback(() => {
+    const deleteFromDatabase = async (id: string) => {
+      if (user.name) {
+        await deleteDoc(doc(database, "users", user.name, "portfolio", id));
+        const state = [...coinIDs];
+        const prevCoins = { ...coins };
+        const prevCoinData = [...coinData];
+        delete prevCoins.id;
+        const newState = state.filter((el) => el !== id);
+        const newStateCoinData = prevCoinData.filter((el) => el.id !== id);
+        setCoinIDs(newState);
+        setCoins(prevCoins);
+        setCoinData(newStateCoinData);
+      }
+    };
     return coinData.map((coin: any) => (
-      <Tr key={coin.id} borderTop="unset" h='64px'>
+      <Tr key={coin.id} borderTop="unset" h="64px">
         <Td
           position="sticky"
           left="-1"
@@ -158,8 +178,7 @@ const Portfolio = () => {
             <Text variant="table-cell-bold">{"---"}</Text>
           )}
           <Box>
-            
-            <FormattedNumber 
+            <FormattedNumber
               value={coins[coin.id.toLowerCase()]?.holdings}
               sufffix={`\u00A0${coin.symbol.toUpperCase()}`}
               className="table-cell-small-bold "
@@ -167,20 +186,22 @@ const Portfolio = () => {
           </Box>
         </Td>
         <Td>
-          {/* <Link href={`${window.location}/${coin.id}`} passHref scroll>
-            <Button variant="medium" width="max-content">
-              View Transactions
-            </Button>
-          </Link> */}
-          <Link href={`${window.location}/${coin.id}`} passHref scroll>
-            <Button variant="medium-hollow" width="max-content">
-              <TbArrowsLeftRight  />
-            </Button>
-          </Link>
+          <HStack>
+            <Link href={`${window.location}/${coin.id}`} passHref scroll>
+              <Button variant="medium-hollow">
+                <TbArrowsLeftRight size={18} />
+              </Button>
+            </Link>
+
+            <Modal
+              delteteFunction={() => deleteFromDatabase(coin.id)}
+              text={`Are you sure you want to delete ${coin.name} from portfolio? Doing so will remove all the associated transactions.`}
+            />
+          </HStack>
         </Td>
       </Tr>
     ));
-  }, [coinData, coins, colorMode]);
+  }, [coinData, coinIDs, coins, colorMode, user]);
 
   const tableColumns = [
     "Coin",
@@ -194,15 +215,9 @@ const Portfolio = () => {
     "Actions",
   ];
 
-  useEffect(() => {
-    console.log(coins, coinIDs, coinData);
-  }, [coins, coinIDs, coinData]);
-
   return (
     <>
-      <Text variant="h-3" pt="40px">
-        My Porfolio
-      </Text>
+      <Text variant="h-3">My Porfolio</Text>
       {coinData.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
       )}

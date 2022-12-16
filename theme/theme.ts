@@ -23,15 +23,7 @@ const theme = extendTheme({
     global: {
       // styles for the `body`
       body: (props: StyleFunctionProps) => ({
-        padding: {
-          base: "0 4% !important",
-          sm: "0 3% !important",
-          md: "0 4% !important",
-        },
-        maxW: "1800px !important",
-        m: "0 auto",
-
-        // backgroundColor: props.colorMode === "dark" ? "#343444" : "#ebebeb",
+        backgroundColor: props.colorMode === "dark" ? "#343444" : "#ebebeb",
       }),
       div: {
         marginInlineStart: "0",
@@ -96,6 +88,11 @@ const theme = extendTheme({
           fontSize: { base: "14px", md: "16px" },
           fontWeight: "600",
           color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
+        }),
+        "body-semibold": (props: StyleFunctionProps) => ({
+          fontSize: { base: "14px", md: "16px" },
+          fontWeight: "500",
+          // color: props.colorMode === "light" ? "#77818f" : "#a0aec0",
         }),
         "table-cell": (props: StyleFunctionProps) => ({
           fontSize: "16px",
@@ -187,6 +184,15 @@ const theme = extendTheme({
     },
     Container: {
       variants: {
+        page: {
+          padding: {
+            base: "40px 4% !important",
+            sm: "20px 3% !important",
+          },
+
+          maxW: "1800px !important",
+          m: "0 auto",
+        },
         "box-component": (props: StyleFunctionProps) => ({
           boxShadow: "base",
           border:

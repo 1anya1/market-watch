@@ -150,8 +150,6 @@ const MainChart = (props: any) => {
 
       if (cryptoData.length > 0) {
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
-        console.log(cryptoData);
-
         switch (chartType) {
           case "Line":
             setShowTooltip(false);
@@ -237,16 +235,11 @@ const MainChart = (props: any) => {
 
             const date = new Date(Number(param.time) * 1000).toISOString();
             const t = date.slice(0, 10).split("-");
-
             const startingVal = cryptoData[0].value;
             let close = 0;
-            let high = 0;
-            let low = 0;
             const val: any = param.seriesPrices.get(newSeries);
             if (chartType === "Candle") {
               close = Number(val?.close) || 0;
-              // high = Number(val?.high) || 0;
-              // low = val?.low || 0;
             } else if (chartContainerRef.current) {
               close = Number(val);
             }
@@ -298,7 +291,6 @@ const MainChart = (props: any) => {
                     thousandSeparator=","
                     className="price-tip"
                   />
-                  {/* <Text variant="small-bold">{Number(val)}</Text> */}
                 </HStack>
                 <HStack>
                   <Text variant="small-font">Change:</Text>
@@ -383,43 +375,25 @@ const MainChart = (props: any) => {
                 }}
               />
             </Box>
-            {/* <HStack spacing="0">
+
+            <HStack
+              spacing="0"
+              bg={initialPercent > 0 ? "green" : "red"}
+              gap="2px"
+              p="2px 4px"
+              borderRadius="4px"
+            >
               {initialPercent > 0 ? (
-                <AiFillCaretUp fill="var(--green)" size={16} />
+                <AiFillCaretUp fill="white" size={12} />
               ) : (
-                <AiFillCaretDown fill="var(--red)" size={16} />
+                <AiFillCaretDown fill="white" size={12} />
               )}
               <HStack margin="0 !important">
-                <Text
-                  color={initialPercent > 0 ? "green" : "red"}
-                  variant="bold-small"
-                >
+                <Text color="white" variant="chart-percent">
                   {initialPercent.toFixed(2)}%
                 </Text>
-                {timeFrames.map((el: { query: any; value: any }) => {
-                  if (el.query === timeFrame)
-                    return <Text variant="bold-small">{`(${el.value})`}</Text>;
-                })}
               </HStack>
-            </HStack> */}
-             <HStack
-                spacing="0"
-                bg={initialPercent > 0 ? "green" : "red"}
-                gap="2px"
-                p="2px 4px"
-                borderRadius="4px"
-              >
-                {initialPercent > 0 ? (
-                  <AiFillCaretUp fill="white" size={12} />
-                ) : (
-                  <AiFillCaretDown fill="white" size={12} />
-                )}
-                <HStack margin="0 !important">
-                  <Text color="white" variant="chart-percent">
-                    {initialPercent.toFixed(2)}%
-                  </Text>
-                </HStack>
-              </HStack>
+            </HStack>
           </HStack>
           <HStack spacing="0" gap="11px">
             {timeFrames.map((el: any) => (
@@ -441,29 +415,9 @@ const MainChart = (props: any) => {
                 {el.value}
               </Text>
             ))}
-            {/* <Box position="relative" zIndex="10" display="flex">
-              <Menu>
-                <MenuButton>
-                  <RiSettings3Fill
-                    fill={
-                      // colorMode === "light" ? colors.gray : colors.blue
-                      // "#4983c6"
-                      colorMode === "light" ? "#1099fa" : "#4983C6"
-                    }
-                    size={20}
-                  />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
 
-                  <MenuItem onClick={() => setChartType("Candle")}>
-                    Candlestick
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box> */}
-             <Menu >
-              <MenuButton >
+            <Menu>
+              <MenuButton>
                 <RiSettings3Fill
                   fill={
                     // colorMode === "light" ? colors.gray : colors.blue

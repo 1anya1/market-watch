@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 
 import {
   Box,
-  Button,
   HStack,
   Menu,
   MenuButton,
@@ -39,7 +38,6 @@ const MiniChart = (props: any) => {
   const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
-    console.log(data[0]);
     const percent = (data[data.length - 1].value * 100) / data[0].value - 100;
     setPercentChange(percent);
   }, [data]);
@@ -396,8 +394,8 @@ const MiniChart = (props: any) => {
               </HStack>
             </HStack>
 
-            <Menu >
-              <MenuButton >
+            <Menu>
+              <MenuButton>
                 <RiSettings3Fill
                   fill={
                     // colorMode === "light" ? colors.gray : colors.blue

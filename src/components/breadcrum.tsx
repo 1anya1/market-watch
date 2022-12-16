@@ -1,14 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
-import { GrNext } from "react-icons/gr";
-import { FaStar } from "react-icons/fa";
 import { MdNavigateNext } from "react-icons/md";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactFragment,
-  ReactPortal,
-  Key,
-} from "react";
+
 const BreadCrums = (props: any) => {
   const { breadcrums } = props;
   return (

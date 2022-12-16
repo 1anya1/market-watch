@@ -8,45 +8,48 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
 import { database } from "../../../context/clientApp";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import UserAuth from "../authentication/user-auth-modal";
-const Favorite = (props: any) => {
+import DeleteModal from "../modals/delete-modal";
 
-  
+const Favorite = (props: any) => {
   const { colorMode } = useColorMode();
   const { coin, liked, setLiked } = props;
   const { user } = useAuth();
-  const [favoredItems, setFavored] = useState<string | number[]>([]);
   const [width, setWidth] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     setWidth(window.innerWidth);
     window.addEventListener("resize", () => setWidth(window.innerWidth));
   }, []);
 
-  // useEffect(()=>{
-  //   const onScroll = () => console.log(window.scrollY);
-  //       // window.removeEventListener('scroll', onScroll);
-  //      document.getElementById('table-data').addEventListener('mousewheel', onScroll);
-  //       return () => document.getElementById('table-data').removeEventListener('mousewheel', onScroll)
-  // },[])
-
   const deleteFromDatabase = async (id: string) => {
-    console.log("in delete");
     if (user.name) {
       await deleteDoc(doc(database, "users", user.name, "liked", id));
       const state = [...liked];
       const newState = state.filter((el) => el !== id);
       setLiked(newState);
+      onClose();
     }
   };
+  const likeFunctionality = () => {
+    if (user.name) {
+      if (liked.indexOf(coin.id as never) !== -1) {
+        return onOpen();
+      } else {
+        addToDatabase(coin.id, coin.symbol);
+      }
+    } else {
+      onOpenLike();
+    }
+  };
+
   const addToDatabase = async (name: any, sym: any) => {
-    console.log("in add ");
     if (user.name) {
       const data = {
         name,
@@ -64,13 +67,9 @@ const Favorite = (props: any) => {
   } = useDisclosure();
   return (
     <HStack gap={{ base: "10px", lg: "20px" }} spacing="0">
-      <Box pl="4px" onClick={user.name ? undefined : onOpenLike}>
+      <Box pl="4px">
         <FaStar
-          onClick={() =>
-            liked.indexOf(coin.id as never) !== -1
-              ? deleteFromDatabase(coin.id)
-              : addToDatabase(coin.id, coin.symbol)
-          }
+          onClick={likeFunctionality}
           fill={
             liked.indexOf(coin.id as never) === -1
               ? "#d3d5ea"
@@ -79,9 +78,19 @@ const Favorite = (props: any) => {
               : "yellow"
           }
         />
+        {isOpen && (
+          <DeleteModal
+            isOpen={isOpen}
+            onClose={onClose}
+            delteteFunction={() => deleteFromDatabase(coin.id)}
+            coinId={coin.id}
+            text={`Are you sure you want to remove ${coin.name} from watchlist?`}
+          />
+        )}
+
         <UserAuth isOpen={isOpenLike} onClose={onCloseLike} />
       </Box>
-      <HStack spacing="0" gap={{ base: "8px", lg: "14px" }} >
+      <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
         <Box
           h={width < 575 ? "20px" : "26px"}
           w={width < 575 ? "22px" : "26px"}

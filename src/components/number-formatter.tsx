@@ -2,7 +2,6 @@ import { NumericFormat } from "react-number-format";
 
 const FormattedNumber = (props: any) => {
   const { value, prefix, sufffix, className } = props;
-  console.log(value);
 
   let num =
     Math.abs(Number(value)) >= 1

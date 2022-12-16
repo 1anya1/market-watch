@@ -8,18 +8,7 @@ import { AiFillTwitterCircle } from "react-icons/ai";
 import { TbWorld, TbClipboardCheck } from "react-icons/tb";
 
 import { database } from "../../context/clientApp";
-import {
-  doc,
-  setDoc,
-  DocumentSnapshot,
-  getDocs,
-  updateDoc,
-  getDoc,
-  addDoc,
-  collection,
-  Firestore,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 
 import {
@@ -44,16 +33,9 @@ import {
   useToast,
   Collapse,
   useDisclosure,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogFooter,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import BuySellModal from "./buy-sell-modal";
+import BuySellModal from "./modals/buy-sell-modal";
 import dynamic from "next/dynamic";
 import UserAuth from "./authentication/user-auth-modal";
 
@@ -66,9 +48,7 @@ const MainChart = dynamic(() => import("./charts/main-chart"), {
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
-
   const { coinId, individualPage } = props;
-  console.log({ user }, { coinId });
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
@@ -98,7 +78,7 @@ const IndividualCoin = (props: any) => {
   const [liked, setLiked] = useState(false);
   const [movingAverage, setMovingAverage] = useState(0);
   const [cryptoExchange, setCryptoExchange] = useState(1);
-  const [currencyExchange, setCurrencyExchange] = useState(0);
+  // const [currencyExchange, setCurrencyExchange] = useState(0);
   const [coinInfo, setCoinInfo] = useState<any>({
     name: "",
     description: "",
@@ -119,9 +99,7 @@ const IndividualCoin = (props: any) => {
       if (coinId && coinInfo.symbol.length > 0 && user.name) {
         const docRef = doc(database, "users", user.name, "liked", coinId);
         const docSnap = await getDoc(docRef);
-        console.log(docSnap);
         if (docSnap.exists()) {
-          console.log("Document data:", docSnap.data());
           setLiked(true);
         } else {
           setLiked(false);
@@ -144,90 +122,11 @@ const IndividualCoin = (props: any) => {
     }
   };
 
-  const buyPortfolio = async (cointQuantity: number) => {
-    if (user.name) {
-      const data = {
-        date: new Date().getTime(),
-        price: coinInfo.currentPrice.usd,
-        quantity: Number(cointQuantity),
-        totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
-        transactionType: "buy",
-      };
-      const existingData = await getDoc(
-        doc(database, "users", user.name, "portfolio", coinId)
-      );
-      const incomingData: any = existingData.data();
-      let updatedData: any = {};
-      if (incomingData) {
-        const { transactions, holdings, holdingsValue, totalProceeds } =
-          incomingData;
-        updatedData = {
-          transactions: transactions ? [...transactions, data] : [data],
-          holdingsValue: holdingsValue
-            ? Number(holdingsValue) + Number(data.totalValue)
-            : Number(data.totalValue),
-          holdings: holdings
-            ? Number(holdings) + Number(data.quantity)
-            : Number(data.quantity),
-          totalProceeds: totalProceeds ? totalProceeds : 0,
-        };
-      } else {
-        updatedData = {
-          transactions: [data],
-          holdings: Number(data.quantity),
-          holdingdValue: Number(data.totalValue),
-          totalProceeds: 0,
-        };
-      }
-      await setDoc(
-        doc(database, "users", user.name, "portfolio", coinId),
-        updatedData
-      );
-    }
-  };
-  const sellPortfolio = async (cointQuantity: number) => {
-    if (user.name) {
-      const data = {
-        date: new Date().getTime(),
-        price: coinInfo.currentPrice.usd,
-        quantity: Number(cointQuantity),
-        totalValue: Number(coinInfo.currentPrice.usd) * Number(cointQuantity),
-        transactionType: "sell",
-      };
-      const existingData = await getDoc(
-        doc(database, "users", user.name, "portfolio", coinId)
-      );
-      const incomingData: any = existingData.data();
-      let updatedData: any = {};
-      if (incomingData) {
-        const { transactions, holdings, holdingsValue, totalProceeds } =
-          incomingData;
-
-        updatedData = {
-          transactions: transactions ? [...transactions, data] : [],
-          holdingsValue: holdingsValue
-            ? Number(holdingsValue) - Number(data.totalValue)
-            : Number(-data.totalValue),
-          holdings: holdings
-            ? Number(holdings) - Number(data.quantity)
-            : Number(-data.quantity),
-          totalProceeds: totalProceeds
-            ? totalProceeds + data.totalValue
-            : data.totalValue,
-        };
-      } else {
-        updatedData = {
-          transactions: [data],
-          holdings: Number(-data.quantity),
-          holdingsValue: Number(-data.totalValue),
-          totalProceeds: data.totalValue,
-        };
-      }
-      await setDoc(
-        doc(database, "users", user.name, "portfolio", coinId),
-        updatedData
-      );
-    }
+  const [currencyExchange, setCurrencyExchange] = useState(0);
+  const handleChangeCrypto = (event: any) => {
+    const value = Number(event.target.value.split(",").join(""));
+    setCryptoExchange(value);
+    setCurrencyExchange(value * coinInfo.currentPrice.usd);
   };
 
   const deleteFromDatabase = async () => {
@@ -236,9 +135,9 @@ const IndividualCoin = (props: any) => {
       setLiked(false);
     }
   };
-  useEffect(() => {
-    setCurrencyExchange(coinInfo.currentPrice.usd);
-  }, [coinInfo]);
+  // useEffect(() => {
+  //   setCurrencyExchange(coinInfo.currentPrice.usd);
+  // }, [coinInfo]);
   useEffect(() => {
     const getData = async () => {
       let crypto: any[] = [];
@@ -258,7 +157,6 @@ const IndividualCoin = (props: any) => {
           await respTwo.json(),
         ])
         .then(([graph, data]) => {
-          console.log({ data }, { graph });
           const totalNew = graph[graph.length - 1][1];
           graph.forEach((el: any) => {
             const frame = {
@@ -327,13 +225,17 @@ const IndividualCoin = (props: any) => {
         });
     }
   }, [coinId, coinInfo, individualPage]);
+  const handleChangeExchange = (event: any) => {
+    const value = Number(event.target.value.split(",").join(""));
+    setCurrencyExchange(value);
+    setCryptoExchange(value / coinInfo.currentPrice.usd);
+  };
 
   useEffect(() => {
     if (cryptoId > 0 && individualPage) {
       fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setNews(data);
         });
     }
@@ -353,17 +255,17 @@ const IndividualCoin = (props: any) => {
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleChangeCrypto = (event: any) => {
-    const value = Number(event.target.value.split(",").join(""));
-    setCryptoExchange(value);
-    setCurrencyExchange(value * coinInfo.currentPrice.usd);
-  };
+  // const handleChangeCrypto = (event: any) => {
+  //   const value = Number(event.target.value.split(",").join(""));
+  //   setCryptoExchange(value);
+  //   setCurrencyExchange(value * coinInfo.currentPrice.usd);
+  // };
 
-  const handleChangeExchange = (event: any) => {
-    const value = Number(event.target.value.split(",").join(""));
-    setCurrencyExchange(value);
-    setCryptoExchange(value / coinInfo.currentPrice.usd);
-  };
+  // const handleChangeExchange = (event: any) => {
+  //   const value = Number(event.target.value.split(",").join(""));
+  //   setCurrencyExchange(value);
+  //   setCryptoExchange(value / coinInfo.currentPrice.usd);
+  // };
 
   const renderRange = useCallback(() => {
     const val = timeFrames.map((el) => {
@@ -512,16 +414,10 @@ const IndividualCoin = (props: any) => {
               <Button variant="medium-hollow" onClick={onOpen}>
                 Buy/Sell
               </Button>
-              <BuySellModal
-                name={coinInfo.name}
-                image={coinInfo.image}
-                currencyExchange={currencyExchange}
-                isOpen={isOpen}
-                onClose={onClose}
-                handleChangeExchange={handleChangeExchange}
-                buyPortfolio={buyPortfolio}
-                sellPortfolio={sellPortfolio}
-              />
+
+              {isOpen && (
+                <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+              )}
             </HStack>
           </HStack>
           <MainChart

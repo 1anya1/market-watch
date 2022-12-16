@@ -10,10 +10,12 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback,  useEffect,  useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import FormattedNumber from "../number-formatter";
@@ -22,6 +24,7 @@ import Favorite from "./nameColumn";
 import { collection, getDocs } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
 import { database } from "../../../context/clientApp";
+import BuySellModal from "../modals/buy-sell-modal";
 
 const TableChartComponent = dynamic(() => import("../charts/table-chart"), {
   ssr: false,
@@ -57,9 +60,24 @@ const HomepageTable = () => {
   const [liked, setLiked] = useState<any[] | []>([]);
   const { user } = useAuth();
 
+  const BuySell = (props: any) => {
+    const { coinId } = props;
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen}>
+          Buy/Sell
+        </Button>
+        {isOpen && (
+          <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+        )}
+      </>
+    );
+  };
+
   useEffect(() => {
     const getLiked = async () => {
-      console.log("here in gettinglal values");
+ 
       if (user.name) {
         const arr: string[] = [];
         const docRef = collection(database, "users", user.name, "liked");
@@ -117,6 +135,7 @@ const HomepageTable = () => {
 
   const tableColumnNames = [
     "Name",
+    "",
     "Price",
     "1h%",
     "24h%",
@@ -131,7 +150,7 @@ const HomepageTable = () => {
     return data.map((coin, idx) => {
       if (idx <= 25)
         return (
-          <Tr key={coin.id} borderTop="unset" h='54px'>
+          <Tr key={coin.id} borderTop="unset" h="54px">
             <Td
               position="sticky"
               left="-1"
@@ -145,10 +164,15 @@ const HomepageTable = () => {
             >
               <Favorite coin={coin} liked={liked} setLiked={setLiked} />
             </Td>
-            <Td padding="5px 10px"  >
-              
-                <FormattedNumber value={coin.current_price} prefix="$" className="table-cell"/>
-             
+            <Td>
+              <BuySell coinId={coin.id} />
+            </Td>
+            <Td padding="5px 10px">
+              <FormattedNumber
+                value={coin.current_price}
+                prefix="$"
+                className="table-cell"
+              />
             </Td>
             <Td padding="5px 10px">
               <PercentChange
@@ -164,56 +188,57 @@ const HomepageTable = () => {
               />
             </Td>
             <Td padding="5px 10px">
-             
-                <FormattedNumber value={coin.total_volume} prefix="$" className="table-cell" />
-             
+              <FormattedNumber
+                value={coin.total_volume}
+                prefix="$"
+                className="table-cell"
+              />
             </Td>
             <Td padding="5px 10px">
-              
-                <FormattedNumber value={coin.market_cap} prefix="$" className="table-cell"/>
-              
+              <FormattedNumber
+                value={coin.market_cap}
+                prefix="$"
+                className="table-cell"
+              />
             </Td>
             <Td padding="5px 10px">
-  
-                <FormattedNumber
-                  value={coin?.circulating_supply?.toFixed() || null}
-                  prefix=""
-                  className="table-cell"
-                />
-             
+              <FormattedNumber
+                value={coin?.circulating_supply?.toFixed() || null}
+                prefix=""
+                className="table-cell"
+              />
             </Td>
-            <Td padding="5px 10px">
-              <HStack spacing="0" gap="20px" width='100%'>
+            <Td padding="5px 10px" width="110px">
+              <HStack spacing="0" gap="20px" width="100%">
                 <TableChartComponent
                   id={coin.id}
                   change={coin.price_change_percentage_7d_in_currency}
                   data={coin.sparkline_in_7d?.price}
                 />
-                
-                  <Popover placement="bottom-start">
-                    <PopoverTrigger>
-                      <Box>
-                        <BiDotsVerticalRounded size={20} />
-                      </Box>
-                    </PopoverTrigger>
-                    <div className="chakra-portal chart-popover">
-                      <PopoverContent
-                        width="max-content"
-                        // _focusVisible={{ boxShadow: "unset" }}
-                      >
-                        <PopoverArrow />
-                        <PopoverBody p=" 10px 20px">
-                          <Link passHref href={`/coins/${coin.id}`}>
-                            <Text cursor="pointer">View Charts</Text>
-                          </Link>
-                          <Link passHref href={`/historic-data/${coin.id}`}>
-                            <Text cursor="pointer">Historic Data</Text>
-                          </Link>
-                        </PopoverBody>
-                      </PopoverContent>
-                    </div>
-                  </Popover>
-               
+
+                <Popover placement="bottom-start">
+                  <PopoverTrigger>
+                    <Box>
+                      <BiDotsVerticalRounded size={20} />
+                    </Box>
+                  </PopoverTrigger>
+                  <div className="chakra-portal chart-popover">
+                    <PopoverContent
+                      width="max-content"
+                      // _focusVisible={{ boxShadow: "unset" }}
+                    >
+                      <PopoverArrow />
+                      <PopoverBody p=" 10px 20px">
+                        <Link passHref href={`/coins/${coin.id}`}>
+                          <Text cursor="pointer">View Charts</Text>
+                        </Link>
+                        <Link passHref href={`/historic-data/${coin.id}`}>
+                          <Text cursor="pointer">Historic Data</Text>
+                        </Link>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </div>
+                </Popover>
               </HStack>
             </Td>
           </Tr>

@@ -13,7 +13,6 @@ type FormData = {
 
 const SignUp = (props: any) => {
   const { signUp } = useAuth();
-  console.log(useAuth());
   const router = useRouter();
   const { setUserActive, setUserInfo, onClose } = props;
   const {

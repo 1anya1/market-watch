@@ -1,8 +1,5 @@
 import { Button, FormLabel, Input, VStack } from "@chakra-ui/react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import { useAuth } from "../../../context/AuthContext";
@@ -23,7 +20,6 @@ const SignIn = (props: any) => {
   } = useForm<FormData>();
   const { logIn } = useAuth();
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     try {
       await logIn(data.email, data.password);
     } catch (error: any) {

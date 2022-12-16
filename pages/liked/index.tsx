@@ -1,38 +1,22 @@
 import {
-  Table,
-  TableCaption,
-  TableContainer,
   Text,
-  Thead,
   Tr,
-  Th,
-  Tbody,
   useColorMode,
   Td,
   HStack,
   Box,
-  Stack,
   PopoverArrow,
   PopoverBody,
   PopoverTrigger,
   Popover,
   PopoverContent,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc,
-  addDoc,
-  collection,
-  getDocs,
-  Firestore,
-  deleteDoc,
-} from "firebase/firestore";
-import { FaStar } from "react-icons/fa";
+import { collection, getDocs } from "firebase/firestore";
 import Link from "next/link";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import FormattedNumber from "../../src/components/number-formatter";
@@ -40,6 +24,7 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import DataTable from "../../src/components/table/table";
 import Favorite from "../../src/components/table/nameColumn";
+import BuySellModal from "../../src/components/modals/buy-sell-modal";
 
 const TableChartComponent = dynamic(
   () => import("../../src/components/charts/table-chart"),
@@ -54,6 +39,7 @@ const LikedItems = () => {
   const [data, setData] = useState<any[]>([]);
   const tableColumns = [
     "Name",
+    "",
     "Price",
     "1h%",
     "24h%",
@@ -63,10 +49,21 @@ const LikedItems = () => {
     "Circulating Supply",
     "Last 7 Days",
   ];
+  const BuySell = (props: any) => {
+    const { coinId } = props;
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen}>
+          Buy/Sell
+        </Button>
+        <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+      </>
+    );
+  };
 
   useEffect(() => {
     const liked = async () => {
-      console.log("here in the effect");
       if (user.name) {
         const arr: string[] = [];
         const docRef = collection(database, "users", user.name, "liked");
@@ -84,7 +81,6 @@ const LikedItems = () => {
     liked();
   }, [user]);
   useEffect(() => {
-    console.log({ liked });
     if (liked.length > 0) {
       const query = liked.join(",").replaceAll(",", "%2C");
       fetch(
@@ -138,6 +134,9 @@ const LikedItems = () => {
             <Favorite coin={coin} setLiked={setLiked} liked={liked} />
           </HStack>
         </Td>
+        <Td>
+          <BuySell coinId={coin.id} />
+        </Td>
         <Td padding="5px 10px">
           <FormattedNumber
             value={coin.current_price}
@@ -177,8 +176,8 @@ const LikedItems = () => {
             className="table-cell"
           />
         </Td>
-        <Td padding="5px 10px">
-          <HStack spacing="0" gap="20px" w='100%'>
+        <Td padding="5px 10px" width="110px">
+          <HStack spacing="0" gap="20px" w="100%">
             <TableChartComponent
               id={coin.id}
               change={coin.price_change_percentage_7d_in_currency}
@@ -213,10 +212,10 @@ const LikedItems = () => {
     ));
   }, [colorMode, data, liked]);
   return (
-    <Box pt="40px">
+    <>
       <Text variant="h-3">Watchlist</Text>
       <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
-    </Box>
+    </>
   );
 };
 

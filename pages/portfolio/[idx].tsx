@@ -1,6 +1,6 @@
-import { Text, Tr, Td, useColorMode, Box } from "@chakra-ui/react";
+import { Text, Tr, Td, useColorMode, Box, Container } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { doc, getDoc, collection } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
 import { useCallback, useEffect, useState } from "react";
@@ -42,10 +42,6 @@ const Transactions = () => {
     getData();
   }, [coinId, user]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const renderData = useCallback(() => {
     return data.transactions.map((transaction: any) => {
       const { date, transactionType, price, quantity, totalValue } =
@@ -64,22 +60,21 @@ const Transactions = () => {
             padding="5px 30px 5px 10px"
             width="160px"
           >
-            <Text variant='table-cell'>{new Date(date).toLocaleDateString()}</Text>
+            <Text variant="table-cell">
+              {new Date(date).toLocaleDateString()}
+            </Text>
           </Td>
           <Td padding="5px 10px">
-            <Text variant='table-cell'>{new Date(date).toLocaleTimeString()}</Text>
+            <Text variant="table-cell">
+              {new Date(date).toLocaleTimeString()}
+            </Text>
           </Td>
 
           <Td padding="5px 10px">
             <Text>{transactionType.toUpperCase()}</Text>
           </Td>
           <Td padding="5px 10px">
-            <FormattedNumber
-              value={price}
-              prefix="$"
-              className="table-cell"
-            />
-            
+            <FormattedNumber value={price} prefix="$" className="table-cell" />
           </Td>
           <Td
             padding="5px 10px"
@@ -115,7 +110,7 @@ const Transactions = () => {
   }, [colorMode, data]);
 
   return (
-    <Box pt="40px">
+    <>
       <BreadCrums breadcrums={breadcrums} />
       <Text variant="h-3" pt="10px">
         Transaction History
@@ -123,7 +118,7 @@ const Transactions = () => {
       {data?.transactions?.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
       )}
-    </Box>
+    </>
   );
 };
 export default Transactions;

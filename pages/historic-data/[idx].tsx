@@ -19,12 +19,10 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { FaShareAlt } from "react-icons/fa";
-
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BiTimeFive } from "react-icons/bi";
-import { NumericFormat } from "react-number-format";
 import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import { AiOutlineDown } from "react-icons/ai";
 import FormattedNumber from "../../src/components/number-formatter";
@@ -139,7 +137,7 @@ const HistoricData = () => {
         .then((res) => res.json())
         .then((allTimeData) => {
           // getting the year difference in order
-          console.log(allTimeData);
+
           const startingPoint = new Date(allTimeData.prices[0][0]);
           const endingPoint = new Date(
             allTimeData.prices[allTimeData.prices.length - 1][0]
@@ -171,9 +169,7 @@ const HistoricData = () => {
           const thisDay: { time: any; value: any }[] = [];
           allTimeData.prices.forEach((frame: any[]) => {
             const t = new Date(frame[0]).toISOString().split("T")[0];
-            // console.log(t, frame[1])
             if (timeFrames.indexOf(t) !== -1 && !obj[t]) {
-              console.log("in this plave");
               obj[t] = 1;
               thisDay.push({ time: frame[0], value: frame[1] });
             }
@@ -186,7 +182,7 @@ const HistoricData = () => {
   const renderTableRow = useCallback(() => {
     const d = [...data];
     return d.reverse().map((el) => (
-      <Tr key={el.time} borderTop="unset">
+      <Tr key={el.time} borderTop="unset" h="64px">
         <Td
           p="20px 40px 20px 20px"
           position="sticky"
@@ -204,37 +200,61 @@ const HistoricData = () => {
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.value} prefix="$" />
+            <FormattedNumber
+              value={el.value}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.open} prefix="$" />
+            <FormattedNumber
+              value={el.open}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.high} prefix="$" />
+            <FormattedNumber
+              value={el.high}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.low} prefix="$" />
+            <FormattedNumber value={el.low} prefix="$" className="table-cell" />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.close} prefix="$" />
+            <FormattedNumber
+              value={el.close}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.volume} prefix="$" />
+            <FormattedNumber
+              value={el.volume}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
         <Td padding="5px 10px">
           <Box fontSize="14px" fontWeight="500">
-            <FormattedNumber value={el.marketCap} prefix="$" />
+            <FormattedNumber
+              value={el.marketCap}
+              prefix="$"
+              className="table-cell"
+            />
           </Box>
         </Td>
       </Tr>
@@ -266,7 +286,7 @@ const HistoricData = () => {
   // using callback to memoize already present data
   const renderOnDay = useCallback(() => {
     const d = [...onDay];
-    console.log("here", d);
+
     return d.reverse().map((el, idx) => (
       <VStack
         key={`${el.time}`}
@@ -290,7 +310,7 @@ const HistoricData = () => {
           alignItems="flex-end"
         >
           <HStack
-            gap={{base:'8px', sm:"14px"}}
+            gap={{ base: "8px", sm: "14px" }}
             spacing="0"
             flexDir={{ base: "column", xxs: "row" }}
             alignItems={{ base: "flex-start", xxs: "center" }}
@@ -350,13 +370,12 @@ const HistoricData = () => {
       <VStack pb="20px" pt="40px" alignItems="flex-start">
         <HStack>
           {coinData?.image?.small && (
-            <Box position='relative' h={{base:'28px', lg:'32px'}}  w={{base:'28px', md:'32px'}}>
-              <Image
-                src={coinData.image.small}
-                alt="coin name"
-                layout="fill"
-                
-              />
+            <Box
+              position="relative"
+              h={{ base: "28px", lg: "32px" }}
+              w={{ base: "28px", md: "32px" }}
+            >
+              <Image src={coinData.image.small} alt="coin name" layout="fill" />
             </Box>
           )}
           <Text textTransform="capitalize" variant="h-3" pb="0">
