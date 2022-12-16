@@ -123,6 +123,7 @@ const SwiperAutoplayComponent = (props: any) => {
           ? topMovers.map((el: any) => (
               <SwiperSlide key={el.name}>
                 <Grid
+                  overflow="hidden"
                   backgroundColor={
                     colorMode === "light" ? "#f5f6fa" : "#051329"
                   }

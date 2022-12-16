@@ -26,6 +26,7 @@ import { NumericFormat } from "react-number-format";
 import { database } from "../../../context/clientApp";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
+import UserAuth from "../authentication/user-auth-modal";
 
 const BuySellModal = (props: any) => {
   const { name, onClose, isOpen } = props;
@@ -170,6 +171,8 @@ const BuySellModal = (props: any) => {
   const time = date.toISOString();
 
   return (
+    <>
+    {user.name ? (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay bg="#000000a8" />
       <ModalContent>
@@ -329,6 +332,11 @@ const BuySellModal = (props: any) => {
         </ModalFooter>
       </ModalContent>
     </Modal>
+    )
+    : 
+    (<UserAuth isOpen={isOpen} onClose={onClose} />)
+          }
+          </>
   );
 };
 export default BuySellModal;

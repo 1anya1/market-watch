@@ -91,6 +91,10 @@ const HomepageTable = () => {
           setLiked([]);
         }
       }
+      else{
+        setLiked([])
+      }
+     
     };
     getLiked();
   }, [user]);
@@ -162,9 +166,11 @@ const HomepageTable = () => {
               }
               padding="5px 30px 5px 10px"
             >
+              
               <Favorite coin={coin} liked={liked} setLiked={setLiked} />
             </Td>
             <Td>
+           
               <BuySell coinId={coin.id} />
             </Td>
             <Td padding="5px 10px">

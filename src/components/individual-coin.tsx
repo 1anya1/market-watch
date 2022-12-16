@@ -157,7 +157,7 @@ const IndividualCoin = (props: any) => {
           await respTwo.json(),
         ])
         .then(([graph, data]) => {
-          const totalNew = graph[graph.length - 1][1];
+          const totalNew = graph.length > 0 ? graph[graph.length - 1][1] : 0;
           graph.forEach((el: any) => {
             const frame = {
               value: el[1],
@@ -171,8 +171,9 @@ const IndividualCoin = (props: any) => {
             high = Math.max(high, el[2]);
             crypto.push(frame);
           });
-          const startingVal = crypto[0].value;
-          const endValue = crypto[crypto.length - 1].value;
+          const startingVal = crypto.length > 0 ? crypto[0].value : 0;
+          const endValue =
+            crypto.length > 0 ? crypto[crypto.length - 1].value : 0;
           const percentChange =
             (Number(endValue) * 100) / Number(startingVal) - 100;
           const coinInfo = {
@@ -346,7 +347,7 @@ const IndividualCoin = (props: any) => {
   return (
     <>
       {dataRetrieved ? (
-        <Box p="40px 0">
+        <Box>
           <HStack gap="11px" spacing="0" pb="28px" flexWrap="wrap">
             <HStack gap="11px" spacing="0">
               <Box>

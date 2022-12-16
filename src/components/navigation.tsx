@@ -24,6 +24,7 @@ import SignOut from "./authentication/log-out";
 import { useAuth } from "../../context/AuthContext";
 import { HiMenuAlt3 } from "react-icons/hi";
 import UserAuth from "./authentication/user-auth-modal";
+import CoinSearch from "./search/coin-search";
 
 const Navigation = ({ children }: { children: React.ReactNode }) => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -87,7 +88,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
 
           {user?.name && (
             <>
-              <Link href="/liked">
+              <Link href="/watchlist">
                 <Text
                   color={
                     router.pathname === "/crypto"
@@ -381,6 +382,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           </DrawerContent>
         </Drawer>
       </HStack>
+      <CoinSearch />
       {children}
     </Container>
   );

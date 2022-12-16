@@ -110,15 +110,15 @@ const Transactions = () => {
   }, [colorMode, data]);
 
   return (
-    <>
-      <BreadCrums breadcrums={breadcrums} />
+    <Box>
+      <BreadCrums breadcrums={breadcrums}  />
       <Text variant="h-3" pt="10px">
         Transaction History
       </Text>
       {data?.transactions?.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
       )}
-    </>
+    </Box>
   );
 };
 export default Transactions;

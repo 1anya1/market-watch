@@ -186,8 +186,8 @@ const theme = extendTheme({
       variants: {
         page: {
           padding: {
-            base: "40px 4% !important",
-            sm: "20px 3% !important",
+            base: "0 4%  60px 4%",
+            sm: "0 3% 40px 3%",
           },
 
           maxW: "1800px !important",
@@ -280,7 +280,7 @@ const theme = extendTheme({
       baseStyle: (props: StyleFunctionProps) => ({
         dialog: {
           bg: props.colorMode === "light" ? "white" : "#081c3b",
-          width: { base: "97vw", lg: "550px" },
+          width: { base: "90vw", lg: "550px" },
           maxWidth: "550px !important",
         },
         overlay: {

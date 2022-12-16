@@ -10,6 +10,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+
 const DeleteModal = (props: any) => {
   const { isOpen, onClose, delteteFunction, text } = props;
   return (
