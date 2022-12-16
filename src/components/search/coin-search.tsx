@@ -100,7 +100,7 @@ const CoinSearch = (props: any) => {
               gap="12px"
               variant="medium-hollow"
               margin="0 auto"
-              visibility='hidden'
+              visibility="hidden"
             >
               <BiSearch />
               <Text>Seach</Text>
@@ -145,7 +145,7 @@ const CoinSearch = (props: any) => {
                 width={{ base: "90vw", md: "240px" }}
                 overflowX="hidden"
                 overflowY="scroll"
-                maxH={{ base: "73vh", md: "250px" }}
+                maxH={{ base: "40vw", md: "250px" }}
                 pt="20px"
               >
                 <VStack gap="10px">
