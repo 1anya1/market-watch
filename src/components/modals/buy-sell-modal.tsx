@@ -172,171 +172,170 @@ const BuySellModal = (props: any) => {
 
   return (
     <>
-    {user.name ? (
-    <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay bg="#000000a8" />
-      <ModalContent>
-        <ModalHeader>
-          <Text variant="h-3" pb="10px">
-            Add Transaction To Portfolio
-          </Text>
-          <HStack
-            spacing="0"
-            gap="6px"
-            bg={colorMode === "light" ? "#e7ecf0" : " #051329"}
-            width="max-content"
-            p="6px"
-            borderRadius="8px"
-          >
-            <Button
-              onClick={() => setButtonAction("buy")}
-              bg={
-                buttonAction === "buy"
-                  ? colorMode === "light"
-                    ? "white !important"
-                    : "#133364 !important"
-                  : "transparent"
-              }
-              width="100px"
-            >
-              Buy
-            </Button>
-            <Button
-              onClick={() => setButtonAction("sell")}
-              bg={
-                buttonAction === "sell"
-                  ? colorMode === "light"
-                    ? "white !important"
-                    : "#133364 !important"
-                  : "transparent"
-              }
-              width="100px"
-            >
-              Sell
-            </Button>
-          </HStack>
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Box>
-            <HStack spacing="0" gap="10px" pb="20px">
-              <Box>
-                <Image
-                  src={coinData.image}
-                  alt={name}
-                  width={{ base: "28px", md: "34px" }}
-                  height={{ base: "28px", md: "34px" }}
-                />
-              </Box>
-              <Text variant="h-4" pb="0" textTransform="capitalize">
-                {name}
+      {user.name ? (
+        <Modal isOpen={isOpen} onClose={onClose} size="xl">
+          <ModalOverlay bg="#000000a8" />
+          <ModalContent>
+            <ModalHeader>
+              <Text variant="h-3" pb="20px" mt="22px" lineHeight="normal">
+                Add Transaction To Portfolio
               </Text>
-            </HStack>
-            <Stack
-              spacing="0"
-              flexDir={{ base: "column", md: "row" }}
-              gap="10px"
-            >
-              <FormControl>
-                <Text variant="medium" pb="6px">
-                  Quantity
-                </Text>
-                <NumberInput>
-                  <NumberInputField
-                    value={cointQuantity}
-                    onChange={handleChange}
-                    placeholder="0.00"
-                  />
-                </NumberInput>
-              </FormControl>
-              <FormControl isDisabled>
-                <Text variant="medium" pb="6px">
-                  Price Per Coin USD
-                </Text>
-
-                <InputGroup>
-                  <InputLeftAddon justifyContent="center">
-                    <Text variant="bold-xsmall">$</Text>
-                  </InputLeftAddon>
-                  <Box
-                    pl="10px"
-                    border={
-                      colorMode === "light"
-                        ? "1px solid #e2e8f1"
-                        : "1px solid #4e5767"
-                    }
-                    width="100%"
-                    borderRadius="0 6px 6px  0"
-                    cursor="not-allowed"
-                  >
-                    <NumericFormat
-                      value={coinData.price}
-                      displayType="text"
-                      thousandSeparator=","
-                      className="h-4"
-                      // onChange={handleChangeExchange}
-                      style={{
-                        background: "transparent",
-                        height: "100%",
-                        cursor: "not-allowed",
-                        outline: "none",
-                      }}
+              <HStack
+                spacing="0"
+                gap="6px"
+                bg={colorMode === "light" ? "#e7ecf0" : " #051329"}
+                width={{ base: "100%", sm: "max-content" }}
+                p="6px"
+                borderRadius="8px"
+              >
+                <Button
+                  onClick={() => setButtonAction("buy")}
+                  bg={
+                    buttonAction === "buy"
+                      ? colorMode === "light"
+                        ? "white !important"
+                        : "#133364 !important"
+                      : "transparent"
+                  }
+                  width={{ base: "48%", sm: "100px" }}
+                >
+                  Buy
+                </Button>
+                <Button
+                  onClick={() => setButtonAction("sell")}
+                  bg={
+                    buttonAction === "sell"
+                      ? colorMode === "light"
+                        ? "white !important"
+                        : "#133364 !important"
+                      : "transparent"
+                  }
+                  width={{ base: "48%", sm: "100px" }}
+                >
+                  Sell
+                </Button>
+              </HStack>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box>
+                <HStack spacing="0" gap="10px" pb="20px">
+                  <Box>
+                    <Image
+                      src={coinData.image}
+                      alt={name}
+                      width={{ base: "28px", md: "34px" }}
+                      height={{ base: "28px", md: "34px" }}
                     />
                   </Box>
-                </InputGroup>
-              </FormControl>
-            </Stack>
+                  <Text variant="h-4" pb="0" textTransform="capitalize">
+                    {name}
+                  </Text>
+                </HStack>
+                <Stack
+                  spacing="0"
+                  flexDir={{ base: "column", md: "row" }}
+                  gap="10px"
+                >
+                  <FormControl>
+                    <Text variant="medium" pb="6px">
+                      Quantity
+                    </Text>
+                    <NumberInput>
+                      <NumberInputField
+                        value={cointQuantity}
+                        onChange={handleChange}
+                        placeholder="0.00"
+                      />
+                    </NumberInput>
+                  </FormControl>
+                  <FormControl isDisabled>
+                    <Text variant="medium" pb="6px">
+                      Price Per Coin USD
+                    </Text>
 
-            <VStack
-              p="20px"
-              borderRadius="8px"
-              mt="20px"
-              spacing="0"
-              alignItems="flex-start"
-              border={
-                colorMode === "light"
-                  ? "1px solid #e2e8f1"
-                  : "1px solid #4e5767"
-              }
-            >
-              <Text variant="h-5">Total Spent</Text>
-              <NumericFormat
-                value={
-                  cointQuantity * coinData.price >= 1
-                    ? (cointQuantity * coinData.price).toFixed(2)
-                    : (cointQuantity * coinData.price).toFixed(6)
-                }
-                displayType="text"
-                thousandSeparator=","
-                className="h-3"
-                prefix="$"
-                // onChange={handleChangeExchange}
-              />
-            </VStack>
-          </Box>
-        </ModalBody>
+                    <InputGroup>
+                      <InputLeftAddon justifyContent="center">
+                        <Text variant="bold-xsmall">$</Text>
+                      </InputLeftAddon>
+                      <Box
+                        pl="10px"
+                        border={
+                          colorMode === "light"
+                            ? "1px solid #e2e8f1"
+                            : "1px solid #4e5767"
+                        }
+                        width="100%"
+                        borderRadius="0 6px 6px  0"
+                        cursor="not-allowed"
+                      >
+                        <NumericFormat
+                          value={coinData.price}
+                          displayType="text"
+                          thousandSeparator=","
+                          className="h-4"
+                          // onChange={handleChangeExchange}
+                          style={{
+                            background: "transparent",
+                            height: "100%",
+                            cursor: "not-allowed",
+                            outline: "none",
+                          }}
+                        />
+                      </Box>
+                    </InputGroup>
+                  </FormControl>
+                </Stack>
 
-        <ModalFooter>
-          <Button
-            variant="large-blue"
-            onClick={() => {
-              onClose();
-              buttonAction === "buy"
-                ? buyPortfolio(cointQuantity)
-                : sellPortfolio(cointQuantity);
-            }}
-            w="100%"
-          >
-            Add Transaction
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-    )
-    : 
-    (<UserAuth isOpen={isOpen} onClose={onClose} />)
-          }
-          </>
+                <VStack
+                  p="20px"
+                  borderRadius="8px"
+                  mt="20px"
+                  spacing="0"
+                  alignItems="flex-start"
+                  border={
+                    colorMode === "light"
+                      ? "1px solid #e2e8f1"
+                      : "1px solid #4e5767"
+                  }
+                >
+                  <Text variant="h-5">Total Spent</Text>
+                  <NumericFormat
+                    value={
+                      cointQuantity * coinData.price >= 1
+                        ? (cointQuantity * coinData.price).toFixed(2)
+                        : (cointQuantity * coinData.price).toFixed(6)
+                    }
+                    displayType="text"
+                    thousandSeparator=","
+                    className="h-3"
+                    prefix="$"
+                    // onChange={handleChangeExchange}
+                  />
+                </VStack>
+              </Box>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant="large-blue"
+                onClick={() => {
+                  onClose();
+                  buttonAction === "buy"
+                    ? buyPortfolio(cointQuantity)
+                    : sellPortfolio(cointQuantity);
+                }}
+                w="100%"
+              >
+                Add Transaction
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      ) : (
+        <UserAuth isOpen={isOpen} onClose={onClose} />
+      )}
+    </>
   );
 };
 export default BuySellModal;

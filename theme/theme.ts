@@ -282,6 +282,13 @@ const theme = extendTheme({
         overlay: {
           bg: props.colorMode === "light" ? "#000000a8" : "#000000db",
         },
+        header: {
+          p: { base: "16px 14px", sm: "16px 20px" },
+        },
+        body: {
+          p: { base: "16px 14px", sm: "16px 20px" },
+        },
+        p: { base: "16px 14px", sm: "16px 20px" },
       }),
     },
     Popover: {
