@@ -19,7 +19,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { RiSettings3Fill } from "react-icons/ri";
-import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { AiFillCaretDown, AiFillCaretUp, AiOutlineDown } from "react-icons/ai";
 
 const MainChart = (props: any) => {
   const {
@@ -396,25 +396,31 @@ const MainChart = (props: any) => {
             </HStack>
           </HStack>
           <HStack spacing="0" gap="11px">
-            {timeFrames.map((el: any) => (
-              <Text
-                key={el.value}
-                onClick={() => setTimeFrame(el.query)}
-                color={
-                  timeFrame === el.query
-                    ? colorMode === "light"
-                      ? "#1099fa"
-                      : "#4983C6"
-                    : colorMode === "light"
-                    ? "black"
-                    : "white"
-                }
-                fontSize={{ base: "12px", sm: "14px" }}
-                fontWeight="bold"
-              >
-                {el.value}
-              </Text>
-            ))}
+            <Menu>
+              <MenuButton>
+                <HStack>
+                  <Text>Date Range</Text>
+
+                  <AiOutlineDown size={12} style={{ strokeWidth: "20" }} />
+                </HStack>
+              </MenuButton>
+              <MenuList zIndex="14">
+                {timeFrames.map((el: any, idx: number) => (
+                  <MenuItem
+                    key={`${el.val}-${idx}`}
+                    onClick={() => setTimeFrame(el.query)}
+                    bg={
+                      el.val === timeFrame
+                        ? "rgba(255, 255, 255, 0.06)"
+                        : "unset"
+                    }
+                    _focus={{ bg: "unset" }}
+                  >
+                    {el.name}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
 
             <Menu>
               <MenuButton>
@@ -422,7 +428,7 @@ const MainChart = (props: any) => {
                   fill={
                     // colorMode === "light" ? colors.gray : colors.blue
                     // "#4983c6"
-                    colorMode === "light" ? "#1099fa" : "#4983C6"
+                    colorMode === "light" ? "#1099fa" : "white"
                   }
                   size={18}
                 />
@@ -438,7 +444,7 @@ const MainChart = (props: any) => {
           </HStack>
         </HStack>
         <Box>
-          <Box ref={chartContainerRef} height={{ base: "200px", lg: "300px" }}>
+          <Box ref={chartContainerRef} height={{ base: "230px", lg: "300px" }}>
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
               Powered by CoinGecko API
             </Text>

@@ -13,6 +13,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Stack,
   Text,
   useColorMode,
 } from "@chakra-ui/react";
@@ -33,12 +34,12 @@ const MiniChart = (props: any) => {
     left: "unset",
   });
   const { colorMode } = useColorMode();
-  const { data } = props;
+  const { data, renderTimeSelection } = props;
 
   const [currWidth, setWidth] = useState(0);
 
   useEffect(() => {
-    const percent = (data[data.length - 1].value * 100) / data[0].value - 100;
+    const percent = (data[data.length - 1]?.value * 100) / data[0]?.value - 100;
     setPercentChange(percent);
   }, [data]);
 
@@ -393,26 +394,30 @@ const MiniChart = (props: any) => {
                 </HStack>
               </HStack>
             </HStack>
+            <HStack>
+              {console.log(renderTimeSelection)}
+              {renderTimeSelection()}
 
-            <Menu>
-              <MenuButton>
-                <RiSettings3Fill
-                  fill={
-                    // colorMode === "light" ? colors.gray : colors.blue
-                    // "#4983c6"
-                    colorMode === "light" ? "#1099fa" : "#4983C6"
-                  }
-                  size={18}
-                />
-              </MenuButton>
-              <MenuList zIndex="10">
-                <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
+              <Menu>
+                <MenuButton>
+                  <RiSettings3Fill
+                    fill={
+                      // colorMode === "light" ? colors.gray : colors.blue
+                      // "#4983c6"
+                      colorMode === "light" ? "#1099fa" : "white"
+                    }
+                    size={18}
+                  />
+                </MenuButton>
+                <MenuList zIndex="10">
+                  <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
 
-                <MenuItem onClick={() => setChartType("Candle")}>
-                  Candlestick
-                </MenuItem>
-              </MenuList>
-            </Menu>
+                  <MenuItem onClick={() => setChartType("Candle")}>
+                    Candlestick
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </HStack>
           </HStack>
           <Box ref={chartContainerRef} height={{ base: "300px", lg: "400px" }}>
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
@@ -437,7 +442,9 @@ const MiniChart = (props: any) => {
           </Box>
         </Box>
       ) : (
-        <Text>Hello there</Text>
+        <Stack ref={chartContainerRef} height={{ base: "300px", lg: "400px" }} alignItems='center'>
+          <Text variant="h-4">No Data Available</Text>
+        </Stack>
       )}
     </>
   );

@@ -35,9 +35,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import BuySellModal from "./modals/buy-sell-modal";
 import dynamic from "next/dynamic";
-import UserAuth from "./authentication/user-auth-modal";
+import FavoriteButton from "./favorite-button";
+import BuySellButton from "./buy-sell-button";
+import ShareButton from "./share-button";
 
 const MainChart = dynamic(() => import("./charts/main-chart"), {
   ssr: false,
@@ -111,16 +112,6 @@ const IndividualCoin = (props: any) => {
     liked();
   }, [coinId, coinInfo, user]);
 
-  const addToDatabase = async () => {
-    if (user.name) {
-      const data = {
-        name: coinId,
-        sym: coinInfo.symbol,
-      };
-      await setDoc(doc(database, "users", user.name, "liked", coinId), data);
-      setLiked(true);
-    }
-  };
 
   const [currencyExchange, setCurrencyExchange] = useState(0);
   const handleChangeCrypto = (event: any) => {
@@ -129,15 +120,6 @@ const IndividualCoin = (props: any) => {
     setCurrencyExchange(value * coinInfo.currentPrice.usd);
   };
 
-  const deleteFromDatabase = async () => {
-    if (user.name) {
-      await deleteDoc(doc(database, "users", user.name, "liked", coinId));
-      setLiked(false);
-    }
-  };
-  // useEffect(() => {
-  //   setCurrencyExchange(coinInfo.currentPrice.usd);
-  // }, [coinInfo]);
   useEffect(() => {
     const getData = async () => {
       let crypto: any[] = [];
@@ -222,7 +204,7 @@ const IndividualCoin = (props: any) => {
             (el: { symbol: string }) =>
               el.symbol.toLowerCase() === coinInfo.symbol
           );
-          setCryptoId(findId.id);
+          setCryptoId(findId?.id);
         });
     }
   }, [coinId, coinInfo, individualPage]);
@@ -247,26 +229,16 @@ const IndividualCoin = (props: any) => {
     { query: 7, value: "W", name: "7 Days" },
     { query: 30, value: "M", name: "30 Days" },
     { query: 90, value: "3M", name: "90 Days" },
-    { query: 180, value: "6M", name: "180 Days" },
-    { query: 365, value: "Y", name: "365 Days" },
+    { query: 180, value: "6M", name: "6 Months" },
+    { query: 365, value: "Y", name: "1 Year" },
     { query: "max", value: "All", name: "All Time" },
   ];
   const dateParse = (date: string) => {
     const frame = date.slice(0, 10).split("-");
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  // const handleChangeCrypto = (event: any) => {
-  //   const value = Number(event.target.value.split(",").join(""));
-  //   setCryptoExchange(value);
-  //   setCurrencyExchange(value * coinInfo.currentPrice.usd);
-  // };
+ 
 
-  // const handleChangeExchange = (event: any) => {
-  //   const value = Number(event.target.value.split(",").join(""));
-  //   setCurrencyExchange(value);
-  //   setCryptoExchange(value / coinInfo.currentPrice.usd);
-  // };
 
   const renderRange = useCallback(() => {
     const val = timeFrames.map((el) => {
@@ -339,11 +311,7 @@ const IndividualCoin = (props: any) => {
   ]);
   const toast = useToast();
   const cancelRef = useRef();
-  const {
-    isOpen: isOpenLike,
-    onOpen: onOpenLike,
-    onClose: onCloseLike,
-  } = useDisclosure();
+
   return (
     <>
       {dataRetrieved ? (
@@ -362,63 +330,16 @@ const IndividualCoin = (props: any) => {
                 {coinInfo.name}
               </Text>
             </HStack>
-            <HStack>
-              <Button
-                variant="medium-hollow"
-                onClick={user.name ? undefined : onOpenLike}
-              >
-                <FaStar
-                  size={18}
-                  onClick={liked ? deleteFromDatabase : addToDatabase}
-                  fill={
-                    !liked
-                      ? "#d3d5ea"
-                      : colorMode === "light"
-                      ? "#1099fa"
-                      : "yellow"
-                  }
-                />
-              </Button>
-              <UserAuth isOpen={isOpenLike} onClose={onCloseLike} />
+            <HStack spacing="0" columnGap="6px" rowGap="10px">
+              <FavoriteButton
+                liked={liked}
+                setLiked={setLiked}
+                coinId={coinId}
+                coinSym={coinInfo.symbol}
+              />
+              <ShareButton />
 
-              <Button variant="medium-hollow">
-                <FaShareAlt
-                  size={18}
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast({
-                      // title: "Copied to clipboard",
-                      // // status: "info",
-                      // variant: "solid",
-                      isClosable: true,
-                      position: "top",
-                      duration: 1000,
-                      render: () => (
-                        <HStack
-                          justifyContent="center"
-                          bg="green"
-                          width="max-content"
-                          margin="20px auto 0 auto"
-                          p=" 10px 20px"
-                          borderRadius="6px"
-                        >
-                          <TbClipboardCheck size={18} />
-                          <Text variant="toast" color="white">
-                            Copied to Clipboard!
-                          </Text>
-                        </HStack>
-                      ),
-                    });
-                  }}
-                />
-              </Button>
-              <Button variant="medium-hollow" onClick={onOpen}>
-                Buy/Sell
-              </Button>
-
-              {isOpen && (
-                <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
-              )}
+              <BuySellButton coinId={coinId} />
             </HStack>
           </HStack>
           <MainChart
@@ -464,7 +385,7 @@ const IndividualCoin = (props: any) => {
                       <Text variant="body-gray-bold">Market Cap</Text>
 
                       <NumericFormat
-                        value={stats.marketCap.toFixed(2)}
+                        value={stats?.marketCap?.toFixed(2)}
                         prefix={"$"}
                         displayType="text"
                         thousandSeparator=","
@@ -477,7 +398,7 @@ const IndividualCoin = (props: any) => {
                       <Text variant="body-gray-bold">Volume</Text>
 
                       <NumericFormat
-                        value={stats.volume.toFixed(0)}
+                        value={stats?.volume?.toFixed(0)}
                         displayType="text"
                         thousandSeparator=","
                         className="h-4"
@@ -488,7 +409,7 @@ const IndividualCoin = (props: any) => {
                       <Text variant="body-gray-bold">24HR Low</Text>
 
                       <NumericFormat
-                        value={stats.low_24}
+                        value={stats?.low_24}
                         prefix={"$"}
                         displayType="text"
                         thousandSeparator=","
@@ -500,7 +421,7 @@ const IndividualCoin = (props: any) => {
                       <Text variant="body-gray-bold">24HR High</Text>
 
                       <NumericFormat
-                        value={stats.high_24}
+                        value={stats?.high_24}
                         prefix={"$"}
                         displayType="text"
                         thousandSeparator=","
@@ -578,7 +499,7 @@ const IndividualCoin = (props: any) => {
                   <Stack gap="11px" spacing="0">
                     <HStack justifyContent="space-between" spacing="0">
                       <NumericFormat
-                        value={stats.circulatingSupply.toFixed(0)}
+                        value={stats?.circulatingSupply?.toFixed(0)}
                         displayType="text"
                         thousandSeparator=","
                         className="h-4"
@@ -615,7 +536,7 @@ const IndividualCoin = (props: any) => {
                       <Text variant="body-gray-bold">Circulating Supply</Text>
 
                       <NumericFormat
-                        value={stats.circulatingSupply.toFixed(0)}
+                        value={stats?.circulatingSupply?.toFixed(0)}
                         displayType="text"
                         thousandSeparator=","
                         className="h-4"

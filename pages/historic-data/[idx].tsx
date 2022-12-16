@@ -27,6 +27,12 @@ import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import { AiOutlineDown } from "react-icons/ai";
 import FormattedNumber from "../../src/components/number-formatter";
 import DataTable from "../../src/components/table/table";
+import FavoriteButton from "../../src/components/favorite-button";
+import ShareButton from "../../src/components/share-button";
+import BuySellButton from "../../src/components/buy-sell-button";
+import { useAuth } from "../../context/AuthContext";
+import { database } from "../../context/clientApp";
+import { doc, getDoc } from "firebase/firestore";
 const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
   ssr: false,
 });
@@ -44,21 +50,45 @@ type DataPoints = {
 const HistoricData = () => {
   const [days, setDays] = useState<string | number>(30);
   const router = useRouter();
+  const { user } = useAuth();
   const coin = router.query.idx;
   const [data, setData] = useState<DataPoints[] | []>([]);
   const { colorMode } = useColorMode();
   const [dataFetched, setDataFetched] = useState(false);
   const [onDay, setOnDay] = useState<any[] | []>([]);
   const [coinData, setCoinData] = useState<any>({});
+  const [liked, setLiked] = useState(false);
+  useEffect(() => {
+    const liked = async () => {
+      if (coin && coinData.symbol.length > 0 && user.name) {
+        const docRef = doc(
+          database,
+          "users",
+          user.name,
+          "liked",
+          coin.toString()
+        );
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setLiked(true);
+        } else {
+          setLiked(false);
+        }
+      } else {
+        setLiked(false);
+      }
+    };
+    liked();
+  }, [coin, coinData, user]);
 
   const timeFrameOptions = [
-    { query: "7 Days", val: 7 },
-    { query: "14 Days", val: 14 },
-    { query: "30 Days", val: 30 },
-    { query: "90 Days", val: 90 },
-    { query: "6 Months", val: 180 },
-    { query: "1 Year", val: 365 },
-    { query: "All Time", val: "max" },
+    { query: "7 Days", val: 7, name: "7 Day" },
+    { query: "14 Days", val: 14, name: "14 Day" },
+    { query: "30 Days", val: 30, name: "30 Day" },
+    { query: "90 Days", val: 90, name: "90 Day" },
+    { query: "6 Months", val: 180, name: "6 Months" },
+    { query: "1 Year", val: 365, name: "1 Year" },
+    { query: "All Time", val: "max", name: "All Time" },
   ];
   const columnNames = [
     "Date",
@@ -94,6 +124,7 @@ const HistoricData = () => {
           return [market, ohlc, coin];
         })
         .then(async ([ohlc, market, coin]) => {
+          console.log(coin);
           const data: any = [];
           market.forEach((el: any) => {
             const [time, open, high, low, close] = el;
@@ -336,6 +367,32 @@ const HistoricData = () => {
       </VStack>
     ));
   }, [colorMode, data, onDay]);
+
+  const renderTimeSelection = useCallback(() => {
+    return (
+      <Menu>
+        <MenuButton>
+          <HStack>
+            <Text>Date Range</Text>
+
+            <AiOutlineDown size={12} style={{ strokeWidth: "20" }} />
+          </HStack>
+        </MenuButton>
+        <MenuList zIndex="14">
+          {timeFrameOptions.map((el) => (
+            <MenuItem
+              key={el.val}
+              onClick={() => setDays(el.val)}
+              bg={el.val === days ? "rgba(255, 255, 255, 0.06)" : "unset"}
+              _focus={{ bg: "unset" }}
+            >
+              {el.query}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
+    );
+  }, [days, timeFrameOptions]);
   const [hxCompoentnHeight, sethxCompoentnHeight] = useState(0);
   const [maxHX, setMaxHX] = useState(0);
   useEffect(() => {
@@ -364,10 +421,13 @@ const HistoricData = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
+  const findDate = () => {
+    const val = timeFrameOptions.filter((el) => el.val === days);
+    return val[0].name;
+  };
   return (
     <>
-      <VStack pb="20px" pt="40px" alignItems="flex-start">
+      <VStack pb="20px" alignItems="flex-start">
         <HStack>
           {coinData?.image?.small && (
             <Box
@@ -383,34 +443,22 @@ const HistoricData = () => {
           </Text>
         </HStack>
         <HStack>
-          <Menu>
-            <MenuButton>
-              <HStack>
-                <Text>Date Range</Text>
-
-                <AiOutlineDown size={12} style={{ strokeWidth: "20" }} />
-              </HStack>
-            </MenuButton>
-            <MenuList zIndex="14">
-              {timeFrameOptions.map((el) => (
-                <MenuItem
-                  key={el.val}
-                  onClick={() => setDays(el.val)}
-                  bg={el.val === days ? "rgba(255, 255, 255, 0.06)" : "unset"}
-                  _focus={{ bg: "unset" }}
-                >
-                  {el.query}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-
           <Link passHref href={`/coins/${coin}`}>
             <Button variant="medium-hollow">View Coin</Button>
           </Link>
-          <Button variant="medium-hollow">
+          {/* <Button variant="medium-hollow">
             <FaShareAlt />
-          </Button>
+          </Button> */}
+
+          <FavoriteButton
+            liked={liked}
+            setLiked={setLiked}
+            coinId={coin}
+            coinSym={coinData.symbol}
+          />
+          <ShareButton />
+
+          <BuySellButton coinId={coin} />
         </HStack>
       </VStack>
       <Stack
@@ -429,7 +477,7 @@ const HistoricData = () => {
             overflow="hidden"
             height="max-content"
           >
-            <Chart data={data} />
+            <Chart data={data} renderTimeSelection={renderTimeSelection} />
           </Container>
         ) : (
           <Box
@@ -447,7 +495,7 @@ const HistoricData = () => {
             p="20px"
           >
             <Text variant="h-3" pb="20px" textTransform="capitalize">
-              Historic {coin} Prices
+              Historic Prices
             </Text>
 
             <Collapse
@@ -479,15 +527,23 @@ const HistoricData = () => {
             )}
           </Container>
         ) : (
-          <Box
-            padding="6"
-            boxShadow="lg"
+          <Container
+            variant="box-component"
             width={{ base: "100%", lg: "400px" }}
-            h="503px"
-            bg={colorMode === "light" ? "white" : "#133364"}
-          />
+            p="20px"
+          >
+            <Text variant="h-4" textAlign="center">
+              No Data Available
+            </Text>
+          </Container>
         )}
       </Stack>
+      <HStack pb="20px" pt="40px">
+        <Text variant="h-3" pb="0">
+          {` ${findDate()} Range`}
+        </Text>
+        {renderTimeSelection()}
+      </HStack>
       <DataTable tableColumns={columnNames} renderData={renderTableRow} />
     </>
   );
