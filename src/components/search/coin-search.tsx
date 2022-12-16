@@ -28,7 +28,6 @@ const CoinSearch = (props: any) => {
   const [sortedCoins, setSortedCoins] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   useEffect(() => {
-    console.log("here in fetch");
     fetch("https://api.coingecko.com/api/v3/search?locale=en")
       .then((res) => res.json())
       .then((data) => setData(data));
@@ -83,7 +82,7 @@ const CoinSearch = (props: any) => {
       rowGap="20px"
       spacing="0"
     >
-      <Box width={{ base: "100%", md: "max-content" }}>
+      <Box width={{ base: "100%", md: "max-content" }} zIndex={inSearch ? "13" : "1"}>
         <Popover
           placement="bottom-end"
           autoFocus={false}
@@ -96,15 +95,18 @@ const CoinSearch = (props: any) => {
               justifyContent="flex-start"
               gap="12px"
               variant="medium-hollow"
-              width={{ base: "100%", md: "160px" }}
               margin="0 auto"
             >
               <BiSearch />
               <Text>Seach</Text>
             </Button>
           </PopoverTrigger>
-          <PopoverContent top="-50px" width={{ base: "94vw", md: "100%" }}>
-            <InputGroup w={{ md: "247px" }}>
+          <PopoverContent
+            top="-50px"
+            width={{ base: "94vw", md: "100%" }}
+            
+          >
+            <InputGroup w={{ sm: "100%", md: "247px" }} maxW="94vw">
               <InputLeftElement
                 pointerEvents="none"
                 children={
@@ -139,17 +141,18 @@ const CoinSearch = (props: any) => {
             </InputGroup>
             {sortedCoins.length > 0 && (
               <PopoverBody
-                width={{ base: "96vw", md: "240px" }}
+                width={{ base: "90vw", md: "240px" }}
                 overflowX="hidden"
                 overflowY="scroll"
                 maxH={{ base: "73vh", md: "250px" }}
                 pt="20px"
+                
               >
                 <VStack gap="10px">
                   {sortedCoins.map((el: any) => (
                     <Link key={el.id} href={`/coins/${el.id}`} passHref scroll>
                       <HStack
-                        width="100%"
+                        width="98%"
                         onClick={() => {
                           setSortedCoins([]);
                           setSearchVal("");

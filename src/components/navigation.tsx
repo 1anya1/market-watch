@@ -422,7 +422,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
         </Drawer>
       </HStack>
       <CoinSearch inSearch={inSearch} />
-      {children}
+      {children }
     </Container>
   );
 };

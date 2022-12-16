@@ -185,11 +185,7 @@ const theme = extendTheme({
     Container: {
       variants: {
         page: {
-          padding: {
-            base: "0 4%  60px 4%",
-            sm: "0 3% 40px 3%",
-          },
-
+          padding: "0 3%",
           maxW: "1800px !important",
           m: "0 auto",
         },
