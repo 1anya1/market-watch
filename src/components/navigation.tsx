@@ -38,9 +38,17 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
     onOpen: onOpenNav,
     onClose: onCloseNav,
   } = useDisclosure();
+  const [inSearch, setInSearch] = useState(false);
+  const calculateClick = (e: { target: { id: any } }) => {
+    if (e?.target?.id) {
+      setInSearch(true);
+    } else {
+      setInSearch(false);
+    }
+  };
 
   return (
-    <Container variant="page">
+    <Container variant="page" onClick={calculateClick}>
       <HStack pt="20px" justifyContent="space-between" gap="20px">
         <Box>
           <Link href="/" passHref>
@@ -216,19 +224,6 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           <DrawerContent bg={colorMode === "light" ? "white" : "#081c3b"}>
             <DrawerHeader>
               <HStack justifyContent="space-between">
-                <Box>
-                  <Link href="/" passHref>
-                    <Box onClick={onCloseNav}>
-                      <Logo />
-                    </Box>
-                  </Link>
-                </Box>
-                <DrawerCloseButton />
-              </HStack>
-            </DrawerHeader>
-
-            <DrawerBody>
-              <VStack spacing="0" alignItems="flex-start" gap="10px">
                 <Box
                   w="50px"
                   h="28px"
@@ -263,10 +258,54 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     )}
                   </Box>
                 </Box>
+                <Box position="relative" h="32px" w="32px">
+                  <DrawerCloseButton position="initial" />
+                </Box>
+              </HStack>
+            </DrawerHeader>
+
+            <DrawerBody>
+              <VStack spacing="0" alignItems="flex-start" gap="14px">
+                {/* <Box
+                  w="50px"
+                  h="28px"
+                  bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
+                  position="relative"
+                  borderRadius="52px"
+                  transition="left 1000ms linear"
+                  border={
+                    colorMode === "light"
+                      ? "2px solid #e7ecf0"
+                      : " 2px solid #123364"
+                  }
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius="50%"
+                    h="24px"
+                    w="24px"
+                    bg={colorMode === "light" ? "white" : "#081c3b"}
+                    position="absolute"
+                    onClick={toggleColorMode}
+                    className={
+                      colorMode === "light" ? "toggle-left" : "toggle-right"
+                    }
+                  >
+                    {colorMode === "light" ? (
+                      <MdDarkMode size={20} onClick={toggleColorMode} />
+                    ) : (
+                      <MdLightMode size={20} onClick={toggleColorMode} />
+                    )}
+                  </Box>
+                </Box> */}
                 {user.name && (
-                  <HStack>
-                    <Text>Hi, {user.name}</Text>
+                  <HStack pb="6px">
                     <CgProfile />
+                    <Text variant="bold-small" textTransform="capitalize">
+                      Hi, {user.name}
+                    </Text>
                   </HStack>
                 )}
                 <Link href="/">
@@ -278,7 +317,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                         ? "black"
                         : "#a0aec0"
                     }
-                    fontSize="14px"
+                    fontSize="16px"
                     fontWeight={700}
                     onClick={onCloseNav}
                   >
@@ -296,7 +335,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                         ? "black"
                         : "#a0aec0"
                     }
-                    fontSize="14px"
+                    fontSize="16px"
                     fontWeight={700}
                   >
                     Global Market
@@ -314,7 +353,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                             ? "black"
                             : "#a0aec0"
                         }
-                        fontSize="14px"
+                        fontSize="16px"
                         fontWeight={700}
                         onClick={onCloseNav}
                       >
@@ -334,7 +373,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                             ? "black"
                             : "#a0aec0"
                         }
-                        fontSize="14px"
+                        fontSize="16px"
                         fontWeight={700}
                         onClick={onCloseNav}
                       >
@@ -382,7 +421,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           </DrawerContent>
         </Drawer>
       </HStack>
-      <CoinSearch />
+      <CoinSearch inSearch={inSearch} />
       {children}
     </Container>
   );

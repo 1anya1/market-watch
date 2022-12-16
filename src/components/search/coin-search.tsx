@@ -6,25 +6,24 @@ import {
   HStack,
   Input,
   InputGroup,
-  InputLeftAddon,
   InputLeftElement,
   InputRightElement,
   Popover,
-  PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
   Text,
   VStack,
+  useColorMode,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { BiSearch } from "react-icons/bi";
 import { IoMdClose } from "react-icons/io";
 
-const CoinSearch = () => {
+const CoinSearch = (props: any) => {
+  const { inSearch } = props;
+  const { colorMode } = useColorMode();
   const [searchVal, setSearchVal] = useState("");
   const [sortedCoins, setSortedCoins] = useState<any>([]);
   const [data, setData] = useState<any>([]);
@@ -34,6 +33,13 @@ const CoinSearch = () => {
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
+
+  useEffect(() => {
+    if (!inSearch) {
+      setSortedCoins([]);
+      setSearchVal("");
+    }
+  }, [inSearch]);
 
   const handleChange = (e: { target: { value: any } }) => {
     const val = e.target.value;
@@ -98,25 +104,38 @@ const CoinSearch = () => {
             </Button>
           </PopoverTrigger>
           <PopoverContent top="-50px" width={{ base: "94vw", md: "100%" }}>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none" children={<BiSearch />} />
+            <InputGroup w={{ md: "247px" }}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={
+                  <BiSearch
+                    fill={colorMode === "light" ? "black" : "white"}
+                    size={16}
+                  />
+                }
+              />
               <Input
                 onChange={handleChange}
                 value={searchVal}
                 placeholder="Search"
                 border="unset"
+                id="search-bar"
               />
-              <InputRightElement
-                pointerEvents="all"
-                children={
-                  <IoMdClose
-                    onClick={() => {
-                      setSortedCoins([]);
-                      setSearchVal("");
-                    }}
-                  />
-                }
-              />
+              {searchVal.length > 0 && (
+                <InputRightElement
+                  pointerEvents="all"
+                  children={
+                    <IoMdClose
+                      size={16}
+                      fill={colorMode === "light" ? "black" : "white"}
+                      onClick={() => {
+                        setSortedCoins([]);
+                        setSearchVal("");
+                      }}
+                    />
+                  }
+                />
+              )}
             </InputGroup>
             {sortedCoins.length > 0 && (
               <PopoverBody
