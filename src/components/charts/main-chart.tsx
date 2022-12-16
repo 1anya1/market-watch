@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   createChart,
   ColorType,
@@ -60,7 +60,7 @@ const MainChart = (props: any) => {
     return () => window.removeEventListener("resize", updateSize);
   }, [currWidth]);
   useEffect(() => {
-    if (chartContainerRef?.current) {
+    if (chartContainerRef?.current && cryptoData.length > 0) {
       const handleResize = () => {
         if (chartContainerRef?.current?.clientWidth) {
           chart.applyOptions({
@@ -80,7 +80,9 @@ const MainChart = (props: any) => {
           chart.timeScale().fitContent();
         }
       };
-
+      const end = cryptoData[cryptoData.length - 1]?.value;
+      const start = cryptoData[0]?.value;
+      console.log({ start }, { end });
       const chart = createChart(chartContainerRef?.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
@@ -154,7 +156,7 @@ const MainChart = (props: any) => {
           case "Line":
             setShowTooltip(false);
             newSeries = chart.addLineSeries({
-              color: colors.blue,
+              color:  start > end ? colors.red : colors.green,
               lastValueVisible: false,
               priceLineColor: "transparent",
               crosshairMarkerVisible: true,
@@ -343,6 +345,13 @@ const MainChart = (props: any) => {
     timeFrame,
   ]);
 
+  const currTimeFrameSelection = useCallback(() => {
+    console.log(timeFrames, timeFrame);
+    const time = timeFrames.filter((el: any) => el.query === timeFrame);
+    console.log({ time });
+    return time[0].name;
+  }, [timeFrame, timeFrames]);
+
   return (
     <Box width="100%">
       <Container
@@ -399,7 +408,7 @@ const MainChart = (props: any) => {
             <Menu>
               <MenuButton>
                 <HStack>
-                  <Text>Date Range</Text>
+                  <Text>{currTimeFrameSelection()}</Text>
 
                   <AiOutlineDown size={12} style={{ strokeWidth: "20" }} />
                 </HStack>

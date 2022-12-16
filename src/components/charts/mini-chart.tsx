@@ -4,7 +4,7 @@ import {
   ISeriesApi,
   SeriesOptionsMap,
 } from "lightweight-charts";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   Box,
@@ -37,6 +37,12 @@ const MiniChart = (props: any) => {
   const { data, renderTimeSelection } = props;
 
   const [currWidth, setWidth] = useState(0);
+  // const currTimeFrameSelection = useCallback(() => {
+  //   console.log(data, renderTimeSelection);
+  //   const time = timeFrames.filter((el: any) => el.query === timeFrame);
+  //   console.log({ time });
+  //   return time[0].name;
+  // }, [timeFrame, timeFrames]);
 
   useEffect(() => {
     const percent = (data[data.length - 1]?.value * 100) / data[0]?.value - 100;
@@ -62,7 +68,7 @@ const MiniChart = (props: any) => {
       blue: colorMode === "light" ? "#1099fa" : "#4983C6",
       gray: "#ECECEC",
     };
-    if (chartContainerRef?.current) {
+    if (chartContainerRef?.current && data.length > 0) {
       const handleResize = () => {
         if (chartContainerRef?.current?.clientWidth) {
           chart.applyOptions({
@@ -82,6 +88,8 @@ const MiniChart = (props: any) => {
           chart.timeScale().fitContent();
         }
       };
+      const end = data[data.length - 1]?.value;
+      const start = data[0]?.value;
 
       const chart = createChart(chartContainerRef?.current, {
         layout: {
@@ -155,7 +163,7 @@ const MiniChart = (props: any) => {
           case "Line":
             setShowTooltip(false);
             newSeries = chart.addLineSeries({
-              color: colors.blue,
+              color: start > end ? colors.red : colors.green,
               lastValueVisible: false,
               priceLineColor: "transparent",
               crosshairMarkerVisible: true,
@@ -442,7 +450,11 @@ const MiniChart = (props: any) => {
           </Box>
         </Box>
       ) : (
-        <Stack ref={chartContainerRef} height={{ base: "300px", lg: "400px" }} alignItems='center'>
+        <Stack
+          ref={chartContainerRef}
+          height={{ base: "300px", lg: "400px" }}
+          alignItems="center"
+        >
           <Text variant="h-4">No Data Available</Text>
         </Stack>
       )}

@@ -440,7 +440,12 @@ const IndividualCoin = (props: any) => {
                   {individualPage && coinInfo?.description && (
                     <Box>
                       <Box position="relative">
-                        <Collapse startingHeight={140} in={viewAllCoin}>
+                        <Collapse
+                          startingHeight={
+                            coinInfo.description.length > 300 ? 140 : "100%"
+                          }
+                          in={viewAllCoin}
+                        >
                           <Text
                             maxH={!viewAllCoin ? "500px" : "100%"}
                             dangerouslySetInnerHTML={{
@@ -451,33 +456,41 @@ const IndividualCoin = (props: any) => {
                             whiteSpace="break-spaces"
                             lineHeight="1.5"
                             transition="all .3s ease-in-out"
-                            height={!viewAllCoin ? "calc(15px * 11)" : "100%"}
-                          />
-
-                          <Box
-                            position="absolute"
-                            bottom="0"
-                            background={
-                              !viewAllCoin
-                                ? colorMode === "light"
-                                  ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
-                                  : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(5 19 41) 100%)"
-                                : "unset"
+                            height={
+                              coinInfo.description.length > 300
+                                ? !viewAllCoin
+                                  ? "calc(15px * 11)"
+                                  : "100%"
+                                : "100%"
                             }
-                            h="150px"
-                            w="100%"
                           />
+                          {coinInfo.description.length > 300 && (
+                            <Box
+                              position="absolute"
+                              bottom="0"
+                              background={
+                                !viewAllCoin
+                                  ? colorMode === "light"
+                                    ? "linear-gradient(rgba(245, 255, 255, 0) 30%, rgb(255, 255, 255) 100%)"
+                                    : "linear-gradient(rgba(18, 51, 100, 0) 30%, rgb(5 19 41) 100%)"
+                                  : "unset"
+                              }
+                              h="150px"
+                              w="100%"
+                            />
+                          )}
                         </Collapse>
                       </Box>
-
-                      <Button
-                        onClick={() => setViewAllCoin(!viewAllCoin)}
-                        mt="20px"
-                        width="100%"
-                        variant="large"
-                      >
-                        {!viewAllCoin ? "View More" : "View Less"}
-                      </Button>
+                      {coinInfo.description.length > 300 && (
+                        <Button
+                          onClick={() => setViewAllCoin(!viewAllCoin)}
+                          mt="20px"
+                          width="100%"
+                          variant="large"
+                        >
+                          {!viewAllCoin ? "View More" : "View Less"}
+                        </Button>
+                      )}
                     </Box>
                   )}
                 </Container>

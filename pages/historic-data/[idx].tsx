@@ -212,6 +212,8 @@ const HistoricData = () => {
 
   const renderTableRow = useCallback(() => {
     const d = [...data];
+
+  
     return d.reverse().map((el) => (
       <Tr key={el.time} borderTop="unset" h="64px">
         <Td
@@ -369,11 +371,16 @@ const HistoricData = () => {
   }, [colorMode, data, onDay]);
 
   const renderTimeSelection = useCallback(() => {
+    const currentVal = () => {
+      const val = timeFrameOptions.filter((el) => el.val === days);
+      return val[0].query;
+    };
+
     return (
       <Menu>
         <MenuButton>
           <HStack>
-            <Text>Date Range</Text>
+            <Text>{currentVal()}</Text>
 
             <AiOutlineDown size={12} style={{ strokeWidth: "20" }} />
           </HStack>
