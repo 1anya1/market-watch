@@ -65,7 +65,6 @@ const FavoriteButton = (props: any) => {
       await deleteDoc(doc(database, "users", user.name, "liked", coinId));
       setLiked(false);
       onCloseLike();
-      
     }
   };
   const likeFunctionality = () => {

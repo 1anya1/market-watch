@@ -112,7 +112,6 @@ const IndividualCoin = (props: any) => {
     liked();
   }, [coinId, coinInfo, user]);
 
-
   const [currencyExchange, setCurrencyExchange] = useState(0);
   const handleChangeCrypto = (event: any) => {
     const value = Number(event.target.value.split(",").join(""));
@@ -237,8 +236,6 @@ const IndividualCoin = (props: any) => {
     const frame = date.slice(0, 10).split("-");
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
- 
-
 
   const renderRange = useCallback(() => {
     const val = timeFrames.map((el) => {

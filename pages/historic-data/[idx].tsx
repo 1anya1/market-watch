@@ -60,7 +60,7 @@ const HistoricData = () => {
   const [liked, setLiked] = useState(false);
   useEffect(() => {
     const liked = async () => {
-      if (coin && coinData.symbol.length > 0 && user.name) {
+      if (coin && coinData?.symbol?.length > 0 && user?.name) {
         const docRef = doc(
           database,
           "users",
