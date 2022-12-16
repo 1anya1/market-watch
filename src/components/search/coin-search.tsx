@@ -145,7 +145,7 @@ const CoinSearch = (props: any) => {
                 width={{ base: "90vw", md: "240px" }}
                 overflowX="hidden"
                 overflowY="scroll"
-                maxH={{ base: "40vh", md: "250px" }}
+                maxH={{ base: "32vh", md: "250px" }}
                 pt="20px"
               >
                 <VStack gap="10px">
