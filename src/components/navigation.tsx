@@ -305,7 +305,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
 
                 {user?.name && (
                   <>
-                    <Link href="/liked">
+                    <Link href="/watchlist">
                       <Text
                         color={
                           router.pathname === "/crypto"
