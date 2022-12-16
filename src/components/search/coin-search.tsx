@@ -73,16 +73,14 @@ const CoinSearch = (props: any) => {
   }, [searchVal]);
 
   return (
-    <HStack
-      justifyContent="flex-end"
-      alignItems="flex-start"
-      pt={{ base: "26px", md: "40px" }}
-      pb={{ base: "20px", md: "20px" }}
-      flexDir={{ base: "column-reverse", md: "row" }}
-      rowGap="20px"
-      spacing="0"
-    >
-      <Box width={{ base: "100%", md: "max-content" }} zIndex={inSearch ? "13" : "1"}>
+    
+      <Box
+        width={{ base: "94vw", md: "max-content" }}
+        zIndex={inSearch ? "13" : "1"}
+        m="0 auto"
+        pt={{ base: "26px", md: "40px" }}
+        pb={{ base: "20px", md: "20px" }}
+      >
         <Popover
           placement="bottom-end"
           autoFocus={false}
@@ -101,11 +99,7 @@ const CoinSearch = (props: any) => {
               <Text>Seach</Text>
             </Button>
           </PopoverTrigger>
-          <PopoverContent
-            top="-50px"
-            width={{ base: "94vw", md: "100%" }}
-            
-          >
+          <PopoverContent top="-50px" width={{ base: "94vw", md: "100%" }}>
             <InputGroup w={{ sm: "100%", md: "247px" }} maxW="94vw">
               <InputLeftElement
                 pointerEvents="none"
@@ -146,7 +140,6 @@ const CoinSearch = (props: any) => {
                 overflowY="scroll"
                 maxH={{ base: "73vh", md: "250px" }}
                 pt="20px"
-                
               >
                 <VStack gap="10px">
                   {sortedCoins.map((el: any) => (
@@ -182,7 +175,7 @@ const CoinSearch = (props: any) => {
           </PopoverContent>
         </Popover>
       </Box>
-    </HStack>
+
   );
 };
 
