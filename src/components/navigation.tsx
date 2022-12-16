@@ -39,7 +39,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
     onClose: onCloseNav,
   } = useDisclosure();
   const [inSearch, setInSearch] = useState(false);
-  const calculateClick = (e: { target: { id: any } }) => {
+  const calculateClick = (e: any) => {
     if (e?.target?.id) {
       setInSearch(true);
     } else {
