@@ -73,13 +73,19 @@ const CoinSearch = (props: any) => {
   }, [searchVal]);
 
   return (
-    
+    <HStack
+      justifyContent="flex-end"
+      alignItems="flex-start"
+      pt={{ base: "26px", md: "40px" }}
+      pb={{ base: "20px", md: "20px" }}
+      flexDir={{ base: "column-reverse", md: "row" }}
+      rowGap="20px"
+      spacing="0"
+    >
       <Box
         width={{ base: "94vw", md: "max-content" }}
         zIndex={inSearch ? "13" : "1"}
-        m="0 auto"
-        pt={{ base: "26px", md: "40px" }}
-        pb={{ base: "20px", md: "20px" }}
+        mr="0"
       >
         <Popover
           placement="bottom-end"
@@ -94,6 +100,7 @@ const CoinSearch = (props: any) => {
               gap="12px"
               variant="medium-hollow"
               margin="0 auto"
+              visibility='hidden'
             >
               <BiSearch />
               <Text>Seach</Text>
@@ -175,7 +182,7 @@ const CoinSearch = (props: any) => {
           </PopoverContent>
         </Popover>
       </Box>
-
+    </HStack>
   );
 };
 
