@@ -26,7 +26,7 @@ const GlobalData = (props: any) => {
   const [defi, setDefi] = useState<any>(null);
   const [topTen, setTopTen] = useState<any>(null);
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
-  const [timeSelect, setDays] = useState(1);
+  const [timeSelect, setDays] = useState<number | string>(1);
 
   useEffect(() => {
     console.log("calling these damn apiss");
