@@ -118,6 +118,8 @@ const MainChart = (props: any) => {
 
         timeScale: {
           borderVisible: false,
+          barSpacing: 4,
+          minBarSpacing: 0,
 
           tickMarkFormatter: (time: number) => {
             const hours = new Date(time * 1000);
@@ -156,7 +158,7 @@ const MainChart = (props: any) => {
           case "Line":
             setShowTooltip(false);
             newSeries = chart.addLineSeries({
-              color:  start > end ? colors.red : colors.green,
+              color: start > end ? colors.red : colors.green,
               lastValueVisible: false,
               priceLineColor: "transparent",
               crosshairMarkerVisible: true,

@@ -70,7 +70,9 @@ const MiniChart = (props: any) => {
     };
     if (chartContainerRef?.current && data.length > 0) {
       const handleResize = () => {
+        console.log("in hetr");
         if (chartContainerRef?.current?.clientWidth) {
+          console.log(chartContainerRef?.current?.clientWidth);
           chart.applyOptions({
             width: chartContainerRef?.current?.clientWidth,
             height: chartContainerRef?.current?.clientHeight,
@@ -86,16 +88,25 @@ const MiniChart = (props: any) => {
             },
           });
           chart.timeScale().fitContent();
+          chart.options;
         }
       };
+
+      // const handleResize =()=>{
+      //   console.log('inhere')
+      // }
       const end = data[data.length - 1]?.value;
       const start = data[0]?.value;
-
+      console.log(chartContainerRef.current);
       const chart = createChart(chartContainerRef?.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
           textColor: colorMode === "light" ? "black" : "white",
+
+          // responsive: true,
+          // maintainAspectRatio: false,
         },
+
         width: chartContainerRef?.current?.clientWidth,
         height: chartContainerRef?.current?.clientHeight,
 
@@ -125,9 +136,10 @@ const MiniChart = (props: any) => {
         },
 
         timeScale: {
+          // lockVisibleTimeRangeOnResize: true,
           borderVisible: false,
-          barSpacing: 20,
-          minBarSpacing: 2,
+          barSpacing: 4,
+          minBarSpacing: 0,
           timeVisible: true,
           tickMarkFormatter: (time: number, tickMarkType = 1) => {
             const hours = new Date(time * 1000);
@@ -155,6 +167,11 @@ const MiniChart = (props: any) => {
         },
       });
       chart.timeScale().fitContent();
+      // chart.resize(
+
+      //   chartContainerRef?.current?.clientWidth,
+      //   chartContainerRef?.current?.clientHeight,
+      // );
 
       if (data.length > 0) {
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
@@ -327,6 +344,7 @@ const MiniChart = (props: any) => {
       window.addEventListener("resize", handleResize);
 
       return () => {
+        console.log("resize");
         window.removeEventListener("resize", handleResize);
 
         chart.remove();
@@ -358,7 +376,7 @@ const MiniChart = (props: any) => {
   return (
     <>
       {data.length > 0 ? (
-        <Box>
+        <Box w="100%">
           <HStack
             spacing="0"
             justifyContent="space-between"
@@ -403,7 +421,6 @@ const MiniChart = (props: any) => {
               </HStack>
             </HStack>
             <HStack>
-              {console.log(renderTimeSelection)}
               {renderTimeSelection()}
 
               <Menu>
@@ -427,7 +444,11 @@ const MiniChart = (props: any) => {
               </Menu>
             </HStack>
           </HStack>
-          <Box ref={chartContainerRef} height={{ base: "300px", lg: "400px" }}>
+          <Box
+            ref={chartContainerRef}
+            height={{ base: "300px", lg: "400px" }}
+            w="100%"
+          >
             <Text fontSize="10px" position="absolute" bottom="2" right="5">
               Powered by CoinGecko API
             </Text>
@@ -454,6 +475,7 @@ const MiniChart = (props: any) => {
           ref={chartContainerRef}
           height={{ base: "300px", lg: "400px" }}
           alignItems="center"
+          w="inherit"
         >
           <Text variant="h-4">No Data Available</Text>
         </Stack>
