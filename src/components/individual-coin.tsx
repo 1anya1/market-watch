@@ -79,7 +79,7 @@ const IndividualCoin = (props: any) => {
   const [liked, setLiked] = useState(false);
   const [movingAverage, setMovingAverage] = useState(0);
   const [cryptoExchange, setCryptoExchange] = useState(1);
-  // const [currencyExchange, setCurrencyExchange] = useState(0);
+  const [currencyExchange, setCurrencyExchange] = useState(0);
   const [coinInfo, setCoinInfo] = useState<any>({
     name: "",
     description: "",
@@ -112,12 +112,13 @@ const IndividualCoin = (props: any) => {
     liked();
   }, [coinId, coinInfo, user]);
 
-  const [currencyExchange, setCurrencyExchange] = useState(0);
+
   const handleChangeCrypto = (event: any) => {
     const value = Number(event.target.value.split(",").join(""));
     setCryptoExchange(value);
     setCurrencyExchange(value * coinInfo.currentPrice.usd);
   };
+
 
   useEffect(() => {
     const getData = async () => {
@@ -188,6 +189,7 @@ const IndividualCoin = (props: any) => {
           setTimeFrameMax(high);
           setTimeFrameLow(low);
           setInitialPricePoint(data.market_data.current_price.usd);
+          setCurrencyExchange(data.market_data.current_price.usd)
         });
     };
     getData();
