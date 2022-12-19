@@ -36,7 +36,6 @@ const MiniChart = (props: any) => {
   const { colorMode } = useColorMode();
   const { data, renderTimeSelection, volume } = props;
 
-
   const [currWidth, setWidth] = useState(0);
   // const currTimeFrameSelection = useCallback(() => {
   //   console.log(data, renderTimeSelection);
@@ -194,13 +193,13 @@ const MiniChart = (props: any) => {
             if (volume) {
               newSeries = chart.addHistogramSeries({
                 color: "#26a69a",
-                priceFormat: {
-                  type: "volume",
-                  scaleMargins: {
-                    top: 0.7, // highest point of the series will be 70% away from the top
-                    bottom: 0,
-                  },
-                },
+                // priceFormat: {
+                //   type: "volume",
+                //   scaleMargins: {
+                //     top: 0.7,
+                //     bottom: 0,
+                //   },
+                // },
               });
               newSeries.setData(volume);
             }
