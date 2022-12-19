@@ -34,7 +34,8 @@ const MiniChart = (props: any) => {
     left: "unset",
   });
   const { colorMode } = useColorMode();
-  const { data, renderTimeSelection } = props;
+  const { data, renderTimeSelection, volume } = props;
+
 
   const [currWidth, setWidth] = useState(0);
   // const currTimeFrameSelection = useCallback(() => {
@@ -45,8 +46,11 @@ const MiniChart = (props: any) => {
   // }, [timeFrame, timeFrames]);
 
   useEffect(() => {
-    const percent = (data[data.length - 1]?.value * 100) / data[0]?.value - 100;
-    setPercentChange(percent);
+    if (data) {
+      const percent =
+        (data[data?.length - 1]?.value * 100) / data[0]?.value - 100;
+      setPercentChange(percent);
+    }
   }, [data]);
 
   useEffect(() => {
@@ -68,7 +72,7 @@ const MiniChart = (props: any) => {
       blue: colorMode === "light" ? "#1099fa" : "#4983C6",
       gray: "#ECECEC",
     };
-    if (chartContainerRef?.current && data.length > 0) {
+    if (chartContainerRef?.current && data?.length > 0) {
       const handleResize = () => {
         console.log("in hetr");
         if (chartContainerRef?.current?.clientWidth) {
@@ -187,6 +191,19 @@ const MiniChart = (props: any) => {
               crosshairMarkerRadius: 6,
             });
             newSeries.setData(data);
+            if (volume) {
+              newSeries = chart.addHistogramSeries({
+                color: "#26a69a",
+                priceFormat: {
+                  type: "volume",
+                  scaleMargins: {
+                    top: 0.7, // highest point of the series will be 70% away from the top
+                    bottom: 0,
+                  },
+                },
+              });
+              newSeries.setData(volume);
+            }
 
             break;
 
@@ -350,7 +367,7 @@ const MiniChart = (props: any) => {
         chart.remove();
       };
     }
-  }, [chartType, colorMode, cryptoData, currWidth, data]);
+  }, [chartType, colorMode, cryptoData, currWidth, data, volume]);
   const FormattedNumber = (props: any) => {
     let { value, prefix, sufffix } = props;
     if (value < 1) {
@@ -375,7 +392,7 @@ const MiniChart = (props: any) => {
 
   return (
     <>
-      {data.length > 0 ? (
+      {data?.length > 0 ? (
         <Box w="100%">
           <HStack
             spacing="0"
