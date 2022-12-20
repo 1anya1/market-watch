@@ -167,6 +167,10 @@ const MiniChart = (props: any) => {
         },
         rightPriceScale: {
           visible: false,
+          scaleMargins: {
+            top: volume ? 0.1 : undefined,
+            bottom: volume ? 0.4 : undefined,
+          },
         },
       });
       chart.timeScale().fitContent();
@@ -178,6 +182,7 @@ const MiniChart = (props: any) => {
 
       if (data.length > 0) {
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
+        let newVolume: ISeriesApi<keyof SeriesOptionsMap>;
 
         switch (chartType) {
           case "Line":
@@ -191,17 +196,18 @@ const MiniChart = (props: any) => {
             });
             newSeries.setData(data);
             if (volume) {
-              newSeries = chart.addHistogramSeries({
+              newVolume = chart.addHistogramSeries({
                 color: "#26a69a",
-                // priceFormat: {
-                //   type: "volume",
-                //   scaleMargins: {
-                //     top: 0.7,
-                //     bottom: 0,
-                //   },
-                // },
+                priceFormat: {
+                  type: "volume",
+                },
+                scaleMargins: {
+                  top: .9,
+                  bottom: 0,
+                },
+                priceScaleId: "",
               });
-              newSeries.setData(volume);
+              newVolume.setData(volume);
             }
 
             break;
