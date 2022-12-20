@@ -6,13 +6,12 @@ import {
   HStack,
   MenuList,
   MenuItem,
+  Box,
 } from "@chakra-ui/react";
-import { validateArgCount } from "@firebase/util";
-import { validateHeaderValue } from "http";
-import { GetServerSideProps, GetStaticProps } from "next";
+
+import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
-import router from "next/router";
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import DoughnutChart from "../../src/components/doughnut-chart";
 const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
@@ -26,36 +25,8 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
 
 const GlobalData = (props: any) => {
   const { marketCapData, topTen, defi, global } = props;
-  console.log(marketCapData, topTen, defi, global);
-  // const [global, setGlobal] = useState<any>(null);
-  // const [defi, setDefi] = useState<any>(null);
-  // const [topTen, setTopTen] = useState<any>(null);
+
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
-
-  // useEffect(() => {
-  //   console.log("calling these damn apiss");
-  //   Promise.all([
-  //     fetch("https://api.coingecko.com/api/v3/global"),
-  //     fetch(
-  //       "https://api.coingecko.com/api/v3/global/decentralized_finance_defi"
-  //     ),
-  //     fetch(
-  //       "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=24h%2C7d%2C30d"
-  //     ),
-  //   ])
-  //     .then(async ([resGlobal, resDefi, resTopTen]) => {
-  //       const g = await resGlobal.json();
-  //       const d = await resDefi.json();
-  //       const a = await resTopTen.json();
-
-  //       return [g, d, a];
-  //     })
-  //     .then((data) => {
-  //       setGlobal(data[0].data);
-  //       setDefi(data[1].data);
-  //       setTopTen(data[2]);
-  //     });
-  // }, []);
 
   const [timeSelect, setDays] = useState(1);
   const timeFrameOptions = [
@@ -73,22 +44,6 @@ const GlobalData = (props: any) => {
       const val = timeFrameOptions.filter((el) => el.query === timeSelect);
       return val[0].name;
     };
-
-    // const handelTimeFrame = (val: number) => {
-    //   setDays(val);
-    //   router.replace(
-    //     {
-    //       pathname: "/global",
-    //       query: {
-    //         timeFrame: val,
-    //       },
-    //     },
-    //     undefined,
-    //     {
-    //       shallow: false,
-    //     }
-    //   );
-    // };
 
     return (
       <Menu>
@@ -118,36 +73,110 @@ const GlobalData = (props: any) => {
   }, [timeSelect]);
 
   useEffect(() => {
-    const idx = timeFrameOptions.findIndex((el) => el.query === timeSelect);
-    console.log(idx);
-    const data = marketCapData[idx].stats.map((el: any[]) => {
-      return { time: el[0] / 1000, value: el[1] };
-    });
-    const volume = marketCapData[idx].total_volumes.map((el: any[]) => {
-      return { time: el[0] / 1000, value: el[1] };
-    });
-    setMarketCapChartData({ data, volume });
-  }, [marketCapData, setMarketCapChartData, timeSelect]);
+    if (timeSelect === 1) {
+      const data = marketCapData[0].stats.map((el: any[]) => ({
+        time: el[0] / 1000,
+        value: el[1],
+      }));
+      const volume = marketCapData[0].total_volumes.map((el: any[]) => ({
+        time: el[0] / 1000,
+        value: el[1],
+      }));
+      setMarketCapChartData({ data, volume });
+    } else if (timeSelect === 0) {
+      const data = marketCapData[1].stats.map((el: any[]) => ({
+        time: el[0] / 1000,
+        value: el[1],
+      }));
+      const volume = marketCapData[1].total_volumes.map((el: any[]) => ({
+        time: el[0] / 1000,
+        value: el[1],
+      }));
+      setMarketCapChartData({ data, volume });
+    } else {
+      const timeFrame = timeSelect * (60 * 60 * 24);
+      const date = new Date().getTime();
+      const filerDate = date / 1000 - timeFrame;
+      const data = marketCapData[1].stats
+        .map((el: any[]) => ({
+          time: el[0] / 1000,
+          value: el[1],
+        }))
+        .filter((el: { time: number }) => el.time >= filerDate);
+      const volume = marketCapData[1].total_volumes
+        .map((el: any[]) => ({
+          time: el[0] / 1000,
+          value: el[1],
+        }))
+        .filter((el: { time: number }) => el.time >= filerDate);
 
-  useEffect(() => {
-    if (topTen && global) {
-      console.log(topTen);
+      setMarketCapChartData({ data, volume });
     }
-  }, [global, topTen]);
+  }, [marketCapData, setMarketCapChartData, timeSelect]);
+  // const totalVolume = () => {
+  //   const sumValues = Object.values(global.data.total_volume).reduce(
+  //     (a: number, b: number) => Number(a) + Number(b)
+  //   );
+
+  //   return sumValues;
+  // };
+
+  // const totalMarketCap = () => {
+  //   const sumValues = Object.values(global.data.total_volume).reduce(
+  //     (a: number, b: number) => Number(a) + Number(b)
+  //   );
+  // };
+
   return (
     <>
-      <Text variant="h-2" pb="20px">
-        Global Data
+      <Text variant="h-2" pb="10px">
+        Global Market
       </Text>
-      {global && topTen && (
-        <DoughnutChart global={global.data} topTen={topTen} />
-      )}
+      <Text pb="20px">
+        The total market cap represents data from{" "}
+        {global.data.active_cryptocurrencies} cryptocurrencies tracked across{" "}
+        {global.data.markets} market exchanges.
+      </Text>
+      <Box>
+        <Box>
+          <Text> Market Cap</Text>
+          <Text>
+            {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
+          </Text>
+        </Box>
+        <Box>
+          <Text>Active Cryptocurrencies</Text>
+          <Text>{global.data.active_cryptocurrencies} </Text>
+        </Box>
+        <Box>
+          <Text>Markets/Exchanges</Text>
+          <Text>{global.data.markets} </Text>
+        </Box>
+        <Box>
+          <Text>24H Volume</Text>
+          <Text>
+            {marketCapData[0].total_volumes[
+              marketCapData[0].total_volumes.length - 1
+            ][1].toFixed(0)}
+          </Text>
+        </Box>
+        <Box>
+          <Text>Market Cap</Text>
+          <Text>
+            {marketCapData[0].stats[
+              marketCapData[0].stats.length - 1
+            ][1].toFixed(0)}{" "}
+          </Text>
+        </Box>
+      </Box>
       {marketCapChartData?.volume && (
         <Container
-          w={{ base: "100%", lg: "calc(50% - 10px)" }}
+          w="100%"
           // h={{ base: "490px", md: "650px", lg: "640px" }}
           variant="box-component"
           position="relative"
+          mb="20px"
+          pb="40px"
         >
           <Chart
             volume={marketCapChartData.volume}
@@ -155,6 +184,9 @@ const GlobalData = (props: any) => {
             renderTimeSelection={renderTimeSelection}
           />
         </Container>
+      )}
+      {global && topTen && (
+        <DoughnutChart global={global.data} topTen={topTen} />
       )}
     </>
   );
@@ -178,26 +210,6 @@ export const getStaticProps: GetStaticProps = async () => {
       "https://www.coingecko.com/market_cap/total_charts_data?duration=1&locale=en&vs_currency=usd"
     ).then((res) => res.json()),
     await fetch(
-      "https://www.coingecko.com/market_cap/total_charts_data?duration=7&locale=en&vs_currency=usd"
-    ).then((res) => res.json()),
-    ,
-    await fetch(
-      "https://www.coingecko.com/market_cap/total_charts_data?duration=14&locale=en&vs_currency=usd"
-    ).then((res) => res.json()),
-    ,
-    await fetch(
-      "https://www.coingecko.com/market_cap/total_charts_data?duration=30&locale=en&vs_currency=usd"
-    ).then((res) => res.json()),
-    ,
-    await fetch(
-      "https://www.coingecko.com/market_cap/total_charts_data?duration=60&locale=en&vs_currency=usd"
-    ).then((res) => res.json()),
-    ,
-    await fetch(
-      "https://www.coingecko.com/market_cap/total_charts_data?duration=90&locale=en&vs_currency=usd"
-    ).then((res) => res.json()),
-    ,
-    await fetch(
       "https://www.coingecko.com/market_cap/total_charts_data?locale=en&vs_currency=usd"
     ).then((res) => res.json()),
     ,
@@ -209,9 +221,13 @@ export const getStaticProps: GetStaticProps = async () => {
   const markets = await fetch(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=true&price_change_percentage=24h%2C7d%2C30d"
   );
+  const reqTopMovers = await fetch(
+    "https://price-api.crypto.com/price/v1/top-movers?direction=1&depth=20"
+  );
   const global = await resGlobal.json();
   const defi = await resFInanceDefi.json();
   const topTen = await markets.json();
+  const topMovers = await reqTopMovers.text();
 
   const marketCapData = reqMarketCapCharts.filter((el) => el !== undefined);
 

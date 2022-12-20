@@ -34,7 +34,7 @@ const MiniChart = (props: any) => {
     left: "unset",
   });
   const { colorMode } = useColorMode();
-  const { data, renderTimeSelection, volume } = props;
+  const { data, renderTimeSelection, volume, title } = props;
 
   const [currWidth, setWidth] = useState(0);
   // const currTimeFrameSelection = useCallback(() => {
@@ -100,7 +100,7 @@ const MiniChart = (props: any) => {
       // }
       const end = data[data.length - 1]?.value;
       const start = data[0]?.value;
-      console.log(chartContainerRef.current);
+
       const chart = createChart(chartContainerRef?.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
@@ -197,12 +197,12 @@ const MiniChart = (props: any) => {
             newSeries.setData(data);
             if (volume) {
               newVolume = chart.addHistogramSeries({
-                color: "#26a69a",
+                color: colorMode === "light" ? "#1099fa" : "#133364",
                 priceFormat: {
                   type: "volume",
                 },
                 scaleMargins: {
-                  top: .9,
+                  top: 0.9,
                   bottom: 0,
                 },
                 priceScaleId: "",
@@ -267,12 +267,14 @@ const MiniChart = (props: any) => {
 
             // const date = new Date(Number(param.time) * 1000).toISOString();
             // const t = date.slice(0, 10).split("-");
+            console.log(param);
 
             const startingVal = data[0].value;
             let close = 0;
             let high = 0;
             let low = 0;
             const val: any = param.seriesPrices.get(newSeries);
+            const volume = param?.seriesPrices?.get(newVolume);
             if (chartType === "Candle") {
               close = Number(val?.close) || 0;
               // high = Number(val?.high) || 0;
@@ -321,15 +323,7 @@ const MiniChart = (props: any) => {
                 </HStack>
                 <HStack>
                   <Text variant="small-font">Price (USD):</Text>
-                  {/* <NumericFormat
-                    value={Number(close)}
-                    prefix={"$"}
-                    displayType="text"
-                    thousandSeparator=","
-                    className="price-tip"
-                  /> */}
                   <FormattedNumber value={Number(close)} prefix="$" />
-                  {/* <Text variant="small-bold">{Number(val)}</Text> */}
                 </HStack>
                 <HStack>
                   <Text variant="small-font">Change:</Text>
@@ -349,6 +343,12 @@ const MiniChart = (props: any) => {
                     </Text>
                   </HStack>
                 </HStack>
+                {volume && (
+                  <HStack>
+                    <Text variant="small-font">Volume (USD):</Text>
+                    <FormattedNumber value={Number(volume)} prefix="$" />
+                  </HStack>
+                )}
               </>
             );
 
