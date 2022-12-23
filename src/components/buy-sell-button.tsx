@@ -6,7 +6,7 @@ const BuySellButton = (props: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button variant="medium-hollow" onClick={onOpen}>
+      <Button variant="medium-hollow" onClick={onOpen} w="inherit">
         Buy/Sell
       </Button>
 
