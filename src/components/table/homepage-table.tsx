@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback,  useEffect,  useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import FormattedNumber from "../number-formatter";
@@ -52,10 +52,11 @@ const PercentChange = (props: any) => {
   );
 };
 
-const HomepageTable = () => {
+const HomepageTable = (props: any) => {
+  const { numCoins } = props;
+  const lastPageX = Math.ceil(Number(numCoins) / 100);
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-  const lastPage = 530;
   const { colorMode } = useColorMode();
   const [liked, setLiked] = useState<any[] | []>([]);
   const { user } = useAuth();
@@ -77,7 +78,6 @@ const HomepageTable = () => {
 
   useEffect(() => {
     const getLiked = async () => {
- 
       if (user.name) {
         const arr: string[] = [];
         const docRef = collection(database, "users", user.name, "liked");
@@ -90,17 +90,15 @@ const HomepageTable = () => {
         } else {
           setLiked([]);
         }
+      } else {
+        setLiked([]);
       }
-      else{
-        setLiked([])
-      }
-     
     };
     getLiked();
   }, [user]);
 
   useEffect(() => {
-    if (page && lastPage) {
+    if (page && numCoins) {
       fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
       )
@@ -117,22 +115,31 @@ const HomepageTable = () => {
           console.log(error);
         });
     }
-  }, [lastPage, page]);
+  }, [numCoins, page]);
 
   const pagination = (page: number, lastPage: number) => {
-    if (page + 3 < lastPage) {
+
+    if (page + 1 <= lastPageX && page < 3) {
       const arr = [];
       for (let i = 0; i < 3; i++) {
         arr.push(page + i);
       }
 
       return arr;
+    } else if (page + 1 <= lastPageX && page >= 3) {
+
+      const arr = [];
+      for (let i = 0; i < 3; i++) {
+        arr.push(page - 1 + i);
+      }
+  
+      return arr;
     } else {
       const arr = [];
-      for (let i = 2; i >= 0; i--) {
+      for (let i = 3; i > 0; i--) {
         arr.push(page - i);
       }
-
+    
       return arr;
     }
   };
@@ -166,11 +173,9 @@ const HomepageTable = () => {
               }
               padding="5px 30px 5px 10px"
             >
-              
               <Favorite coin={coin} liked={liked} setLiked={setLiked} />
             </Td>
             <Td>
-           
               <BuySell coinId={coin.id} />
             </Td>
             <Td padding="5px 10px">
@@ -270,25 +275,61 @@ const HomepageTable = () => {
               1
             </Box>
           ) : null}
-          {pagination(page, lastPage).map((el) => (
+          {page > 2 && <Box>...</Box>}
+          {pagination(page, numCoins).map((el, idx) => {
+          
+            if (idx === 1) {
+              return (
+                <Box
+                  key={el}
+                  onClick={() => setPage(el)}
+                  backgroundColor={el === page ? "#4783c5" : "#123363"}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  {el}
+                </Box>
+              );
+            }
+            if (idx === 0) {
+              return (
+                <Box
+                  key={el}
+                  onClick={() => setPage(el)}
+                  backgroundColor={el === page ? "#4783c5" : "#123363"}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  {el}
+                </Box>
+              );
+            }
+            if (idx === 2) {
+   
+              return (
+                <Box
+                  key={el}
+                  onClick={() => setPage(el)}
+                  backgroundColor={el === page ? "#4783c5" : "#123363"}
+                  p="5px 10px"
+                  borderRadius="4px"
+                >
+                  {el}
+                </Box>
+              );
+            }
+          })}
+          {page < lastPageX - 1 && <Box>...</Box>}
+          {(page +1< lastPageX || page===lastPageX)&& (
             <Box
-              key={el}
-              onClick={() => setPage(el)}
-              backgroundColor={el === page ? "#4783c5" : "#123363"}
+              onClick={() => setPage(lastPageX)}
+              backgroundColor={lastPageX === page ? "#4783c5" : "#123363"}
               p="5px 10px"
               borderRadius="4px"
             >
-              {el}
+              {lastPageX}
             </Box>
-          ))}
-          <Box
-            onClick={() => setPage(530)}
-            backgroundColor={530 === page ? "#4783c5" : "#123363"}
-            p="5px 10px"
-            borderRadius="4px"
-          >
-            530
-          </Box>
+          )}
         </HStack>
       </>
     );

@@ -40,7 +40,7 @@ const NewsFeed = () => {
   if (newsData.length > 0) {
     return (
       <>
-        <Text fontSize="32px" fontWeight="700" pb="20px">
+        <Text fontSize="32px" fontWeight="700" pb="20px" pt='40px'>
           Crypto News
         </Text>
         <HStack flexWrap="wrap" gap="60px">

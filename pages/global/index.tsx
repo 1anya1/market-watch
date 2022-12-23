@@ -257,7 +257,7 @@ const GlobalData = (props: any) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   // const { query } = context;
-  console.log("in here running");
+
 
   const reqMarketCapCharts = await Promise.all([
     await fetch(

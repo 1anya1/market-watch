@@ -123,7 +123,7 @@ const CustomLegend = (props: any) => {
   const { colorMode } = useColorMode();
 
   const { payload, id, arrVal, setActiveIndexMarketCap } = props;
-  console.log(id, arrVal);
+ 
 
   const handleClick = (idDisplay: string) => {
     const idx = arrVal.findIndex((el: string[]) => el[0] === idDisplay);
@@ -142,7 +142,7 @@ const CustomLegend = (props: any) => {
       >
         {payload.map((entry: { value: string }, index: string | number) => {
           const idDisplay = entry.value.split("-")[0];
-          console.log;
+     
 
           return (
             <HStack
@@ -182,7 +182,7 @@ const CustomLegend = (props: any) => {
 
 const DoughnutChart = (props: any) => {
   const { global, topTen } = props;
-  console.log({global})
+
 
   const marketCap = Object?.entries(global?.market_cap_percentage);
   const totalVolume = Object?.entries(global?.total_volume);

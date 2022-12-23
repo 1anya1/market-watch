@@ -7,33 +7,32 @@ import Header from "../src/components/header";
 import { GetStaticProps } from "next";
 
 const Home = (props: any) => {
- 
+  
   return (
     <>
       <Header title="Top Coins" />
       <SwiperAutoplayComponent />
-      <HomepageTable />
+      <HomepageTable numCoins={props?.globalMetrics?.data?.active_cryptocurrencies} />
       <NewsFeed />
     </>
   );
 };
 
-// export const getStaticProps: GetStaticProps = async () => {
-//   const hour = 60 * 60 * 1;
-//   const reqGlobalMetrics = await fetch(
-//     "https://api.coingecko.com/api/v3/global"
-//   );
-//   const getT
+export const getStaticProps: GetStaticProps = async () => {
+  const hour = 60 * 60 * 24;
+  const reqGlobalMetrics = await fetch(
+    "https://api.coingecko.com/api/v3/global"
+  );
 
-//   const globalMetrics = await reqGlobalMetrics.json();
+  const globalMetrics = await reqGlobalMetrics.json();
 
-//   return {
-//     props: {
-//       globalMetrics,
-//     },
+  return {
+    props: {
+      globalMetrics,
+    },
 
-//     revalidate: hour,
-//   };
-// };
+    revalidate: hour,
+  };
+};
 
 export default Home;
