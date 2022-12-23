@@ -112,13 +112,11 @@ const IndividualCoin = (props: any) => {
     liked();
   }, [coinId, coinInfo, user]);
 
-
   const handleChangeCrypto = (event: any) => {
     const value = Number(event.target.value.split(",").join(""));
     setCryptoExchange(value);
     setCurrencyExchange(value * coinInfo.currentPrice.usd);
   };
-
 
   useEffect(() => {
     const getData = async () => {
@@ -189,7 +187,7 @@ const IndividualCoin = (props: any) => {
           setTimeFrameMax(high);
           setTimeFrameLow(low);
           setInitialPricePoint(data.market_data.current_price.usd);
-          setCurrencyExchange(data.market_data.current_price.usd)
+          setCurrencyExchange(data.market_data.current_price.usd);
         });
     };
     getData();
@@ -315,7 +313,7 @@ const IndividualCoin = (props: any) => {
     <>
       {dataRetrieved ? (
         <Box>
-          <HStack gap="11px" spacing="0" pb="28px" flexWrap="wrap">
+          <HStack gap="11px" spacing="0" pb="28px" flexWrap="wrap" zIndex='11' position='relative'>
             <HStack gap="11px" spacing="0">
               <Box>
                 <Image
@@ -635,7 +633,7 @@ const IndividualCoin = (props: any) => {
                     This is not real time data. To use for approximation only*
                   </Text>
                   <Button variant="large" width="100%" mt="10px">
-                    Buy
+                  <BuySellButton coinId={coinId} />
                   </Button>
                 </Container>
               )}

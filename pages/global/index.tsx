@@ -7,6 +7,9 @@ import {
   MenuList,
   MenuItem,
   Box,
+  Divider,
+  Stack,
+  useColorMode,
 } from "@chakra-ui/react";
 
 import { GetStaticProps } from "next";
@@ -14,6 +17,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import DoughnutChart from "../../src/components/doughnut-chart";
+import FormattedNumber from "../../src/components/number-formatter";
 const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
   ssr: false,
 });
@@ -25,6 +29,7 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
 
 const GlobalData = (props: any) => {
   const { marketCapData, topTen, defi, global } = props;
+  const { colorMode } = useColorMode();
 
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
 
@@ -137,42 +142,91 @@ const GlobalData = (props: any) => {
         {global.data.active_cryptocurrencies} cryptocurrencies tracked across{" "}
         {global.data.markets} market exchanges.
       </Text>
-      <Box>
-        <Box>
-          <Text> Market Cap</Text>
-          <Text>
-            {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
-          </Text>
-        </Box>
-        <Box>
-          <Text>Active Cryptocurrencies</Text>
-          <Text>{global.data.active_cryptocurrencies} </Text>
-        </Box>
-        <Box>
-          <Text>Markets/Exchanges</Text>
-          <Text>{global.data.markets} </Text>
-        </Box>
-        <Box>
-          <Text>24H Volume</Text>
-          <Text>
-            {marketCapData[0].total_volumes[
-              marketCapData[0].total_volumes.length - 1
-            ][1].toFixed(0)}
-          </Text>
-        </Box>
-        <Box>
-          <Text>Market Cap</Text>
-          <Text>
-            {marketCapData[0].stats[
-              marketCapData[0].stats.length - 1
-            ][1].toFixed(0)}{" "}
-          </Text>
-        </Box>
-      </Box>
+      <HStack
+        flexWrap="wrap"
+        spacing="0"
+        gap="10px"
+        pb="20px"
+        h="max-content"
+        borderRadius="8px"
+        p={{ base: "20px 10%", lg: "20px" }}
+        border={
+          colorMode === "light" ? ".75px solid #dddfe1" : "1px solid #133364"
+        }
+        boxShadow='base'
+        flexDir={{ base: "column", lg: "row" }}
+        justifyContent="space-between"
+        maxW="1000px"
+        mb="20px"
+      >
+        <HStack
+          w={{ base: "100%", lg: "39%" }}
+          justifyContent={{ base: "space-between", lg: "space-evenly" }}
+          gap="10px"
+          spacing='0'
+        >
+          <Box>
+            <Text variant="xxs-text"> Total Market Cap</Text>
+            <Text variant="h-4">
+              {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
+            </Text>
+          </Box>
+          <Divider orientation="vertical" h="60px" />
+          {/* <Box borderRadius="8px" p="20px" bg="#123365"> */}
+          <Box>
+            <Text variant="xxs-text"> Active Coins</Text>
+            <Text variant="h-4">{global.data.active_cryptocurrencies} </Text>
+          </Box>
+          <Divider orientation="vertical" h="60px" />
+          <Box>
+            <Text variant="xxs-text" width="max-content">
+              Markets
+            </Text>
+            <Text variant="h-4">{global.data.markets} </Text>
+          </Box>
+        </HStack>
+        <Divider
+          orientation="vertical"
+          h="60px"
+          display={{ base: "none", lg: "flex" }}
+        />
+        <Stack
+          w={{ base: "100%", lg: "56%" }}
+          flexDir={{ base: "column", med: "row" }}
+          spacing="0"
+          justifyContent={{ base: "space-between", lg: "space-evenly" }}
+          gap="10px"
+        >
+          <Box>
+            <Text variant="xxs-text"> 24H Volume</Text>
+            <FormattedNumber
+              value={marketCapData[0].total_volumes[
+                marketCapData[0].total_volumes.length - 1
+              ][1].toFixed(0)}
+              prefix="$"
+              className="h-4"
+            />
+          </Box>
+          <Divider
+            orientation="vertical"
+            h="60px"
+            display={{ base: "none", med: "flex" }}
+          />
+          <Box>
+            <Text variant="xxs-text"> Market Cap</Text>
+            <FormattedNumber
+              value={marketCapData[0].stats[
+                marketCapData[0].stats.length - 1
+              ][1].toFixed(2)}
+              prefix="$"
+              className="h-4"
+            />
+          </Box>
+        </Stack>
+      </HStack>
       {marketCapChartData?.volume && (
         <Container
           w="100%"
-          // h={{ base: "490px", md: "650px", lg: "640px" }}
           variant="box-component"
           position="relative"
           mb="20px"

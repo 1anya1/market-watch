@@ -322,7 +322,9 @@ const MiniChart = (props: any) => {
                   <Text variant="small-font">{`${days[dIDX]}, ${monthNames[mIDX]} ${d}, ${year}`}</Text>
                 </HStack>
                 <HStack>
-                  <Text variant="small-font">Price (USD):</Text>
+                  <Text variant="small-font">
+                    {volume ? "Total Value (USD)" : "Price (USD)"}
+                  </Text>
                   <FormattedNumber value={Number(close)} prefix="$" />
                 </HStack>
                 <HStack>
@@ -444,26 +446,29 @@ const MiniChart = (props: any) => {
             </HStack>
             <HStack>
               {renderTimeSelection()}
+              {!volume && (
+                <Menu>
+                  <MenuButton>
+                    <RiSettings3Fill
+                      fill={
+                        // colorMode === "light" ? colors.gray : colors.blue
+                        // "#4983c6"
+                        colorMode === "light" ? "#1099fa" : "white"
+                      }
+                      size={18}
+                    />
+                  </MenuButton>
+                  <MenuList zIndex="10">
+                    <MenuItem onClick={() => setChartType("Line")}>
+                      Line
+                    </MenuItem>
 
-              <Menu>
-                <MenuButton>
-                  <RiSettings3Fill
-                    fill={
-                      // colorMode === "light" ? colors.gray : colors.blue
-                      // "#4983c6"
-                      colorMode === "light" ? "#1099fa" : "white"
-                    }
-                    size={18}
-                  />
-                </MenuButton>
-                <MenuList zIndex="10">
-                  <MenuItem onClick={() => setChartType("Line")}>Line</MenuItem>
-
-                  <MenuItem onClick={() => setChartType("Candle")}>
-                    Candlestick
-                  </MenuItem>
-                </MenuList>
-              </Menu>
+                    <MenuItem onClick={() => setChartType("Candle")}>
+                      Candlestick
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              )}
             </HStack>
           </HStack>
           <Box
@@ -471,9 +476,11 @@ const MiniChart = (props: any) => {
             height={{ base: "300px", lg: "400px" }}
             w="100%"
           >
-            <Text fontSize="10px" position="absolute" bottom="2" right="5">
-              Powered by CoinGecko API
-            </Text>
+            {!volume && (
+              <Text fontSize="10px" position="absolute" bottom="2" right="5">
+                Powered by CoinGecko API
+              </Text>
+            )}
           </Box>
           <Box
             position="absolute"
