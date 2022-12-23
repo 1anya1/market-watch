@@ -1,4 +1,4 @@
-import { Text, HStack } from "@chakra-ui/react";
+import { Box} from "@chakra-ui/react";
 import HomepageTable from "../src/components/table/homepage-table";
 import NewsFeed from "../src/components/news-feed";
 import SwiperAutoplayComponent from "../src/components/swiper-autoplay";
@@ -9,12 +9,12 @@ import { GetStaticProps } from "next";
 const Home = (props: any) => {
   
   return (
-    <>
+    <Box pb='40px'>
       <Header title="Top Coins" />
       <SwiperAutoplayComponent />
       <HomepageTable numCoins={props?.globalMetrics?.data?.active_cryptocurrencies} />
-      <NewsFeed />
-    </>
+      {/* <NewsFeed /> */}
+    </Box>
   );
 };
 
