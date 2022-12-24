@@ -118,7 +118,6 @@ const HomepageTable = (props: any) => {
   }, [numCoins, page]);
 
   const pagination = (page: number, lastPage: number) => {
-
     if (page + 1 <= lastPageX && page < 3) {
       const arr = [];
       for (let i = 0; i < 3; i++) {
@@ -127,19 +126,18 @@ const HomepageTable = (props: any) => {
 
       return arr;
     } else if (page + 1 <= lastPageX && page >= 3) {
-
       const arr = [];
       for (let i = 0; i < 3; i++) {
         arr.push(page - 1 + i);
       }
-  
+
       return arr;
     } else {
       const arr = [];
       for (let i = 3; i > 0; i--) {
         arr.push(page - i);
       }
-    
+
       return arr;
     }
   };
@@ -268,7 +266,24 @@ const HomepageTable = (props: any) => {
           {page > 1 ? (
             <Box
               onClick={() => setPage(1)}
-              backgroundColor={1 === page ? "#4783c5" : "#123363"}
+              backgroundColor={
+                colorMode === "light"
+                  ? 1 === page
+                    ? "#1099fa"
+                    : "#f5f6fa"
+                  : 1 === page
+                  ? "#133364"
+                  : "transparent"
+              }
+              border={
+                colorMode === "light"
+                  ? 1 === page
+                    ? "#1099fa"
+                    : "1px solid #dddfe1"
+                  : 1 === page
+                  ? "#4783c5"
+                  : "1px solid #133364"
+              }
               p="5px 10px"
               borderRadius="4px"
             >
@@ -277,53 +292,58 @@ const HomepageTable = (props: any) => {
           ) : null}
           {page > 2 && <Box>...</Box>}
           {pagination(page, numCoins).map((el, idx) => {
-          
-            if (idx === 1) {
-              return (
-                <Box
-                  key={el}
-                  onClick={() => setPage(el)}
-                  backgroundColor={el === page ? "#4783c5" : "#123363"}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  {el}
-                </Box>
-              );
-            }
-            if (idx === 0) {
-              return (
-                <Box
-                  key={el}
-                  onClick={() => setPage(el)}
-                  backgroundColor={el === page ? "#4783c5" : "#123363"}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  {el}
-                </Box>
-              );
-            }
-            if (idx === 2) {
-   
-              return (
-                <Box
-                  key={el}
-                  onClick={() => setPage(el)}
-                  backgroundColor={el === page ? "#4783c5" : "#123363"}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  {el}
-                </Box>
-              );
-            }
+            // if (idx === 1) {
+            return (
+              <Box
+                key={el}
+                onClick={() => setPage(el)}
+                backgroundColor={
+                  colorMode === "light"
+                    ? el === page
+                      ? "#1099fa"
+                      : "#f5f6fa"
+                    : el === page
+                    ? "#133364"
+                    : "transparent"
+                }
+                border={
+                  colorMode === "light"
+                    ? el === page
+                      ? "#1099fa"
+                      : "1px solid #dddfe1"
+                    : el === page
+                    ? "#4783c5"
+                    : "1px solid #133364"
+                }
+                p="5px 10px"
+                borderRadius="4px"
+              >
+                {el}
+              </Box>
+            );
           })}
           {page < lastPageX - 1 && <Box>...</Box>}
-          {(page +1< lastPageX || page===lastPageX)&& (
+          {(page + 1 < lastPageX || page === lastPageX) && (
             <Box
               onClick={() => setPage(lastPageX)}
-              backgroundColor={lastPageX === page ? "#4783c5" : "#123363"}
+              backgroundColor={
+                colorMode === "light"
+                  ? lastPageX === page
+                    ? "#1099fa"
+                    : "#f5f6fa"
+                  : lastPageX === page
+                  ? "#133364"
+                  : "transparent"
+              }
+              border={
+                colorMode === "light"
+                  ? lastPageX === page
+                    ? "#1099fa"
+                    : "1px solid #dddfe1"
+                  : lastPageX === page
+                  ? "#4783c5"
+                  : "1px solid #133364"
+              }
               p="5px 10px"
               borderRadius="4px"
             >

@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, database } from "./clientApp";
+import { useToast } from "@chakra-ui/react";
 
 interface UserType {
   name: string | null;
@@ -23,6 +24,7 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState<UserType>({ name: null });
   const [loading, setLoading] = useState<boolean>(true);
+  const toast = useToast();
 
   useEffect(() => {
     console.log("here on auth change");
@@ -52,6 +54,18 @@ export const AuthContextProvider = ({
           email: email,
           // uid,
         });
+        toast({
+          title: "Successfully Signed Up",
+          description: "Congrats, You have successfully signed up!",
+          status: "success",
+          variant: "solid",
+          duration: 2000,
+          position: "top",
+          containerStyle: {
+            backgroundColor: "green",
+            borderRadius: "8px",
+          },
+        });
       } finally {
         console.log(auth);
         await signInWithEmailAndPassword(auth, email, password)
@@ -60,6 +74,18 @@ export const AuthContextProvider = ({
             const user = userCredential.user;
             console.log("successfully signed in");
             setUser({ name: name });
+            toast({
+              title: "Successfully Signed In",
+              description: `Welcome Back ${name}`,
+              status: "success",
+              variant: "solid",
+              duration: 2000,
+              position: "top",
+              containerStyle: {
+                backgroundColor: "green",
+                borderRadius: "8px",
+              },
+            });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -71,15 +97,41 @@ export const AuthContextProvider = ({
     databaseVerification();
   };
 
-  const logIn = (email: string, password: string) => {
-    console.log("in here");
-    console.log(auth);
-    return signInWithEmailAndPassword(auth, email, password);
+  const logIn = async (email: string, password: string) => {
+    const validation =  await signInWithEmailAndPassword(auth, email, password);
+    console.log({validation})
+    if(validation?.user?.displayName){
+      toast({
+        title: "Successfully Signed In",
+        description: `Welcome Back ${validation?.user?.displayName}`,
+        status: "success",
+        variant: "solid",
+        duration: 2000,
+        position: "top",
+        containerStyle: {
+          backgroundColor: "green",
+          borderRadius: "8px",
+        },
+      });
+
+    }
   };
 
   const logOut = async () => {
-    console.log(auth);
+    
     setUser({ name: null });
+    toast({
+      title: "Successfully Signed Out",
+      description: `You have successfully signed out`,
+      status: "success",
+      variant: "solid",
+      duration: 2000,
+      position: "top",
+      containerStyle: {
+        backgroundColor: "green",
+        borderRadius: "8px",
+      },
+    });
     await signOut(auth);
   };
   return (

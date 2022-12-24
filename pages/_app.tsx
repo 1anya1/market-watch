@@ -5,6 +5,8 @@ import theme from "../theme/theme";
 import Navigation from "../src/components/navigation";
 import { AuthContextProvider } from "../context/AuthContext";
 
+// set up get initial props to get the list of all the currecnt crypti listings 
+// useful link https://stackoverflow.com/questions/72069612/unable-to-use-getstaticprops-in-app-js
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
