@@ -74,7 +74,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
               fontSize="14px"
               fontWeight={700}
             >
-              Home
+              Coins
             </Text>
           </Link>
 
@@ -94,45 +94,45 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             </Text>
           </Link>
 
-          {user?.name && (
-            <>
-              <Link href="/watchlist">
-                <Text
-                  color={
-                    router.pathname === "/crypto"
-                      ? "#4983c6"
-                      : colorMode === "light"
-                      ? "black"
-                      : "#a0aec0"
-                  }
-                  fontSize="14px"
-                  fontWeight={700}
-                >
-                  Watchlist
-                </Text>
-              </Link>
-              <Link href="/portfolio">
-                <Text
-                  color={
-                    router.pathname === "/crypto"
-                      ? "#4983c6"
-                      : colorMode === "light"
-                      ? "black"
-                      : "#a0aec0"
-                  }
-                  fontSize="14px"
-                  fontWeight={700}
-                  onClick={onCloseNav}
-                >
-                  Portfolio
-                </Text>
-              </Link>
+          <>
+            <Link href="/watchlist">
+              <Text
+                color={
+                  router.pathname === "/crypto"
+                    ? "#4983c6"
+                    : colorMode === "light"
+                    ? "black"
+                    : "#a0aec0"
+                }
+                fontSize="14px"
+                fontWeight={700}
+              >
+                Watchlist
+              </Text>
+            </Link>
+            <Link href="/portfolio">
+              <Text
+                color={
+                  router.pathname === "/crypto"
+                    ? "#4983c6"
+                    : colorMode === "light"
+                    ? "black"
+                    : "#a0aec0"
+                }
+                fontSize="14px"
+                fontWeight={700}
+                onClick={onCloseNav}
+              >
+                Portfolio
+              </Text>
+            </Link>
+            {user?.name && (
               <HStack>
                 <Text>Hi, {user.name}</Text>
                 <CgProfile />
               </HStack>
-            </>
-          )}
+            )}
+          </>
 
           {!user.name ? (
             <>
@@ -265,41 +265,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             </DrawerHeader>
 
             <DrawerBody>
-              <VStack spacing="0" alignItems="flex-start" gap="14px">
-                {/* <Box
-                  w="50px"
-                  h="28px"
-                  bg={colorMode === "light" ? "#e7ecf0" : "#123364"}
-                  position="relative"
-                  borderRadius="52px"
-                  transition="left 1000ms linear"
-                  border={
-                    colorMode === "light"
-                      ? "2px solid #e7ecf0"
-                      : " 2px solid #123364"
-                  }
-                >
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    borderRadius="50%"
-                    h="24px"
-                    w="24px"
-                    bg={colorMode === "light" ? "white" : "#081c3b"}
-                    position="absolute"
-                    onClick={toggleColorMode}
-                    className={
-                      colorMode === "light" ? "toggle-left" : "toggle-right"
-                    }
-                  >
-                    {colorMode === "light" ? (
-                      <MdDarkMode size={20} onClick={toggleColorMode} />
-                    ) : (
-                      <MdLightMode size={20} onClick={toggleColorMode} />
-                    )}
-                  </Box>
-                </Box> */}
+              <VStack spacing="0" alignItems="flex-start" gap="20px">
                 {user.name && (
                   <HStack pb="6px">
                     <CgProfile />
@@ -321,7 +287,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     fontWeight={700}
                     onClick={onCloseNav}
                   >
-                    Home
+                    Coins
                   </Text>
                 </Link>
 
@@ -342,50 +308,49 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   </Text>
                 </Link>
 
-                {user?.name && (
-                  <>
-                    <Link href="/watchlist">
-                      <Text
-                        color={
-                          router.pathname === "/crypto"
-                            ? "#4983c6"
-                            : colorMode === "light"
-                            ? "black"
-                            : "#a0aec0"
-                        }
-                        fontSize="16px"
-                        fontWeight={700}
-                        onClick={onCloseNav}
-                      >
-                        Watchlist
-                      </Text>
-                    </Link>
-                  </>
-                )}
-                {user?.name && (
-                  <>
-                    <Link href="/portfolio">
-                      <Text
-                        color={
-                          router.pathname === "/crypto"
-                            ? "#4983c6"
-                            : colorMode === "light"
-                            ? "black"
-                            : "#a0aec0"
-                        }
-                        fontSize="16px"
-                        fontWeight={700}
-                        onClick={onCloseNav}
-                      >
-                        Portfolio
-                      </Text>
-                    </Link>
-                  </>
-                )}
+                <>
+                  <Link href="/watchlist">
+                    <Text
+                      color={
+                        router.pathname === "/crypto"
+                          ? "#4983c6"
+                          : colorMode === "light"
+                          ? "black"
+                          : "#a0aec0"
+                      }
+                      fontSize="16px"
+                      fontWeight={700}
+                      onClick={onCloseNav}
+                    >
+                      Watchlist
+                    </Text>
+                  </Link>
+                </>
+
+                <>
+                  <Link href="/portfolio">
+                    <Text
+                      color={
+                        router.pathname === "/crypto"
+                          ? "#4983c6"
+                          : colorMode === "light"
+                          ? "black"
+                          : "#a0aec0"
+                      }
+                      fontSize="16px"
+                      fontWeight={700}
+                      onClick={onCloseNav}
+                    >
+                      Portfolio
+                    </Text>
+                  </Link>
+                </>
+
                 {!user.name ? (
-                  <VStack alignItems="flex-start" spacing="0" gap="10px">
+                  <VStack alignItems="flex-start" spacing="0" gap="20px" width='100%'>
                     <Button
-                      w="80px"
+                    width='100%'
+                     
                       variant="medium-hollow"
                       onClick={() => {
                         onOpen();
@@ -396,6 +361,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                       Log In
                     </Button>
                     <Button
+                    width='100%'
                       variant="medium"
                       onClick={() => {
                         onOpen();
@@ -422,7 +388,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
         </Drawer>
       </HStack>
       <CoinSearch inSearch={inSearch} />
-      {children }
+      {children}
     </Container>
   );
 };

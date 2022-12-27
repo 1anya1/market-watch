@@ -6,6 +6,7 @@ import { FaReddit, FaGithub } from "react-icons/fa";
 import { BsFacebook } from "react-icons/bs";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import { TbWorld, TbClipboardCheck } from "react-icons/tb";
+import BuySellModal from "./modals/buy-sell-modal";
 
 import { database } from "../../context/clientApp";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
@@ -117,6 +118,19 @@ const IndividualCoin = (props: any) => {
     setCryptoExchange(value);
     setCurrencyExchange(value * coinInfo.currentPrice.usd);
   };
+  const BuySell = (props: any) => {
+    const { coinId } = props;
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
+          Buy/Sell
+        </Button>
+        <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+      </>
+    );
+  };
+
 
   useEffect(() => {
     const getData = async () => {
@@ -335,8 +349,9 @@ const IndividualCoin = (props: any) => {
                 coinSym={coinInfo.symbol}
               />
               <ShareButton />
+              <BuySell coinId={coinId} />
 
-              <BuySellButton coinId={coinId} />
+              {/* <BuySellButton coinId={coinId} /> */}
             </HStack>
           </HStack>
           <MainChart
@@ -633,7 +648,7 @@ const IndividualCoin = (props: any) => {
                     This is not real time data. To use for approximation only*
                   </Text>
                   <Button variant="large" width="100%" mt="10px">
-                  <BuySellButton coinId={coinId} />
+                  <BuySell coinId={coinId} />
                   </Button>
                 </Container>
               )}

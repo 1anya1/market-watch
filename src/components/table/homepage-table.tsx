@@ -66,12 +66,10 @@ const HomepageTable = (props: any) => {
     const { onOpen, onClose, isOpen } = useDisclosure();
     return (
       <>
-        <Button variant="medium-hollow" onClick={onOpen}>
+        <Button variant="medium-hollow" onClick={onOpen} width="inherit">
           Buy/Sell
         </Button>
-        {isOpen && (
-          <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
-        )}
+        <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
       </>
     );
   };
@@ -99,6 +97,7 @@ const HomepageTable = (props: any) => {
 
   useEffect(() => {
     if (page && numCoins) {
+      
       fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
       )
@@ -115,6 +114,7 @@ const HomepageTable = (props: any) => {
           console.log(error);
         });
     }
+  
   }, [numCoins, page]);
 
   const pagination = (page: number, lastPage: number) => {

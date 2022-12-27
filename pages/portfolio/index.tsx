@@ -218,9 +218,15 @@ const Portfolio = () => {
   return (
     <>
       <Text variant="h-3">My Porfolio</Text>
-      {coinData.length > 0 && (
+      {user.name ? 
+      coinData.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
-      )}
+      )
+      : 
+      <Box>
+          <Text>Sign up or sign in to add to favoriets</Text>
+        </Box>
+}
     </>
   );
 };

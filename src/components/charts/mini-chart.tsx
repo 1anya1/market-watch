@@ -489,7 +489,7 @@ const MiniChart = (props: any) => {
             ref={toolTipRef}
             top={coordinates ? coordinates.top : "unset"}
             left={coordinates ? coordinates.left : "unset"}
-            bg={colorMode === "light" ? "#f5f6fa" : "#123364"}
+            bg={colorMode === "light" ? "#f5f6fa" : "#030c19"}
             borderRadius="8px"
             display={showToolTip ? "block" : "none"}
             p="10px"

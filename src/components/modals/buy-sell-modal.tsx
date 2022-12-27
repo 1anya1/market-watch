@@ -30,11 +30,13 @@ import UserAuth from "../authentication/user-auth-modal";
 
 const BuySellModal = (props: any) => {
   const { name, onClose, isOpen } = props;
+  console.log(isOpen)
 
   const [coinData, setData] = useState<any>({});
   const toast = useToast();
   const [toastMessage, setToastMessage] = useState<any>(null);
   useEffect(() => {
+    console.log({ toastMessage }, "toast message");
     if (toastMessage) {
       const { title, body } = toastMessage;
       toast({
@@ -54,24 +56,28 @@ const BuySellModal = (props: any) => {
   }, [toastMessage, toast]);
 
   useEffect(() => {
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${name}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const coinData = {
-          image: data.image.small,
-          price: data.market_data.current_price.usd,
-        };
-        setData(coinData);
-      });
-  }, [name]);
+    if (isOpen) {
+      console.log('in here')
+      fetch(
+        `https://api.coingecko.com/api/v3/coins/${name}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          const coinData = {
+            image: data.image.small,
+            price: data.market_data.current_price.usd,
+          };
+          setData(coinData);
+        });
+    }
+  }, [isOpen, name]);
   const { user } = useAuth();
   const { colorMode } = useColorMode();
   const [cointQuantity, setCoinQuantity] = useState<number>(0);
   const [buttonAction, setButtonAction] = useState("buy");
   const buyPortfolio = async (cointQuantity: number) => {
     if (user.name) {
+      console.log("in user name");
       const data = {
         date: new Date().getTime(),
         price: coinData.price,
@@ -85,6 +91,7 @@ const BuySellModal = (props: any) => {
       const incomingData: any = existingData.data();
       let updatedData: any = {};
       if (incomingData) {
+        console.log("in here incoming adata");
         const { transactions, holdings, holdingsValue, totalProceeds } =
           incomingData;
         updatedData = {
@@ -98,6 +105,7 @@ const BuySellModal = (props: any) => {
           totalProceeds: totalProceeds ? totalProceeds : 0,
         };
       } else {
+        console.log("in here updating data");
         updatedData = {
           transactions: [data],
           holdings: Number(data.quantity),
@@ -109,9 +117,10 @@ const BuySellModal = (props: any) => {
         doc(database, "users", user.name, "portfolio", name),
         updatedData
       );
+      console.log("in jere await docs ");
       setToastMessage({
         title: "Success",
-        body: `${name} buy transaction has been added to portfolio`,
+        body: `${name.toUpperCase()} buy transaction has been added to portfolio`,
       });
     }
   };

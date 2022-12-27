@@ -214,7 +214,13 @@ const LikedItems = () => {
   return (
     <>
       <Text variant="h-3">Watchlist</Text>
-      <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
+      {user.name ? (
+        <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
+      ) : (
+        <Box>
+          <Text>Sign up or sign in to add to favoriets</Text>
+        </Box>
+      )}
     </>
   );
 };

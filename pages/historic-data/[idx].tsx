@@ -15,6 +15,7 @@ import {
   Button,
   MenuList,
   Collapse,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,10 +30,11 @@ import FormattedNumber from "../../src/components/number-formatter";
 import DataTable from "../../src/components/table/table";
 import FavoriteButton from "../../src/components/favorite-button";
 import ShareButton from "../../src/components/share-button";
-import BuySellButton from "../../src/components/buy-sell-button";
+// import BuySellButton from "../../src/components/buy-sell-button";
 import { useAuth } from "../../context/AuthContext";
 import { database } from "../../context/clientApp";
 import { doc, getDoc } from "firebase/firestore";
+import BuySellModal from "../../src/components/modals/buy-sell-modal";
 const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
   ssr: false,
 });
@@ -90,6 +92,18 @@ const HistoricData = () => {
     { query: "1 Year", val: 365, name: "1 Year" },
     { query: "All Time", val: "max", name: "All Time" },
   ];
+  const BuySell = (props: any) => {
+    const { coinId } = props;
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
+          Buy/Sell
+        </Button>
+        <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+      </>
+    );
+  };
   const columnNames = [
     "Date",
     "Price",
@@ -465,7 +479,7 @@ const HistoricData = () => {
           />
           <ShareButton />
 
-          <BuySellButton coinId={coin} />
+          <BuySell coinId={coin} />
         </HStack>
       </VStack>
       <Stack
