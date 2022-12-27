@@ -36,7 +36,6 @@ const BuySellModal = (props: any) => {
   const toast = useToast();
   const [toastMessage, setToastMessage] = useState<any>(null);
   useEffect(() => {
-    console.log({ toastMessage }, "toast message");
     if (toastMessage) {
       const { title, body } = toastMessage;
       toast({
@@ -49,6 +48,7 @@ const BuySellModal = (props: any) => {
         containerStyle: {
           backgroundColor: "green",
           borderRadius: "8px",
+         
         },
       });
     }
@@ -57,7 +57,6 @@ const BuySellModal = (props: any) => {
 
   useEffect(() => {
     if (isOpen) {
-      console.log('in here')
       fetch(
         `https://api.coingecko.com/api/v3/coins/${name}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
       )
@@ -120,7 +119,7 @@ const BuySellModal = (props: any) => {
       console.log("in jere await docs ");
       setToastMessage({
         title: "Success",
-        body: `${name.toUpperCase()} buy transaction has been added to portfolio`,
+        body: `Transaction has been added to portfolio`,
       });
     }
   };
@@ -168,7 +167,7 @@ const BuySellModal = (props: any) => {
       );
       setToastMessage({
         title: "Success",
-        body: `${name} sell transaction has been added to portfolio`,
+        body: `Transaction has been added to portfolio`,
       });
     }
   };

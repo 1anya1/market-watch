@@ -74,18 +74,18 @@ export const AuthContextProvider = ({
             const user = userCredential.user;
             console.log("successfully signed in");
             setUser({ name: name });
-            toast({
-              title: "Successfully Signed In",
-              description: `Welcome Back ${name}`,
-              status: "success",
-              variant: "solid",
-              duration: 2000,
-              position: "top",
-              containerStyle: {
-                backgroundColor: "green",
-                borderRadius: "8px",
-              },
-            });
+            // toast({
+            //   title: "Successfully Signed In",
+            //   description: `Welcome Back ${name}`,
+            //   status: "success",
+            //   variant: "solid",
+            //   duration: 2000,
+            //   position: "top",
+            //   containerStyle: {
+            //     backgroundColor: "green",
+            //     borderRadius: "8px",
+            //   },
+            // });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -111,6 +111,7 @@ export const AuthContextProvider = ({
         containerStyle: {
           backgroundColor: "green",
           borderRadius: "8px",
+          textTransform:'capitalize'
         },
       });
 

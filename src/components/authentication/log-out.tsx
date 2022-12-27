@@ -13,7 +13,7 @@ const SignOut = () => {
     }
   };
   return (
-    <Button onClick={handleLogout} variant="medium">
+    <Button onClick={handleLogout} variant="medium" w='inherit'>
       Sign Out
     </Button>
   );

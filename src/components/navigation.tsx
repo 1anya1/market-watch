@@ -347,10 +347,14 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 </>
 
                 {!user.name ? (
-                  <VStack alignItems="flex-start" spacing="0" gap="20px" width='100%'>
+                  <VStack
+                    alignItems="flex-start"
+                    spacing="0"
+                    gap="20px"
+                    width="100%"
+                  >
                     <Button
-                    width='100%'
-                     
+                      width="100%"
                       variant="medium-hollow"
                       onClick={() => {
                         onOpen();
@@ -361,7 +365,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                       Log In
                     </Button>
                     <Button
-                    width='100%'
+                      width="100%"
                       variant="medium"
                       onClick={() => {
                         onOpen();
@@ -373,7 +377,9 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     </Button>
                   </VStack>
                 ) : (
-                  <SignOut />
+                  <Box w="100%">
+                    <SignOut />
+                  </Box>
                 )}
                 <UserAuth
                   nav
