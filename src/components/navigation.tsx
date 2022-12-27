@@ -220,8 +220,11 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
           onClose={onCloseNav}
           // finalFocusRef={btnRef}
         >
-          <DrawerOverlay />
-          <DrawerContent bg={colorMode === "light" ? "white" : "#081c3b"}>
+          <DrawerOverlay  display={{ base: "flex", md: "none" }} />
+          <DrawerContent
+            bg={colorMode === "light" ? "white" : "#081c3b"}
+            display={{ base: "flex", md: "none" }}
+          >
             <DrawerHeader>
               <HStack justifyContent="space-between">
                 <Box
