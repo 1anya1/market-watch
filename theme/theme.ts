@@ -38,7 +38,7 @@ const theme = extendTheme({
   breakpoints: {
     xs: "320px",
     xxs: "24rem",
-    med:'36rem',
+    med: "36rem",
     ms: "490px",
     sm: "30em",
     md: "48em",
@@ -160,6 +160,11 @@ const theme = extendTheme({
           fontWeight: 600,
           color: "#a0aec0",
         },
+        "footer-link": (props: StyleFunctionProps) => ({
+          color: props.colorMode === "light" ? "black" : "#a0aec0",
+          fontSize: "14px",
+          fontWeight: 700,
+        }),
       },
     },
     Stack: {
