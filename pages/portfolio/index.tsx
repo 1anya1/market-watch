@@ -22,6 +22,9 @@ import dynamic from "next/dynamic";
 import { TbArrowsLeftRight } from "react-icons/tb";
 import { AiFillDelete } from "react-icons/ai";
 import DeleteModal from "../../src/components/modals/delete-modal";
+import Favorite from "../../src/components/table/nameColumn";
+
+import BuySellModal from "../../src/components/modals/buy-sell-modal";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
@@ -35,6 +38,18 @@ const Portfolio = () => {
   const [coinIDs, setCoinIDs] = useState<any>([]);
   const [coinData, setCoinData] = useState<any>([]);
   const { colorMode } = useColorMode();
+  const BuySell = (props: any) => {
+    const { coinId } = props;
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    return (
+      <>
+        <Button variant="medium-hollow" onClick={onOpen}>
+          Buy/Sell
+        </Button>
+        <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
+      </>
+    );
+  };
 
   useEffect(() => {
     if (user.name) {
@@ -82,6 +97,27 @@ const Portfolio = () => {
       </>
     );
   };
+  const [liked, setLiked] = useState<any[] | []>([]);
+  useEffect(() => {
+    const getLiked = async () => {
+      if (user.name) {
+        const arr: string[] = [];
+        const docRef = collection(database, "users", user.name, "liked");
+        const docSnap = await getDocs(docRef);
+        if (docSnap.docs.length > 0) {
+          docSnap.forEach((doc) => {
+            arr.push(doc.id);
+          });
+          setLiked(arr);
+        } else {
+          setLiked([]);
+        }
+      } else {
+        setLiked([]);
+      }
+    };
+    getLiked();
+  }, [user]);
 
   const renderData = useCallback(() => {
     const deleteFromDatabase = async (id: string) => {
@@ -111,30 +147,34 @@ const Portfolio = () => {
           }
           padding="5px 30px 5px 10px"
         >
-          <HStack spacing="0" gap={{ base: "8px", lg: "14px" }}>
-            <Box
-              h={{ base: "20px", sm: "26px" }}
-              w={{ base: "20px", sm: "26px" }}
-              position="relative"
-            >
-              <Image src={coin.image} alt={coin.name} layout="fill" />
-            </Box>
-
-            <Link href={`/coins/${coin.id}`}>
-              <VStack spacing="0" gap="4px" alignItems="flex-start">
-                <Text
-                  variant="bold-xsmall"
-                  maxW={{ base: "75px", lg: "unset" }}
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                >
-                  {coin.name}
-                </Text>
-                <Text variant="xxs-text">{coin.symbol.toUpperCase()}</Text>
-              </VStack>
-            </Link>
-          </HStack>
+          <Favorite
+            coin={coin}
+            liked={liked}
+            setLiked={setLiked}
+            link={`${window.location}/${coin.id}`}
+          />
         </Td>
+        <Td padding="5px 10px">
+          {coins[coin.id.toLowerCase()]?.holdingsValue ? (
+            <Box>
+              <FormattedNumber
+                value={coins[coin.id.toLowerCase()]?.holdingsValue}
+                prefix="$"
+                className="table-cell-bold"
+              />
+            </Box>
+          ) : (
+            <Text variant="table-cell-bold">{"---"}</Text>
+          )}
+          <Box>
+            <FormattedNumber
+              value={coins[coin.id.toLowerCase()]?.holdings}
+              sufffix={`\u00A0${coin.symbol.toUpperCase()}`}
+              className="table-cell-small-bold "
+            />
+          </Box>
+        </Td>
+
         <Td padding="5px 10px">
           <FormattedNumber
             value={coin.current_price}
@@ -165,26 +205,7 @@ const Portfolio = () => {
             <Chart data={coin.sparkline_in_7d.price} table={true} />
           </Box>
         </Td>
-        <Td padding="5px 10px">
-          {coins[coin.id.toLowerCase()]?.holdingsValue ? (
-            <Box>
-              <FormattedNumber
-                value={coins[coin.id.toLowerCase()]?.holdingsValue}
-                prefix="$"
-                className="table-cell-bold"
-              />
-            </Box>
-          ) : (
-            <Text variant="table-cell-bold">{"---"}</Text>
-          )}
-          <Box>
-            <FormattedNumber
-              value={coins[coin.id.toLowerCase()]?.holdings}
-              sufffix={`\u00A0${coin.symbol.toUpperCase()}`}
-              className="table-cell-small-bold "
-            />
-          </Box>
-        </Td>
+
         <Td>
           <HStack>
             <Link href={`${window.location}/${coin.id}`} passHref scroll>
@@ -197,36 +218,37 @@ const Portfolio = () => {
               delteteFunction={() => deleteFromDatabase(coin.id)}
               text={`Are you sure you want to delete ${coin.name} from portfolio? Doing so will remove all the associated transactions.`}
             />
+            <BuySell coinId={coin.id} />
           </HStack>
         </Td>
       </Tr>
     ));
-  }, [coinData, coinIDs, coins, colorMode, user]);
+  }, [coinData, coinIDs, coins, colorMode, liked, user]);
 
   const tableColumns = [
     "Coin",
+    "Holdings",
     "Price",
     "1h%",
     "24h%",
     "7d%",
     "Market Cap",
     "7 Day Trend",
-    "Holdings",
     "Actions",
   ];
 
   return (
     <>
       <Text variant="h-3">My Porfolio</Text>
-      {user.name ? 
-      coinData.length > 0 && (
-        <DataTable renderData={renderData} tableColumns={tableColumns} />
-      )
-      : 
-      <Box>
+      {user.name ? (
+        coinData.length > 0 && (
+          <DataTable renderData={renderData} tableColumns={tableColumns} />
+        )
+      ) : (
+        <Box>
           <Text>Sign up or sign in to add to favoriets</Text>
         </Box>
-}
+      )}
     </>
   );
 };

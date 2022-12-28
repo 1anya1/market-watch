@@ -38,7 +38,7 @@ import {
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import FavoriteButton from "./favorite-button";
-import BuySellButton from "./buy-sell-button";
+
 import ShareButton from "./share-button";
 
 const MainChart = dynamic(() => import("./charts/main-chart"), {
@@ -124,7 +124,7 @@ const IndividualCoin = (props: any) => {
     return (
       <>
         <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
-          Buy/Sell
+          Buy/Sellåå
         </Button>
         <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
       </>
@@ -337,7 +337,7 @@ const IndividualCoin = (props: any) => {
                   height={{ base: "28px", md: "34px" }}
                 />
               </Box>
-              <Text variant="h-2" pb="0">
+              <Text variant="h-1" pb="0">
                 {coinInfo.name}
               </Text>
             </HStack>

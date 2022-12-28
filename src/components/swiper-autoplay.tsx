@@ -16,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import PercentChangeBox from "./percent-change-box";
 
 const TableChartComponent = dynamic(
   () => import("../../src/components/charts/table-chart"),
@@ -167,6 +168,7 @@ const SwiperAutoplayComponent = (props: any) => {
                         </Text>
                       </HStack>
                     </Link>
+
                     <HStack
                       gap="10px"
                       justifyContent={{ base: "space-between", md: "unset" }}
@@ -177,37 +179,13 @@ const SwiperAutoplayComponent = (props: any) => {
                       >
                         <FormattedNumber value={el.current_price} prefix="$" />
                       </Box>
-                      <HStack
-                        bg={
-                          el.price_change_percentage_24h < 0 ? "red" : "green"
-                        }
-                        spacing="0"
-                        gap="4px"
-                        padding="4px 6px"
-                        borderRadius="4px"
-                      >
-                        <Box
-                          transform={
-                            el.price_change_percentage_24h < 0
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)"
-                          }
-                        >
-                          {el.price_change_percentage_24h !== 0 && (
-                            <BsFillTriangleFill size={8} fill="white" />
-                          )}
-                        </Box>
-                        <Text variant="chart-percent" color="white">
-                          {Math.abs(el.price_change_percentage_24h).toFixed(2)}%
-                        </Text>
-                      </HStack>
+                      <PercentChangeBox val={el.price_change_percentage_24h} />
                     </HStack>
                   </Stack>
                   <Box
                     width="100%"
                     height={{ base: "40px", md: "75px" }}
                     className="imagegoes"
-                    // display="flex"
                     justifyContent="flex-end"
                     display={{ base: "none", md: "flex" }}
                   >

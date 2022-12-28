@@ -134,7 +134,7 @@ const GlobalData = (props: any) => {
 
   return (
     <>
-      <Text variant="h-2" pb="10px">
+      <Text variant="h-1" pb="10px">
         Global Market
       </Text>
       <Text pb="20px">

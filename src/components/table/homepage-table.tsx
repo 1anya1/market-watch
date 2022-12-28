@@ -258,8 +258,8 @@ const HomepageTable = (props: any) => {
   if (data.length > 0) {
     return (
       <>
-        <Text pt="40px" variant="h-3">
-          By Market Cap
+        <Text pt="20px" variant="h-3">
+        Prices by Market Cap
         </Text>
         <DataTable tableColumns={tableColumnNames} renderData={renderData} />
         <HStack>

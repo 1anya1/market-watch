@@ -18,7 +18,7 @@ import DeleteModal from "../modals/delete-modal";
 
 const Favorite = (props: any) => {
   const { colorMode } = useColorMode();
-  const { coin, liked, setLiked } = props;
+  const { coin, liked, setLiked, link } = props;
   const { user } = useAuth();
   const [width, setWidth] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -67,7 +67,7 @@ const Favorite = (props: any) => {
   } = useDisclosure();
   return (
     <HStack gap={{ base: "10px", lg: "20px" }} spacing="0">
-      <Box pl="4px">
+      <Box pl="4px" cursor='pointer'>
         <FaStar
           onClick={likeFunctionality}
           fill={
@@ -103,13 +103,14 @@ const Favorite = (props: any) => {
           />
         </Box>
 
-        <Link href={`/coins/${coin.id}`}>
-          <VStack spacing="0" gap="4px" alignItems="flex-start">
+        <Link href={link ? link : `/coins/${coin.id}`} >
+          <VStack spacing="0" gap="4px" alignItems="flex-start" cursor='pointer'>
             <Text
               variant="bold-xsmall"
-              maxW={{ base: "75px", lg: "unset" }}
+              maxW={{ base: "75px", lg: "150px" , xl:'unset'}}
               textOverflow="ellipsis"
               overflow="hidden"
+              pr='10px'
             >
               {coin.name}
             </Text>

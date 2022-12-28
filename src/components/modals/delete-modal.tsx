@@ -20,8 +20,8 @@ const DeleteModal = (props: any) => {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody pt="40px">
-            <Text variant="body-semibold">{text}</Text>
+          <ModalBody pt="40px !important">
+            <Text variant="body">{text}</Text>
           </ModalBody>
 
           <ModalFooter>

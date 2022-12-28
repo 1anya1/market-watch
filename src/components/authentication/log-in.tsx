@@ -1,8 +1,17 @@
-import { Button, FormLabel, Input, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack,
+} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useAuth } from "../../../context/AuthContext";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useState } from "react";
 
 type FormData = {
   name: string;
@@ -26,6 +35,10 @@ const SignIn = (props: any) => {
       console.log(error.message);
     }
   });
+  const [show, setShow] = useState(false);
+  const handleClick = () => {
+    setShow(!show);
+  };
 
   return (
     <form onSubmit={onSubmit} style={{ zIndex: "100" }}>
@@ -36,7 +49,19 @@ const SignIn = (props: any) => {
         </VStack>
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Password</FormLabel>
-          <Input {...register("password")} />
+          <InputGroup>
+            <Input
+              type={show ? "text" : "password"}
+              {...register("password")}
+            />
+            <InputRightElement width="4.5rem">
+              {show ? (
+                <AiOutlineEyeInvisible size={18} onClick={handleClick} />
+              ) : (
+                <AiOutlineEye size={18} onClick={handleClick} />
+              )}
+            </InputRightElement>
+          </InputGroup>
         </VStack>
         <Button
           type="submit"

@@ -1,4 +1,12 @@
-import { Text, Tr, Td, useColorMode, Box, Container } from "@chakra-ui/react";
+import {
+  Text,
+  Tr,
+  Td,
+  useColorMode,
+  Box,
+  HStack,
+  Button,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
@@ -7,6 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import DataTable from "../../src/components/table/table";
 import FormattedNumber from "../../src/components/number-formatter";
 import BreadCrums from "../../src/components/breadcrum";
+import Link from "next/link";
 
 const tableColumns = [
   "Date",
@@ -43,7 +52,8 @@ const Transactions = () => {
   }, [coinId, user]);
 
   const renderData = useCallback(() => {
-    return data.transactions.map((transaction: any) => {
+    const items = [...data.transactions];
+    return items.reverse().map((transaction: any) => {
       const { date, transactionType, price, quantity, totalValue } =
         transaction;
       return (
@@ -111,10 +121,16 @@ const Transactions = () => {
 
   return (
     <Box>
-      <BreadCrums breadcrums={breadcrums}  />
-      <Text variant="h-3" pt="10px">
-        Transaction History
-      </Text>
+      <BreadCrums breadcrums={breadcrums} />
+      <HStack spacing='0' gap='14px'>
+        <Text variant="h-3" pt="10px">
+          Transaction History
+        </Text>
+        <Link href={`/coins/${coinId}`} passHref >
+        <Button variant="medium-hollow"> View Coin</Button>
+        </Link>
+      </HStack>
+
       {data?.transactions?.length > 0 && (
         <DataTable renderData={renderData} tableColumns={tableColumns} />
       )}
