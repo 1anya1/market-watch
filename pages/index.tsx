@@ -7,36 +7,34 @@ import Header from "../src/components/header";
 import { GetStaticProps } from "next";
 import { numericFormatter } from "react-number-format";
 import PercentChangeBox from "../src/components/percent-change-box";
+import numberFormater from "../helper-functions/number-formatter";
 
 const Home = (props: any) => {
   const { globalMetrics } = props;
 
-  const numberFormater = () => {
-    const value = globalMetrics.data.total_market_cap.usd;
-    if (value < 1e3) return value.bold();
-    if (value > 1e9) return (value / 1e9).toFixed(2) + "B";
-    if (value > 1e6) return (value / 1e6).toFixed(2) + "M";
-    if (value >= 1e3) return +(value / 1e3).toFixed(1) + "K";
-  };
+  // const numberFormater = () => {
+  //   const value = globalMetrics.data.total_market_cap.usd;
+  //   if (value < 1e3) return value.bold();
+  //   if (value > 1e9) return (value / 1e9).toFixed(2) + "B";
+  //   if (value > 1e6) return (value / 1e6).toFixed(2) + "M";
+  //   if (value >= 1e3) return +(value / 1e3).toFixed(1) + "K";
+  // };
 
   return (
     <Box pb="40px">
-      {/* <Text variant="h-1">
-        Todays Coins
-      </Text> */}
-      <HStack flexWrap="wrap" spacing="0" gap="10px" pb='28px'>
-        <span>The global crypto market cap is</span>
-        <span style={{fontWeight:'bold'}}>{`$${numberFormater()}`}</span>
-        <span>a</span>
-        <PercentChangeBox
-          val={globalMetrics.data.market_cap_change_percentage_24h_usd}
-        />
-        <span>
+      <HStack flexWrap="wrap" spacing="0" gap="10px" pb="28px">
+        <Text>
+          The global crypto market cap is{" "}
+          <span style={{ fontWeight: "bold" }}>{`$${numberFormater(globalMetrics.data.total_market_cap.usd)}`}</span> a{" "}
+          <span style={{ fontWeight: "bold" }}>
+            {globalMetrics.data.market_cap_change_percentage_24h_usd.toFixed(2)}
+            %
+          </span>{" "}
           {globalMetrics.data.market_cap_change_percentage_24h_usd > 0
             ? "increase"
             : "decrease"}{" "}
           over the last 24 hrs.
-        </span>
+        </Text>
       </HStack>
       <Text variant="h-3" pb="10px">
         Trending Coins

@@ -20,6 +20,7 @@ import {
 import { NumericFormat } from "react-number-format";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { RiSettings3Fill } from "react-icons/ri";
+import numberFormater from "../../../helper-functions/number-formatter";
 
 const MiniChart = (props: any) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -409,21 +410,14 @@ const MiniChart = (props: any) => {
           >
             <HStack>
               <Box fontSize={{ base: "18px", sm: "24px", md: "28px" }}>
-                <NumericFormat
-                  value={
+                <Text variant="h-3" pb="0">
+                  $
+                  {numberFormater(
                     data[data.length - 1].value > 0
-                      ? data[data.length - 1].value.toFixed(2)
-                      : data[data.length - 1].value.toFixed(6)
-                  }
-                  prefix={"$"}
-                  suffix=" USD"
-                  displayType="text"
-                  thousandSeparator=","
-                  style={{
-                    fontSize: "inherit",
-                    fontWeight: "bold",
-                  }}
-                />
+                      ? data[data.length - 1].value
+                      : data[data.length - 1].value
+                  )}
+                </Text>
               </Box>
               <HStack
                 spacing="0"

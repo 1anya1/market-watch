@@ -37,6 +37,7 @@ const theme = extendTheme({
   },
   breakpoints: {
     xs: "320px",
+    fold:'18rem',
     xxs: "24rem",
     med: "36rem",
     ms: "490px",

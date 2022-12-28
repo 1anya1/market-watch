@@ -23,6 +23,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FormattedNumber from "./number-formatter";
 import dynamic from "next/dynamic";
+import numberFormater from "../../helper-functions/number-formatter";
 const Chart = dynamic(() => import("./charts/simple-chart"), {
   ssr: false,
 });

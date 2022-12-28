@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   Modal,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
@@ -20,7 +21,7 @@ const UserAuth = (props: any) => {
     <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent zIndex="100">
-        <Box p="20px" borderRadius="11px" className="inhere">
+        <Box p="20px" borderRadius="11px" className="inhere" mt='20px'>
           <HStack
             spacing="0"
             gap="6px"
@@ -74,17 +75,19 @@ const UserAuth = (props: any) => {
           </HStack>
 
           <ModalCloseButton />
-          {nav ? (
-            userLogin === "log-in" ? (
+         
+            {nav ? (
+              userLogin === "log-in" ? (
+                <SignIn onClose={onClose} />
+              ) : (
+                <SignUp onClose={onClose} />
+              )
+            ) : logIn === "log-in" ? (
               <SignIn onClose={onClose} />
             ) : (
               <SignUp onClose={onClose} />
-            )
-          ) : logIn === "log-in" ? (
-            <SignIn onClose={onClose} />
-          ) : (
-            <SignUp onClose={onClose} />
-          )}
+            )}
+         
         </Box>
       </ModalContent>
     </Modal>

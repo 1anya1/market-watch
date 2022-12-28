@@ -317,6 +317,7 @@ const HomepageTable = (props: any) => {
                 }
                 p="5px 10px"
                 borderRadius="4px"
+                color={el===page ? 'white' : 'inherit'}
               >
                 {el}
               </Box>

@@ -5,6 +5,7 @@ import {
   ISeriesApi,
   SeriesOptionsMap,
 } from "lightweight-charts";
+import numberFormater from "../../../helper-functions/number-formatter";
 
 import { NumericFormat } from "react-number-format";
 import {
@@ -288,6 +289,7 @@ const MainChart = (props: any) => {
                 </HStack>
                 <HStack>
                   <Text variant="small-font">Price (USD):</Text>
+                  
                   <NumericFormat
                     value={Number(close)}
                     prefix={"$"}

@@ -12,6 +12,7 @@ import {
   PopoverContent,
   Button,
   useDisclosure,
+  Stack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -26,6 +27,8 @@ import DataTable from "../../src/components/table/table";
 import Favorite from "../../src/components/table/nameColumn";
 import BuySellModal from "../../src/components/modals/buy-sell-modal";
 
+import Image from "next/image";
+import EmptyState from "../../src/components/empty-state";
 const TableChartComponent = dynamic(
   () => import("../../src/components/charts/table-chart"),
   {
@@ -215,10 +218,15 @@ const LikedItems = () => {
     <>
       <Text variant="h-3">Watchlist</Text>
       {user.name ? (
+        data.length >0 ?
         <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
+        :
+        <EmptyState header=' You do not have any favorite coins yet.' action='Add a new coin to get started!' />
       ) : (
         <Box>
           <Text>Sign up or sign in to add to favoriets</Text>
+         
+         
         </Box>
       )}
     </>

@@ -10,12 +10,14 @@ import {
   Divider,
   Stack,
   useColorMode,
+  Grid,
 } from "@chakra-ui/react";
 
 import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
+import numberFormater from "../../helper-functions/number-formatter";
 import DoughnutChart from "../../src/components/doughnut-chart";
 import FormattedNumber from "../../src/components/number-formatter";
 const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
@@ -29,6 +31,7 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
 
 const GlobalData = (props: any) => {
   const { marketCapData, topTen, defi, global } = props;
+  console.log({ global });
   const { colorMode } = useColorMode();
 
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
@@ -118,19 +121,6 @@ const GlobalData = (props: any) => {
       setMarketCapChartData({ data, volume });
     }
   }, [marketCapData, setMarketCapChartData, timeSelect]);
-  // const totalVolume = () => {
-  //   const sumValues = Object.values(global.data.total_volume).reduce(
-  //     (a: number, b: number) => Number(a) + Number(b)
-  //   );
-
-  //   return sumValues;
-  // };
-
-  // const totalMarketCap = () => {
-  //   const sumValues = Object.values(global.data.total_volume).reduce(
-  //     (a: number, b: number) => Number(a) + Number(b)
-  //   );
-  // };
 
   return (
     <>
@@ -142,87 +132,80 @@ const GlobalData = (props: any) => {
         {global.data.active_cryptocurrencies} cryptocurrencies tracked across{" "}
         {global.data.markets} market exchanges.
       </Text>
-      <HStack
-        flexWrap="wrap"
-        spacing="0"
-        gap="10px"
-        pb="20px"
-        h="max-content"
-        borderRadius="8px"
-        p={{ base: "20px 10%", lg: "20px" }}
-        border={
-          colorMode === "light" ? ".75px solid #dddfe1" : "1px solid #133364"
-        }
-        boxShadow='base'
-        flexDir={{ base: "column", lg: "row" }}
-        justifyContent="space-between"
-        maxW="1000px"
+
+      <Grid
+        w={{ base: "100%", lg: "900px" }}
+        gap='10px'
+        gridTemplateColumns={{
+          base: "1fr",
+          fold: "1fr 1fr",
+          med: "1fr 1fr 1fr",
+          lg: "repeat(6, 1fr)",
+        }}
+        
+       
+        borderRadius="10px"
         mb="20px"
+        justifyItems="center"
       >
-        <HStack
-          w={{ base: "100%", lg: "39%" }}
-          justifyContent={{ base: "space-between", lg: "space-evenly" }}
-          gap="10px"
-        >
-          <Box>
-            <Text variant="xxs-text"> Total Market Cap</Text>
-            <Text variant="h-4">
-              {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
-            </Text>
-          </Box>
-          <Divider orientation="vertical" h="60px" />
-          {/* <Box borderRadius="8px" p="20px" bg="#123365"> */}
-          <Box>
-            <Text variant="xxs-text"> Active Coins</Text>
-            <Text variant="h-4">{global.data.active_cryptocurrencies} </Text>
-          </Box>
-          <Divider orientation="vertical" h="60px" />
-          <Box>
-            <Text variant="xxs-text" width="max-content">
-              Markets
-            </Text>
-            <Text variant="h-4">{global.data.markets} </Text>
-          </Box>
-        </HStack>
-        <Divider
-          orientation="vertical"
-          h="60px"
-          display={{ base: "none", lg: "flex" }}
-        />
-        <Stack
-          w={{ base: "100%", lg: "56%" }}
-          flexDir={{ base: "column", med: "row" }}
-          spacing="0"
-          justifyContent={{ base: "space-between", lg: "space-evenly" }}
-          gap="10px"
-        >
-          <Box>
-            <Text variant="xxs-text"> 24H Volume</Text>
-            <FormattedNumber
-              value={marketCapData[0].total_volumes[
+       <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            Total Market Cap
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
+          </Text>
+        </Box>
+        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            Active Coins
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            {global.data.active_cryptocurrencies}{" "}
+          </Text>
+        </Box>
+        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            Total Markets
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            {global.data.markets}{" "}
+          </Text>
+        </Box>
+        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            24H Volume
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            $
+            {numberFormater(
+              marketCapData[0].total_volumes[
                 marketCapData[0].total_volumes.length - 1
-              ][1].toFixed(0)}
-              prefix="$"
-              className="h-4"
-            />
-          </Box>
-          <Divider
-            orientation="vertical"
-            h="60px"
-            display={{ base: "none", med: "flex" }}
-          />
-          <Box>
-            <Text variant="xxs-text"> Market Cap</Text>
-            <FormattedNumber
-              value={marketCapData[0].stats[
-                marketCapData[0].stats.length - 1
-              ][1].toFixed(2)}
-              prefix="$"
-              className="h-4"
-            />
-          </Box>
-        </Stack>
-      </HStack>
+              ][1]
+            )}
+          </Text>
+        </Box>
+        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            Market Cap
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            $
+            {numberFormater(
+              marketCapData[0].stats[marketCapData[0].stats.length - 1][1]
+            )}
+          </Text>
+        </Box>
+        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+          <Text variant="xxs-text" margin="auto" textAlign="center">
+            Dominance
+          </Text>
+          <Text variant="h-5" textAlign="center">
+            BTC: {global.data.market_cap_percentage.btc.toFixed(0)}%
+          </Text>
+        </Box>
+      </Grid>
+
       {marketCapChartData?.volume && (
         <Container
           w="100%"

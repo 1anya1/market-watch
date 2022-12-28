@@ -23,7 +23,7 @@ import { TbArrowsLeftRight } from "react-icons/tb";
 import { AiFillDelete } from "react-icons/ai";
 import DeleteModal from "../../src/components/modals/delete-modal";
 import Favorite from "../../src/components/table/nameColumn";
-
+import EmptyState from "../../src/components/empty-state";
 import BuySellModal from "../../src/components/modals/buy-sell-modal";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
@@ -241,8 +241,13 @@ const Portfolio = () => {
     <>
       <Text variant="h-3">My Porfolio</Text>
       {user.name ? (
-        coinData.length > 0 && (
+        coinData.length > 0 ? (
           <DataTable renderData={renderData} tableColumns={tableColumns} />
+        ) : (
+          <EmptyState
+            header="You do not have any coing in portfolio."
+            action="Buy or Sell coins to get started!"
+          />
         )
       ) : (
         <Box>
