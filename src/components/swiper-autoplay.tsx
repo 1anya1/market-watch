@@ -138,7 +138,7 @@ const SwiperAutoplayComponent = (props: any) => {
                     md: "auto minmax(50px, 500px)",
                   }}
                   gap={{ base: "4px", md: "10px", lg: "20px" }}
-                  mb="10px"
+                 
                 >
                   <Stack spacing="0">
                     <Link

@@ -77,7 +77,7 @@ const CoinSearch = (props: any) => {
       justifyContent="flex-end"
       alignItems="flex-start"
       pt={{ base: "34px", md: "40px" }}
-      pb={{ base: "34px", md: "20px" }}
+      pb={{ base: "40px", md: "20px" }}
       flexDir={{ base: "column-reverse", md: "row" }}
       rowGap="20px"
       spacing="0"
