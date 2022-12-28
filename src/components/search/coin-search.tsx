@@ -76,8 +76,8 @@ const CoinSearch = (props: any) => {
     <HStack
       justifyContent="flex-end"
       alignItems="flex-start"
-      pt={{ base: "26px", md: "40px" }}
-      pb={{ base: "20px", md: "20px" }}
+      pt={{ base: "34px", md: "40px" }}
+      pb={{ base: "34px", md: "20px" }}
       flexDir={{ base: "column-reverse", md: "row" }}
       rowGap="20px"
       spacing="0"

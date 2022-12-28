@@ -134,7 +134,7 @@ const GlobalData = (props: any) => {
 
   return (
     <>
-      <Text variant="h-1" pb="10px">
+      <Text variant="h-2" pb="10px">
         Global Market
       </Text>
       <Text pb="20px">
@@ -163,7 +163,6 @@ const GlobalData = (props: any) => {
           w={{ base: "100%", lg: "39%" }}
           justifyContent={{ base: "space-between", lg: "space-evenly" }}
           gap="10px"
-          spacing='0'
         >
           <Box>
             <Text variant="xxs-text"> Total Market Cap</Text>
@@ -257,7 +256,7 @@ const GlobalData = (props: any) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   // const { query } = context;
-
+  console.log("in here running");
 
   const reqMarketCapCharts = await Promise.all([
     await fetch(

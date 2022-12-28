@@ -4,15 +4,10 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-
-
 }
 
 * {
   box-sizing: border-box;
-}
-.chakra-container {
-  min-height: calc(100vh - 195px)
 }
 
 html[data-theme="light"] {
@@ -22,7 +17,7 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  --text-color:#a0aec0;
+  --text-color: #a0aec0;
   --a-color: #4983c6;
   --price-chart: #a0aec0;
 }
@@ -129,22 +124,22 @@ a {
   z-index: 5;
 }
 .table-cell {
-  font-size: 16px ;
-  font-weight: 500 ;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--price-chart);
 }
-.table-cell-bold{
-  font-size: 16px ;
-  font-weight: 700 ;
+.table-cell-bold {
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-color);
 }
 .table-cell-small {
-  font-size: 12px ;
+  font-size: 12px;
   font-weight: 500;
   color: var(--price-chart);
 }
 .table-cell-small-bold {
-  font-size: 12px ;
+  font-size: 12px;
   font-weight: 700;
   color: var(--price-chart);
 }
