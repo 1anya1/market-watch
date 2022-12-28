@@ -1,17 +1,19 @@
 import {
+  Box,
   Button,
   FormLabel,
   Input,
   InputGroup,
   InputRightElement,
   VStack,
+  Text,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useAuth } from "../../../context/AuthContext";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type FormData = {
   name: string;
@@ -21,28 +23,44 @@ type FormData = {
 
 const SignIn = (props: any) => {
   const { onClose } = props;
+  const [errorMessage, setError] = useState<null | string>(null);
+
   const {
     register,
-
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  const { logIn } = useAuth();
+  const { logIn, user } = useAuth();
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await logIn(data.email, data.password);
+     const res = await logIn(data.email, data.password);
+      console.log(res)
+      if (res) {
+        onClose()
+      }
     } catch (error: any) {
-      console.log(error.message);
-    }
+      const val = error.message;
+      console.log(val);
+      if (val.indexOf("password") || val.indexOd("email")) {
+        setError("The email and/or password you entered do not match.");
+      }
+    } 
   });
   const [show, setShow] = useState(false);
   const handleClick = () => {
     setShow(!show);
   };
 
+
+
   return (
     <form onSubmit={onSubmit} style={{ zIndex: "100" }}>
-      <VStack spacing={0} gap="20px" pt="40px" zIndex="100">
+      <VStack spacing={0} gap="20px" pt="28px" zIndex="100">
+        {errorMessage && (
+          <Box>
+            <Text color="red">{errorMessage}</Text>
+          </Box>
+        )}
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Email Address</FormLabel>
           <Input {...register("email")} />
@@ -65,7 +83,7 @@ const SignIn = (props: any) => {
         </VStack>
         <Button
           type="submit"
-          onClick={onClose}
+          // onClick={onClose}
           width="100%"
           variant="large-blue"
         >

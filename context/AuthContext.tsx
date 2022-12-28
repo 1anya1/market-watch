@@ -48,59 +48,62 @@ export const AuthContextProvider = ({
           email,
           password
         );
-        await updateProfile(user, { displayName: name });
-        await setDoc(doc(database, "users", name), {
+        console.log(user);
+        const prof = await updateProfile(user, { displayName: name });
+        const docs = await setDoc(doc(database, "users", name), {
           username: name,
           email: email,
           // uid,
         });
-        toast({
-          title: "Successfully Signed Up",
-          description: "Congrats, You have successfully signed up!",
-          status: "success",
-          variant: "solid",
-          duration: 2000,
-          position: "top",
-          containerStyle: {
-            backgroundColor: "green",
-            borderRadius: "8px",
-          },
-        });
-      } finally {
-        console.log(auth);
-        await signInWithEmailAndPassword(auth, email, password)
-          .then(async (userCredential) => {
-            console.log(userCredential);
-            const user = userCredential.user;
-            console.log("successfully signed in");
-            setUser({ name: name });
-            // toast({
-            //   title: "Successfully Signed In",
-            //   description: `Welcome Back ${name}`,
-            //   status: "success",
-            //   variant: "solid",
-            //   duration: 2000,
-            //   position: "top",
-            //   containerStyle: {
-            //     backgroundColor: "green",
-            //     borderRadius: "8px",
-            //   },
-            // });
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-          });
+        if (user?.displayName) {
+          await signInWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+              console.log(userCredential);
+              const user = userCredential.user;
+              console.log("successfully signed in");
+              setUser({ name: name });
+              toast({
+                title: "Successfully Signed Up",
+                description: `Hello ${name}!`,
+                status: "success",
+                variant: "solid",
+                duration: 2000,
+                position: "top",
+                containerStyle: {
+                  backgroundColor: "green",
+                  borderRadius: "8px",
+                },
+              });
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+            });
+          return true;
+        }
+      } catch (error: any) {
+        const val = error.message;
+        if (val.includes("weak-password")) {
+          console.log("weak password");
+          return "Weak password. Make sure your password is at least 6 characters long.";
+        }
+        if (val.includes("email-already-in-use")) {
+          console.log("in use");
+          return "Email already in use.";
+        }
+        if (val.includes("invalid-email")) {
+          console.log("not acceptable");
+          return "Invalid email address.";
+        }
       }
     };
-    databaseVerification();
+    return databaseVerification();
   };
 
   const logIn = async (email: string, password: string) => {
-    const validation =  await signInWithEmailAndPassword(auth, email, password);
-    console.log({validation})
-    if(validation?.user?.displayName){
+    const validation = await signInWithEmailAndPassword(auth, email, password);
+    if (validation?.user?.displayName) {
       toast({
         title: "Successfully Signed In",
         description: `Welcome Back ${validation?.user?.displayName}`,
@@ -111,15 +114,14 @@ export const AuthContextProvider = ({
         containerStyle: {
           backgroundColor: "green",
           borderRadius: "8px",
-          textTransform:'capitalize'
+          textTransform: "capitalize",
         },
       });
-
+      return true;
     }
   };
 
   const logOut = async () => {
-    
     setUser({ name: null });
     toast({
       title: "Successfully Signed Out",

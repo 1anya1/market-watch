@@ -1,12 +1,7 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 import HomepageTable from "../src/components/table/homepage-table";
-import NewsFeed from "../src/components/news-feed";
 import SwiperAutoplayComponent from "../src/components/swiper-autoplay";
-import CoinSearch from "../src/components/search/coin-search";
-import Header from "../src/components/header";
 import { GetStaticProps } from "next";
-import { numericFormatter } from "react-number-format";
-import PercentChangeBox from "../src/components/percent-change-box";
 import numberFormater from "../helper-functions/number-formatter";
 import Link from "next/link";
 
@@ -55,7 +50,7 @@ const Home = (props: any) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const hour = 60 * 60 * 24;
+  const hour = 60 * 60;
   const reqGlobalMetrics = await fetch(
     "https://api.coingecko.com/api/v3/global"
   );
