@@ -12,20 +12,15 @@ import numberFormater from "../helper-functions/number-formatter";
 const Home = (props: any) => {
   const { globalMetrics } = props;
 
-  // const numberFormater = () => {
-  //   const value = globalMetrics.data.total_market_cap.usd;
-  //   if (value < 1e3) return value.bold();
-  //   if (value > 1e9) return (value / 1e9).toFixed(2) + "B";
-  //   if (value > 1e6) return (value / 1e6).toFixed(2) + "M";
-  //   if (value >= 1e3) return +(value / 1e3).toFixed(1) + "K";
-  // };
-
   return (
     <Box pb="40px">
       <HStack flexWrap="wrap" spacing="0" gap="10px" pb="28px">
         <Text>
           The global crypto market cap is{" "}
-          <span style={{ fontWeight: "bold" }}>{`$${numberFormater(globalMetrics.data.total_market_cap.usd)}`}</span> a{" "}
+          <span style={{ fontWeight: "bold" }}>{`$${numberFormater(
+            globalMetrics.data.total_market_cap.usd
+          )}`}</span>{" "}
+          a{" "}
           <span style={{ fontWeight: "bold" }}>
             {globalMetrics.data.market_cap_change_percentage_24h_usd.toFixed(2)}
             %

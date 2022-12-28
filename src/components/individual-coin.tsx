@@ -124,7 +124,7 @@ const IndividualCoin = (props: any) => {
     return (
       <>
         <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
-          Buy/Sellåå
+          Buy/Sell
         </Button>
         <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
       </>

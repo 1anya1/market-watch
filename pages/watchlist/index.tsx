@@ -218,15 +218,17 @@ const LikedItems = () => {
     <>
       <Text variant="h-3">Watchlist</Text>
       {user.name ? (
-        data.length >0 ?
-        <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
-        :
-        <EmptyState header=' You do not have any favorite coins yet.' action='Add a new coin to get started!' />
+        data.length > 0 ? (
+          <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
+        ) : (
+          <EmptyState
+            header=" You do not have any favorite coins yet."
+            action="Add a new coin to get started!"
+          />
+        )
       ) : (
         <Box>
           <Text>Sign up or sign in to add to favoriets</Text>
-         
-         
         </Box>
       )}
     </>

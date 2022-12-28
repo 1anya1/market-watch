@@ -16,7 +16,7 @@ import DataTable from "../../src/components/table/table";
 import FormattedNumber from "../../src/components/number-formatter";
 import BreadCrums from "../../src/components/breadcrum";
 import Link from "next/link";
-import EmptyState from "../../src/components/empty-state";
+
 
 const tableColumns = [
   "Date",

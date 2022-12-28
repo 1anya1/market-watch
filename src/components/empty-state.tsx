@@ -4,9 +4,9 @@ import Link from "next/link";
 import emptyImage from "../../src/images/empty-state.png";
 
 type Props = {
-    header : string
-    action: string
-}
+  header: string;
+  action: string;
+};
 
 const EmptyState = (props: Props) => {
   const { header, action } = props;
