@@ -40,6 +40,7 @@ const LikedItems = () => {
   const [liked, setLiked] = useState<any[] | []>([]);
   const { colorMode } = useColorMode();
   const [data, setData] = useState<any[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const tableColumns = [
     "Name",
     "",
@@ -55,6 +56,7 @@ const LikedItems = () => {
   const BuySell = (props: any) => {
     const { coinId } = props;
     const { onOpen, onClose, isOpen } = useDisclosure();
+
     return (
       <>
         <Button variant="medium-hollow" onClick={onOpen}>
@@ -64,7 +66,7 @@ const LikedItems = () => {
       </>
     );
   };
-
+  const [error, setError] = useState<null | string>(null);
   useEffect(() => {
     const liked = async () => {
       if (user.name) {
@@ -89,8 +91,22 @@ const LikedItems = () => {
       fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${query}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=price_change_percentage=1h%2C24h%2C7d`
       )
-        .then((res) => res.json())
-        .then((data) => setData(data));
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          setData(data);
+          setLoaded(true);
+        })
+        .catch((error) => {
+          if (error.message === "Failed to fetch") {
+            setError(
+              "Exceeded the Rate Limit. Please wait a few minutes and refresh the page"
+            );
+          }
+        });
     } else {
       setData([]);
     }
@@ -217,10 +233,13 @@ const LikedItems = () => {
   return (
     <>
       <Text variant="h-3">Watchlist</Text>
+
       {user.name ? (
-        data.length > 0 ? (
+        data.length > 0 && !error && loaded ? (
           <DataTable tableColumns={tableColumns} renderData={renderTableRow} />
-        ) : (
+        ) : error ? (
+          <Text>{error}</Text>
+        ) : !loaded ? null : (
           <EmptyState
             header=" You do not have any favorite coins yet."
             action="Add a new coin to get started!"

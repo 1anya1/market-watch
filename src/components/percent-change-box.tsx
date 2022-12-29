@@ -17,7 +17,7 @@ const PercentChangeBox = (props: any) => {
         {val !== 0 && <BsFillTriangleFill size={8} fill="white" />}
       </Box>
       <Text variant="chart-percent" color="white">
-        {val.toFixed(2)}%
+        {val?.toFixed(2)}%
       </Text>
       s
     </HStack>

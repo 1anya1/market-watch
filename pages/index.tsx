@@ -24,19 +24,19 @@ const Home = (props: any) => {
             <span
               style={{ fontWeight: "bold", cursor: "pointer" }}
             >{`$${numberFormater(
-              globalMetrics.data.total_market_cap.usd
+              globalMetrics?.data?.total_market_cap?.usd
             )}`}</span>
           </Link>{" "}
           a{" "}
           <Link href="/global" passHref>
             <span style={{ fontWeight: "bold", cursor: "pointer" }}>
-              {globalMetrics.data.market_cap_change_percentage_24h_usd.toFixed(
+              {globalMetrics?.data.market_cap_change_percentage_24h_usd?.toFixed(
                 2
               )}
               %
             </span>
           </Link>{" "}
-          {globalMetrics.data.market_cap_change_percentage_24h_usd > 0
+          {globalMetrics?.data.market_cap_change_percentage_24h_usd > 0
             ? "increase"
             : "decrease"}{" "}
           over the last 24 hrs.

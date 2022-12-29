@@ -25,6 +25,7 @@ import DeleteModal from "../../src/components/modals/delete-modal";
 import Favorite from "../../src/components/table/nameColumn";
 import EmptyState from "../../src/components/empty-state";
 import BuySellModal from "../../src/components/modals/buy-sell-modal";
+import { setLogLevel } from "firebase/app";
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
@@ -38,9 +39,11 @@ const Portfolio = () => {
   const [coinIDs, setCoinIDs] = useState<any>([]);
   const [coinData, setCoinData] = useState<any>([]);
   const { colorMode } = useColorMode();
+  const [loaded, setLoaded] = useState(false);
   const BuySell = (props: any) => {
     const { coinId } = props;
     const { onOpen, onClose, isOpen } = useDisclosure();
+
     return (
       <>
         <Button variant="medium-hollow" onClick={onOpen}>
@@ -70,8 +73,15 @@ const Portfolio = () => {
           await fetch(
             `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinString}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
           )
-            .then((resData) => resData.json())
-            .then((data) => setCoinData(data));
+            .then((resData) => {
+              if (resData.ok) {
+                return resData.json();
+              }
+            })
+            .then((data) => {
+              setCoinData(data);
+              setLoaded(true);
+            });
         }
       };
       getPortfolio();
@@ -240,7 +250,7 @@ const Portfolio = () => {
   return (
     <>
       <Text variant="h-3">My Porfolio</Text>
-      {user.name ? (
+      {user.name && loaded ? (
         coinData.length > 0 ? (
           <DataTable renderData={renderData} tableColumns={tableColumns} />
         ) : (
@@ -249,7 +259,7 @@ const Portfolio = () => {
             action="Buy or Sell coins to get started!"
           />
         )
-      ) : (
+      ) : !loaded ? null : (
         <Box>
           <Text>Sign up or sign in to add to favoriets</Text>
         </Box>

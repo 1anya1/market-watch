@@ -73,7 +73,7 @@ const HomepageTable = (props: any) => {
       </>
     );
   };
-
+  const [error, setError] = useState<null | string>(null);
   useEffect(() => {
     const getLiked = async () => {
       if (user.name) {
@@ -97,24 +97,29 @@ const HomepageTable = (props: any) => {
 
   useEffect(() => {
     if (page && numCoins) {
-      
       fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
       )
         .then((response) => {
           if (response.ok) {
             return response.json();
+            
           }
           throw new Error("Something went wrong");
         })
         .then((data) => {
           setData(data);
+          setError(null)
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.message);
+          if (error.message === "Failed to fetch") {
+            setError(
+              "Exceeded the Rate Limit. Please wait a few minutes and refresh the page"
+            );
+          }
         });
     }
-  
   }, [numCoins, page]);
 
   const pagination = (page: number, lastPage: number) => {
@@ -255,10 +260,10 @@ const HomepageTable = (props: any) => {
       return null;
     });
   }, [colorMode, data, liked]);
-  if (data.length > 0) {
+  if (data.length > 0 && !error) {
+
     return (
       <>
-       
         <DataTable tableColumns={tableColumnNames} renderData={renderData} />
         <HStack>
           {page > 1 ? (
@@ -315,7 +320,7 @@ const HomepageTable = (props: any) => {
                 }
                 p="5px 10px"
                 borderRadius="4px"
-                color={el===page ? 'white' : 'inherit'}
+                color={el === page ? "white" : "inherit"}
               >
                 {el}
               </Box>
@@ -352,6 +357,11 @@ const HomepageTable = (props: any) => {
         </HStack>
       </>
     );
+  }
+  if(error){
+    return(
+    <Text>{error}</Text>
+    )
   }
   return null;
 };

@@ -31,7 +31,7 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
 
 const GlobalData = (props: any) => {
   const { marketCapData, topTen, defi, global } = props;
-  console.log({ global });
+  console.log({ global }, { topTen });
   const { colorMode } = useColorMode();
 
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
@@ -82,21 +82,21 @@ const GlobalData = (props: any) => {
 
   useEffect(() => {
     if (timeSelect === 1) {
-      const data = marketCapData[0].stats.map((el: any[]) => ({
+      const data = marketCapData[0]?.stats.map((el: any[]) => ({
         time: el[0] / 1000,
         value: el[1],
       }));
-      const volume = marketCapData[0].total_volumes.map((el: any[]) => ({
+      const volume = marketCapData[0]?.total_volumes.map((el: any[]) => ({
         time: el[0] / 1000,
         value: el[1],
       }));
       setMarketCapChartData({ data, volume });
     } else if (timeSelect === 0) {
-      const data = marketCapData[1].stats.map((el: any[]) => ({
+      const data = marketCapData[1]?.stats.map((el: any[]) => ({
         time: el[0] / 1000,
         value: el[1],
       }));
-      const volume = marketCapData[1].total_volumes.map((el: any[]) => ({
+      const volume = marketCapData[1]?.total_volumes.map((el: any[]) => ({
         time: el[0] / 1000,
         value: el[1],
       }));
@@ -105,7 +105,7 @@ const GlobalData = (props: any) => {
       const timeFrame = timeSelect * (60 * 60 * 24);
       const date = new Date().getTime();
       const filerDate = date / 1000 - timeFrame;
-      const data = marketCapData[1].stats
+      const data = marketCapData[1]?.stats
         .map((el: any[]) => ({
           time: el[0] / 1000,
           value: el[1],
@@ -129,82 +129,136 @@ const GlobalData = (props: any) => {
       </Text>
       <Text pb="20px">
         The total market cap represents data from{" "}
-        {global.data.active_cryptocurrencies} cryptocurrencies tracked across{" "}
-        {global.data.markets} market exchanges.
+        {global?.data?.active_cryptocurrencies} cryptocurrencies tracked across{" "}
+        {global?.data?.markets} market exchanges.
       </Text>
 
+    {topTen && global &&
       <Grid
         w={{ base: "100%", lg: "900px" }}
-        gap='10px'
+        gap="10px"
         gridTemplateColumns={{
           base: "1fr",
           fold: "1fr 1fr",
           med: "1fr 1fr 1fr",
           lg: "repeat(6, 1fr)",
         }}
-        
-       
         borderRadius="10px"
         mb="20px"
         justifyItems="center"
       >
-       <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             Total Market Cap
           </Text>
           <Text variant="h-5" textAlign="center">
-            {global.data.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
+            {global?.data?.market_cap_change_percentage_24h_usd.toFixed(2)}%{" "}
           </Text>
         </Box>
-        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             Active Coins
           </Text>
           <Text variant="h-5" textAlign="center">
-            {global.data.active_cryptocurrencies}{" "}
+            {global?.data?.active_cryptocurrencies}{" "}
           </Text>
         </Box>
-        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             Total Markets
           </Text>
           <Text variant="h-5" textAlign="center">
-            {global.data.markets}{" "}
+            {global?.data?.markets}{" "}
           </Text>
         </Box>
-        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             24H Volume
           </Text>
           <Text variant="h-5" textAlign="center">
             $
             {numberFormater(
-              marketCapData[0].total_volumes[
-                marketCapData[0].total_volumes.length - 1
+              marketCapData[0]?.total_volumes[
+                marketCapData[0]?.total_volumes.length - 1
               ][1]
             )}
           </Text>
         </Box>
-        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             Market Cap
           </Text>
           <Text variant="h-5" textAlign="center">
             $
             {numberFormater(
-              marketCapData[0].stats[marketCapData[0].stats.length - 1][1]
+              marketCapData[0]?.stats[marketCapData[0]?.stats?.length - 1][1]
             )}
           </Text>
         </Box>
-        <Box minW="120px" border={colorMode === "light" ? " 1px solid #dddfe1" :  " 1px solid #051329"}  bg={colorMode==='light' ? '#f5f6fa' : '#051329'} p='10px'  borderRadius="10px" w='100%'>
+        <Box
+          minW="120px"
+          border={
+            colorMode === "light" ? " 1px solid #dddfe1" : " 1px solid #051329"
+          }
+          bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
+          p="10px"
+          borderRadius="10px"
+          w="100%"
+        >
           <Text variant="xxs-text" margin="auto" textAlign="center">
             Dominance
           </Text>
           <Text variant="h-5" textAlign="center">
-            BTC: {global.data.market_cap_percentage.btc.toFixed(0)}%
+            BTC: {global?.data?.market_cap_percentage?.btc.toFixed(0)}%
           </Text>
         </Box>
       </Grid>
+}
 
       {marketCapChartData?.volume && (
         <Container
@@ -215,8 +269,8 @@ const GlobalData = (props: any) => {
           pb="40px"
         >
           <Chart
-            volume={marketCapChartData.volume}
-            data={marketCapChartData.data}
+            volume={marketCapChartData?.volume}
+            data={marketCapChartData?.data}
             renderTimeSelection={renderTimeSelection}
           />
         </Container>
@@ -265,14 +319,16 @@ export const getStaticProps: GetStaticProps = async () => {
   const topTen = await markets.json();
   const topMovers = await reqTopMovers.text();
 
+
   const marketCapData = reqMarketCapCharts.filter((el) => el !== undefined);
+  console.log(reqMarketCapCharts, global, topTen)
 
   return {
     props: {
       marketCapData,
-      global,
-      defi,
-      topTen,
+      global: global?.status?.error_code === 429 ? null : global,
+      defi: defi?.status?.error_code === 429 ? null : defi, 
+      topTen: topTen?.status?.error_code === 429 ? null : topTen, 
     },
 
     revalidate: 60 * 60 * 24,

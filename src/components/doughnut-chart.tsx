@@ -185,8 +185,10 @@ const DoughnutChart = (props: any) => {
   const { global, topTen } = props;
 
 
-  const marketCap = Object?.entries(global?.market_cap_percentage);
-  const totalVolume = Object?.entries(global?.total_volume);
+
+
+  const marketCap = Object.entries(global?.market_cap_percentage)
+  const totalVolume =  Object.entries(global?.total_volume)
   const { colorMode } = useColorMode();
 
   const marketCapData: any[] = [];
@@ -299,54 +301,54 @@ const DoughnutChart = (props: any) => {
             <Image
               height="30px"
               width="30px"
-              src={topTen[activeIndexMarketCap].image}
+              src={topTen[activeIndexMarketCap]?.image}
               alt="coin logo"
             />
             <Text variant="h-3" pb="none" textTransform="capitalize">
-              {topTen[activeIndexMarketCap].id}
+              {topTen[activeIndexMarketCap]?.id}
             </Text>
-            <Link href={`/coins/${topTen[activeIndexMarketCap].id}`} passHref>
+            <Link href={`/coins/${topTen[activeIndexMarketCap]?.id}`} passHref>
               <Button variant="medium">View More</Button>
             </Link>
           </HStack>
 
           {activeIndexMarketCap !== undefined && (
-            <Chart data={topTen[activeIndexMarketCap].sparkline_in_7d.price} />
+            <Chart data={topTen[activeIndexMarketCap]?.sparkline_in_7d?.price} />
           )}
           <Stack pb="20px">
             {renderStats(
               "Market Cap",
-              topTen[activeIndexMarketCap].market_cap,
+              topTen[activeIndexMarketCap]?.market_cap,
               "$",
               false
             )}
             {renderStats(
               "Circulating Supply",
-              topTen[activeIndexMarketCap].circulating_supply,
+              topTen[activeIndexMarketCap]?.circulating_supply,
               "",
               false
             )}
             {renderStats(
               "Total Volume",
-              topTen[activeIndexMarketCap].total_volume,
+              topTen[activeIndexMarketCap]?.total_volume,
               "$",
               false
             )}
             {renderStats(
               "Current Price",
-              topTen[activeIndexMarketCap].current_price,
+              topTen[activeIndexMarketCap]?.current_price,
               "$",
               false
             )}
             {renderStats(
               "24H High",
-              topTen[activeIndexMarketCap].high_24h,
+              topTen[activeIndexMarketCap]?.high_24h,
               "$",
               false
             )}
             {renderStats(
               "24H Low",
-              topTen[activeIndexMarketCap].low_24h,
+              topTen[activeIndexMarketCap]?.low_24h,
               "$",
               true
             )}
