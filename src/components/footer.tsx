@@ -36,9 +36,9 @@ const Footer = () => {
           spacing="0"
           gap="14px"
         >
-          <AiFillGithub size={24} />
-          <AiFillLinkedin size={24} />
-          <BiWorld size={24} />
+          <AiFillGithub size={24} className='social-shares'/>
+          <AiFillLinkedin size={24} className='social-shares' />
+          <BiWorld size={24} className='social-shares'/>
         </HStack>
       </Container>
     </Box>

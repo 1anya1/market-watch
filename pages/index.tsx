@@ -9,7 +9,7 @@ const Home = (props: any) => {
   const { globalMetrics } = props;
 
   return (
-    <Box >
+    <Box className='main-page' >
       <Text variant="h-3" pb="10px">
         Trending Coins
       </Text>

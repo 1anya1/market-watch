@@ -123,14 +123,13 @@ const IndividualCoin = (props: any) => {
     const { onOpen, onClose, isOpen } = useDisclosure();
     return (
       <>
-        <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
+        <Button variant="medium-hollow" onClick={onOpen} width="inherit">
           Buy/Sell
         </Button>
         <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
       </>
     );
   };
-
 
   useEffect(() => {
     const getData = async () => {
@@ -327,7 +326,14 @@ const IndividualCoin = (props: any) => {
     <>
       {dataRetrieved ? (
         <Box>
-          <HStack gap="11px" spacing="0" pb="28px" flexWrap="wrap" zIndex='11' position='relative'>
+          <HStack
+            gap="11px"
+            spacing="0"
+            pb="28px"
+            flexWrap="wrap"
+            zIndex="11"
+            position="relative"
+          >
             <HStack gap="11px" spacing="0">
               <Box>
                 <Image
@@ -648,7 +654,7 @@ const IndividualCoin = (props: any) => {
                     This is not real time data. To use for approximation only*
                   </Text>
                   <Button variant="large" width="100%" mt="10px">
-                  <BuySell coinId={coinId} />
+                    <BuySell coinId={coinId} />
                   </Button>
                 </Container>
               )}

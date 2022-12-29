@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState,  } from "react";
+import {Box} from '@chakra-ui/react'
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -17,6 +18,7 @@ interface UserType {
 const AuthContext = createContext({});
 export const useAuth = () => useContext<any>(AuthContext);
 
+
 export const AuthContextProvider = ({
   children,
 }: {
@@ -25,7 +27,7 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<UserType>({ name: null });
   const [loading, setLoading] = useState<boolean>(true);
   const toast = useToast();
-
+  console.log(children)
   useEffect(() => {
     console.log("here on auth change");
     const unsubscribe = onAuthStateChanged(auth, (user) => {

@@ -21,6 +21,12 @@ html[data-theme="dark"] {
   --a-color: #4983c6;
   --price-chart: #a0aec0;
 }
+.social-shares:hover{
+  fill:#4983c6
+}
+.social-shares:focus{
+  fill:#4983c6
+}
 
 .chakra-ui-dark {
   /* background-color: #081c3b; */
@@ -202,3 +208,4 @@ g:focus {
     transform: translateX(0px) rotate(-360deg);
   }
 }
+
