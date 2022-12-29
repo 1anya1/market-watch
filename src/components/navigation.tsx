@@ -56,7 +56,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
       <HStack pt="20px" justifyContent="space-between" gap="20px">
         <Box>
           <Link href="/" passHref>
-            <Box>
+            <Box cursor="pointer">
               <Logo />
             </Box>
           </Link>
@@ -68,6 +68,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
         >
           <Link href="/">
             <Text
+              cursor="pointer"
               color={
                 router.pathname === "/"
                   ? "#4983c6"
@@ -84,6 +85,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
 
           <Link href="/global">
             <Text
+              cursor="pointer"
               color={
                 router.pathname === "/global"
                   ? "#4983c6"
@@ -102,6 +104,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             {user.name ? (
               <Link href="/watchlist">
                 <Text
+                  cursor="pointer"
                   color={
                     router.pathname === "/crypto"
                       ? "#4983c6"
@@ -137,6 +140,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
             {user.name ? (
               <Link href="/portfolio">
                 <Text
+                  cursor="pointer"
                   color={
                     router.pathname === "/crypto"
                       ? "#4983c6"
@@ -323,6 +327,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 )}
                 <Link href="/">
                   <Text
+                    cursor="pointer"
                     color={
                       router.pathname === "/"
                         ? "#4983c6"
@@ -340,6 +345,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
 
                 <Link href="/global">
                   <Text
+                    cursor="pointer"
                     onClick={onCloseNav}
                     color={
                       router.pathname === "/global"
@@ -358,6 +364,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 {user.name ? (
                   <Link href="/watchlist">
                     <Text
+                      cursor="pointer"
                       color={
                         router.pathname === "/crypto"
                           ? "#4983c6"
@@ -374,6 +381,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                 ) : (
                   <Text
+                    cursor="pointer"
                     color={
                       router.pathname === "/crypto"
                         ? "#4983c6"
@@ -396,6 +404,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                 {user.name ? (
                   <Link href="/portfolio">
                     <Text
+                      cursor="pointer"
                       color={
                         router.pathname === "/crypto"
                           ? "#4983c6"
@@ -412,6 +421,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                 ) : (
                   <Text
+                    cursor="pointer"
                     color={
                       router.pathname === "/crypto"
                         ? "#4983c6"
@@ -439,6 +449,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                     width="100%"
                   >
                     <Button
+                      cursor="pointer"
                       width="100%"
                       variant="medium-hollow"
                       onClick={() => {
@@ -450,6 +461,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                       Log In
                     </Button>
                     <Button
+                      cursor="pointer"
                       width="100%"
                       variant="medium"
                       onClick={() => {
@@ -463,6 +475,7 @@ const Navigation = ({ children }: { children: React.ReactNode }) => {
                   </VStack>
                 ) : (
                   <Box
+                    cursor="pointer"
                     w="100%"
                     onClick={() => {
                       onCloseNav();

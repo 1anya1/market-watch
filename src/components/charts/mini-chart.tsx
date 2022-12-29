@@ -74,9 +74,9 @@ const MiniChart = (props: any) => {
     };
     if (chartContainerRef?.current && data?.length > 0) {
       const handleResize = () => {
-        console.log("in hetr");
+
         if (chartContainerRef?.current?.clientWidth) {
-          console.log(chartContainerRef?.current?.clientWidth);
+
           chart.applyOptions({
             width: chartContainerRef?.current?.clientWidth,
             height: chartContainerRef?.current?.clientHeight,
@@ -268,7 +268,7 @@ const MiniChart = (props: any) => {
 
             // const date = new Date(Number(param.time) * 1000).toISOString();
             // const t = date.slice(0, 10).split("-");
-            console.log(param);
+
 
             const startingVal = data[0].value;
             let close = 0;
@@ -369,7 +369,7 @@ const MiniChart = (props: any) => {
       window.addEventListener("resize", handleResize);
 
       return () => {
-        console.log("resize");
+
         window.removeEventListener("resize", handleResize);
 
         chart.remove();

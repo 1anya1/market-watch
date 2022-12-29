@@ -103,16 +103,14 @@ const HomepageTable = (props: any) => {
         .then((response) => {
           if (response.ok) {
             return response.json();
-            
           }
           throw new Error("Something went wrong");
         })
         .then((data) => {
           setData(data);
-          setError(null)
+          setError(null);
         })
         .catch((error) => {
-          console.log(error.message);
           if (error.message === "Failed to fetch") {
             setError(
               "Exceeded the Rate Limit. Please wait a few minutes and refresh the page"
@@ -261,7 +259,6 @@ const HomepageTable = (props: any) => {
     });
   }, [colorMode, data, liked]);
   if (data.length > 0 && !error) {
-
     return (
       <>
         <DataTable tableColumns={tableColumnNames} renderData={renderData} />
@@ -358,10 +355,8 @@ const HomepageTable = (props: any) => {
       </>
     );
   }
-  if(error){
-    return(
-    <Text>{error}</Text>
-    )
+  if (error) {
+    return <Text>{error}</Text>;
   }
   return null;
 };

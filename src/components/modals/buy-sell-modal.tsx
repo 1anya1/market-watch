@@ -30,7 +30,6 @@ import UserAuth from "../authentication/user-auth-modal";
 
 const BuySellModal = (props: any) => {
   const { name, onClose, isOpen } = props;
-  console.log(isOpen)
 
   const [coinData, setData] = useState<any>({});
   const toast = useToast();
@@ -48,7 +47,6 @@ const BuySellModal = (props: any) => {
         containerStyle: {
           backgroundColor: "green",
           borderRadius: "8px",
-         
         },
       });
     }
@@ -76,7 +74,6 @@ const BuySellModal = (props: any) => {
   const [buttonAction, setButtonAction] = useState("buy");
   const buyPortfolio = async (cointQuantity: number) => {
     if (user.name) {
-      console.log("in user name");
       const data = {
         date: new Date().getTime(),
         price: coinData.price,
@@ -90,7 +87,6 @@ const BuySellModal = (props: any) => {
       const incomingData: any = existingData.data();
       let updatedData: any = {};
       if (incomingData) {
-        console.log("in here incoming adata");
         const { transactions, holdings, holdingsValue, totalProceeds } =
           incomingData;
         updatedData = {
@@ -104,7 +100,6 @@ const BuySellModal = (props: any) => {
           totalProceeds: totalProceeds ? totalProceeds : 0,
         };
       } else {
-        console.log("in here updating data");
         updatedData = {
           transactions: [data],
           holdings: Number(data.quantity),
@@ -116,7 +111,7 @@ const BuySellModal = (props: any) => {
         doc(database, "users", user.name, "portfolio", name),
         updatedData
       );
-      console.log("in jere await docs ");
+
       setToastMessage({
         title: "Success",
         body: `Transaction has been added to portfolio`,

@@ -124,6 +124,7 @@ const SwiperAutoplayComponent = (props: any) => {
           ? topMovers.map((el: any) => (
               <SwiperSlide key={el.name}>
                 <Grid
+                 
                   overflow="hidden"
                   backgroundColor={
                     colorMode === "light" ? "#f5f6fa" : "#051329"
@@ -138,7 +139,6 @@ const SwiperAutoplayComponent = (props: any) => {
                     md: "auto minmax(50px, 500px)",
                   }}
                   gap={{ base: "4px", md: "10px", lg: "20px" }}
-                 
                 >
                   <Stack spacing="0">
                     <Link
@@ -147,6 +147,7 @@ const SwiperAutoplayComponent = (props: any) => {
                       scroll
                     >
                       <HStack
+                       cursor="pointer"
                         spacing="0"
                         gap="10px"
                         width="max-content"

@@ -27,9 +27,9 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<UserType>({ name: null });
   const [loading, setLoading] = useState<boolean>(true);
   const toast = useToast();
-  console.log(children)
+
   useEffect(() => {
-    console.log("here on auth change");
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser({
@@ -50,7 +50,7 @@ export const AuthContextProvider = ({
           email,
           password
         );
-        console.log(user);
+
         const prof = await updateProfile(user, { displayName: name });
         const docs = await setDoc(doc(database, "users", name), {
           username: name,
@@ -60,9 +60,9 @@ export const AuthContextProvider = ({
         if (user?.displayName) {
           await signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
-              console.log(userCredential);
+
               const user = userCredential.user;
-              console.log("successfully signed in");
+        
               setUser({ name: name });
               toast({
                 title: "Successfully Signed Up",
@@ -80,22 +80,22 @@ export const AuthContextProvider = ({
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
+
             });
           return true;
         }
       } catch (error: any) {
         const val = error.message;
         if (val.includes("weak-password")) {
-          console.log("weak password");
+
           return "Weak password. Make sure your password is at least 6 characters long.";
         }
         if (val.includes("email-already-in-use")) {
-          console.log("in use");
+
           return "Email already in use.";
         }
         if (val.includes("invalid-email")) {
-          console.log("not acceptable");
+
           return "Invalid email address.";
         }
       }

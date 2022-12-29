@@ -6,23 +6,17 @@ import {
 } from "lightweight-charts";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 
-import {
-  Box,
- 
-  Text,
-  useColorMode,
-} from "@chakra-ui/react";
-
+import { Box, Text, useColorMode } from "@chakra-ui/react";
 
 const MiniChart = (props: any) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
- 
+
   const { colorMode } = useColorMode();
   const { data, table } = props;
 
   const endingValue = data[data.length - 1];
   const startingValue = data[0];
-  console.log(startingValue, endingValue)
+
   const [dataChart, setDataChart] = useState<any[]>([]);
   useEffect(() => {
     const dataArr: SetStateAction<any[]> = [];
@@ -31,10 +25,7 @@ const MiniChart = (props: any) => {
     setDataChart(dataArr);
   }, [data]);
 
-
   const [currWidth, setWidth] = useState(0);
-
- 
 
   useEffect(() => {
     if (currWidth === 0) {
@@ -114,8 +105,6 @@ const MiniChart = (props: any) => {
           barSpacing: 20,
           minBarSpacing: 2,
           visible: false,
-
-   
         },
         leftPriceScale: {
           // visible: chartContainerRef?.current?.clientWidth > 480 ? true : false,
@@ -131,7 +120,7 @@ const MiniChart = (props: any) => {
 
       if (dataChart.length > 0) {
         let newSeries: ISeriesApi<keyof SeriesOptionsMap>;
-     
+
         newSeries = chart.addLineSeries({
           color: startingValue > endingValue ? colors.red : colors.green,
           lastValueVisible: false,

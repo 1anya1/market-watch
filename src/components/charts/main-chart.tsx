@@ -83,7 +83,6 @@ const MainChart = (props: any) => {
       };
       const end = cryptoData[cryptoData.length - 1]?.value;
       const start = cryptoData[0]?.value;
-      console.log({ start }, { end });
       const chart = createChart(chartContainerRef?.current, {
         layout: {
           background: { type: ColorType.Solid, color: "transparent" },
@@ -289,7 +288,7 @@ const MainChart = (props: any) => {
                 </HStack>
                 <HStack>
                   <Text variant="small-font">Price (USD):</Text>
-                  
+
                   <NumericFormat
                     value={Number(close)}
                     prefix={"$"}
@@ -350,9 +349,7 @@ const MainChart = (props: any) => {
   ]);
 
   const currTimeFrameSelection = useCallback(() => {
-    console.log(timeFrames, timeFrame);
     const time = timeFrames.filter((el: any) => el.query === timeFrame);
-    console.log({ time });
     return time[0].name;
   }, [timeFrame, timeFrames]);
 

@@ -97,7 +97,7 @@ const HistoricData = () => {
     const { onOpen, onClose, isOpen } = useDisclosure();
     return (
       <>
-        <Button variant="medium-hollow" onClick={onOpen} width='inherit'>
+        <Button variant="medium-hollow" onClick={onOpen} width="inherit">
           Buy/Sell
         </Button>
         <BuySellModal name={coinId} onClose={onClose} isOpen={isOpen} />
@@ -138,7 +138,6 @@ const HistoricData = () => {
           return [market, ohlc, coin];
         })
         .then(async ([ohlc, market, coin]) => {
-          console.log(coin);
           const data: any = [];
           market.forEach((el: any) => {
             const [time, open, high, low, close] = el;
@@ -227,7 +226,6 @@ const HistoricData = () => {
   const renderTableRow = useCallback(() => {
     const d = [...data];
 
-  
     return d.reverse().map((el) => (
       <Tr key={el.time} borderTop="unset" h="64px">
         <Td
