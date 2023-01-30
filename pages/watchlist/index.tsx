@@ -109,6 +109,7 @@ const LikedItems = () => {
         });
     } else {
       setData([]);
+      setLoaded(true);
     }
   }, [liked]);
 
