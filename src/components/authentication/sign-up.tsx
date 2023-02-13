@@ -46,7 +46,7 @@ const SignUp = (props: any) => {
         </VStack>
         <VStack spacing={0} gap="4px" width="100%" alignItems="flex-start">
           <FormLabel margin="0">Password</FormLabel>
-          <Input {...register("password")} />
+          <Input type={"password"} {...register("password")} />
         </VStack>
         <Button type="submit" width="100%" variant="large-blue">
           Create Account
