@@ -335,7 +335,7 @@ const IndividualCoin = (props: any) => {
             position="relative"
           >
             <HStack gap="11px" spacing="0">
-              <Box>
+              <Box width="100%">
                 <Image
                   src={coinInfo.image}
                   alt={coinInfo.name}
@@ -343,7 +343,7 @@ const IndividualCoin = (props: any) => {
                   height={{ base: "28px", md: "34px" }}
                 />
               </Box>
-              <Text variant="h-1" pb="0">
+              <Text variant="h-1" pb="0" whiteSpace='nowrap'>
                 {coinInfo.name}
               </Text>
             </HStack>
@@ -360,14 +360,6 @@ const IndividualCoin = (props: any) => {
               {/* <BuySellButton coinId={coinId} /> */}
             </HStack>
           </HStack>
-          <MainChart
-            cryptoData={cryptoData}
-            timeFrame={timeFrame}
-            setTimeFrame={setTimeFrame}
-            initalPricePoint={initalPricePoint}
-            initialPercent={initialPercent}
-            timeFrames={timeFrames}
-          />
           <Stack
             flexDirection={{ base: "column", lg: "row" }}
             columnGap="20px"
@@ -376,6 +368,16 @@ const IndividualCoin = (props: any) => {
             spacing="0"
           >
             <VStack gap="20px" width={{ base: "100%", lg: "55%" }} spacing="0">
+            
+                <MainChart
+                  cryptoData={cryptoData}
+                  timeFrame={timeFrame}
+                  setTimeFrame={setTimeFrame}
+                  initalPricePoint={initalPricePoint}
+                  initialPercent={initialPercent}
+                  timeFrames={timeFrames}
+                />
+        
               {dataRetrieved && coinInfo.symbol && (
                 <Container variant="box-component" h="max-content" w="100%">
                   {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
