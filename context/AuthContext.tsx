@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState,  } from "react";
-import {Box} from '@chakra-ui/react'
+
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -7,7 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, database } from "./clientApp";
 import { useToast } from "@chakra-ui/react";
 

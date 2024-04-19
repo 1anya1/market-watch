@@ -49,12 +49,14 @@ const Home = (props: any) => {
   );
 };
 
+// here we are getting server side rendering of the page 
 export const getStaticProps: GetStaticProps = async () => {
   const hour = 60 * 60;
   const reqGlobalMetrics = await fetch(
     "https://api.coingecko.com/api/v3/global"
   );
 
+  //TODO better error handle for API's global call 
   const globalMetrics = await reqGlobalMetrics.json();
 
   return {
