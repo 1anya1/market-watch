@@ -1,3 +1,4 @@
+
 import AWS from "aws-sdk";
 import { Readable } from "stream";
 
@@ -7,7 +8,7 @@ const bucketName: string = "cryptonewsfeed";
 const region: string = "us-west-1";
 const accessKeyId: string = process.env.ACCESS_KEY_ID_AWS || "";
 const secretAccessKey: string = process.env.ACCESS_KEY_SECRET_AWS || "";
-const useS3: boolean = true;
+const useS3: boolean = false;
 
 AWS.config.update({ region });
 const s3 = new AWS.S3({
@@ -19,25 +20,22 @@ const s3 = new AWS.S3({
 
 // TODO, pull out local file handling into local_files.ts and us s3 only for s3!
 // uploads a file to S3
-export function uploadJsonFile(json: any, key: string, type: string = "cards") {
+export function uploadJsonFile(json: any, key: string) {
   if (!useS3) {
     // in dev we do not use s3, we just store the file locally
     let dir = "./data";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
-    dir = `./data/${key}`;
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
+    // dir = `./data/${key}`;
+    // if (!fs.existsSync(dir)) {
+    //   fs.mkdirSync(dir);
+    // }
     let file: string = "./data/";
-    if (key === "splinterlands") {
-      file += `${key}/${key}-${type}.json`;
-    } else if (key === "axie-infinity") {
-      file += `${key}/${key}-${type}.json`;
-    }
+
     if (key) {
-      fs.writeFileSync("myname", JSON.stringify({ name: "anna", dog: "true" }));
+      file += `${key}.json`;
+      fs.writeFileSync(file, JSON.stringify(json));
       console.log(`Development mode: stored json data locally in : ${file}`);
     } else {
       console.error("key undefined!!!");
@@ -48,7 +46,7 @@ export function uploadJsonFile(json: any, key: string, type: string = "cards") {
   const uploadParams = {
     Bucket: bucketName,
     Body: JSON.stringify(json),
-    Key: `${key}-${type}`,
+    Key: `${key}`,
   };
 
   s3.upload(uploadParams, (error: Error, data: any) => {
@@ -84,3 +82,4 @@ export async function getJsonFile(key: string, type: string = "cards") {
 
   return JSON.parse(bodyContents);
 }
+

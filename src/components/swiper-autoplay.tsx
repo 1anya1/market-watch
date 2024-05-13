@@ -26,46 +26,8 @@ const TableChartComponent = dynamic(
 );
 
 const SwiperAutoplayComponent = (props: any) => {
-  // const [data, setData] = useState<any[]>([]);
-  // useEffect(() => {
-  //   fetch(
-  //     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=24h"
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data));
-  // }, []);
-  const [globalValues, setGlobalValues] = useState<any>(null);
-  const [topMovers, setTopMovers] = useState<any[]>([]);
-  useEffect(() => {
-    Promise.all([
-      fetch(
-        "https://price-api.crypto.com/price/v1/top-movers?depth=10&tradable_on=EXCHANGE-OR-APP"
-      ),
-      fetch("https://price-api.crypto.com/price/v1/global-metrics"),
-    ])
-
-      .then(async ([resMovers, resGlobal]) => {
-        const movers = await resMovers.json();
-        const global = await resGlobal.json();
-        return [movers, global];
-      })
-      .then(([movers, global]) => {
-        setGlobalValues(global.data);
-        const arr: string[] = [];
-        movers.forEach((el: { name: string }) =>
-          arr.push(el.name.replace(/[\. ,:-]+/g, "-").toLowerCase())
-        );
-
-        const str = arr.join("%2C");
-        fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${str}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            setTopMovers(data);
-          });
-      });
-  }, []);
+  const { topMovers } = props;
+  console.log({topMovers})
   const [width, setWidth] = useState(0);
   const [slides, setSlides] = useState(1.25);
   const { colorMode } = useColorMode();
@@ -103,7 +65,12 @@ const SwiperAutoplayComponent = (props: any) => {
       return `${turn}...s`;
     }
   };
-  //
+  const data = Object.keys(topMovers)
+  .filter(key => !isNaN(Number(key)))  // Ensure the key is numeric using Number
+  .map(key => {
+    const { timestamp, ...rest } = topMovers[key];
+    return rest;
+  });
   return (
     <Box>
       <Swiper
@@ -120,11 +87,10 @@ const SwiperAutoplayComponent = (props: any) => {
         loop={true}
         modules={[Autoplay]}
       >
-        {topMovers.length > 0
-          ? topMovers.map((el: any) => (
+        {data.length > 0
+          ? data.map((el: any) => (
               <SwiperSlide key={el.name}>
                 <Grid
-                 
                   overflow="hidden"
                   backgroundColor={
                     colorMode === "light" ? "#f5f6fa" : "#051329"
@@ -147,7 +113,7 @@ const SwiperAutoplayComponent = (props: any) => {
                       scroll
                     >
                       <HStack
-                       cursor="pointer"
+                        cursor="pointer"
                         spacing="0"
                         gap="10px"
                         width="max-content"

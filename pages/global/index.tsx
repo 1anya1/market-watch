@@ -22,14 +22,11 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
   ssr: false,
 });
 
-//Total Crypto Market Chartthe total market cap & volume of cryptocurrencies globally, a result of 12,907 cryptocurrencies tracked across 617 exchanges.
-// time frames include 24h 7d 14d 30d 90d
-
-// https://www.coingecko.com/market_cap/total_charts_data?duration=1&locale=en&vs_currency=usd
 
 const GlobalData = (props: any) => {
-  const { marketCapData, topTen, defi, global } = props;
+  const { topTen, global } = props;
   const { colorMode } = useColorMode();
+
 
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
 
@@ -77,47 +74,47 @@ const GlobalData = (props: any) => {
     );
   }, [timeSelect]);
 
-  useEffect(() => {
-    if (timeSelect === 1) {
-      const data = marketCapData[0]?.stats.map((el: any[]) => ({
-        time: el[0] / 1000,
-        value: el[1],
-      }));
-      const volume = marketCapData[0]?.total_volumes.map((el: any[]) => ({
-        time: el[0] / 1000,
-        value: el[1],
-      }));
-      setMarketCapChartData({ data, volume });
-    } else if (timeSelect === 0) {
-      const data = marketCapData[1]?.stats.map((el: any[]) => ({
-        time: el[0] / 1000,
-        value: el[1],
-      }));
-      const volume = marketCapData[1]?.total_volumes.map((el: any[]) => ({
-        time: el[0] / 1000,
-        value: el[1],
-      }));
-      setMarketCapChartData({ data, volume });
-    } else {
-      const timeFrame = timeSelect * (60 * 60 * 24);
-      const date = new Date().getTime();
-      const filerDate = date / 1000 - timeFrame;
-      const data = marketCapData[1]?.stats
-        .map((el: any[]) => ({
-          time: el[0] / 1000,
-          value: el[1],
-        }))
-        .filter((el: { time: number }) => el.time >= filerDate);
-      const volume = marketCapData[1].total_volumes
-        .map((el: any[]) => ({
-          time: el[0] / 1000,
-          value: el[1],
-        }))
-        .filter((el: { time: number }) => el.time >= filerDate);
+  // useEffect(() => {
+  //   if (timeSelect === 1) {
+  //     const data = marketCapData[0]?.data.map((el: any[]) => ({
+  //       time: el[0] / 1000,
+  //       value: el[1],
+  //     }));
+  //     const volume = marketCapData[0]?.total_volumes.map((el: any[]) => ({
+  //       time: el[0] / 1000,
+  //       value: el[1],
+  //     }));
+  //     setMarketCapChartData({ data, volume });
+  //   } else if (timeSelect === 0) {
+  //     const data = marketCapData[1]?.stats.map((el: any[]) => ({
+  //       time: el[0] / 1000,
+  //       value: el[1],
+  //     }));
+  //     const volume = marketCapData[1]?.total_volumes.map((el: any[]) => ({
+  //       time: el[0] / 1000,
+  //       value: el[1],
+  //     }));
+  //     setMarketCapChartData({ data, volume });
+  //   } else {
+  //     const timeFrame = timeSelect * (60 * 60 * 24);
+  //     const date = new Date().getTime();
+  //     const filerDate = date / 1000 - timeFrame;
+  //     const data = marketCapData[1]?.stats
+  //       .map((el: any[]) => ({
+  //         time: el[0] / 1000,
+  //         value: el[1],
+  //       }))
+  //       .filter((el: { time: number }) => el.time >= filerDate);
+  //     const volume = marketCapData[1].total_volumes
+  //       .map((el: any[]) => ({
+  //         time: el[0] / 1000,
+  //         value: el[1],
+  //       }))
+  //       .filter((el: { time: number }) => el.time >= filerDate);
 
-      setMarketCapChartData({ data, volume });
-    }
-  }, [marketCapData, setMarketCapChartData, timeSelect]);
+  //     setMarketCapChartData({ data, volume });
+  //   }
+  // }, [marketCapData, setMarketCapChartData, timeSelect]);
 
   return (
     <>
@@ -201,52 +198,8 @@ const GlobalData = (props: any) => {
               {global?.data?.markets}{" "}
             </Text>
           </Box>
-          <Box
-            minW="120px"
-            border={
-              colorMode === "light"
-                ? " 1px solid #dddfe1"
-                : " 1px solid #051329"
-            }
-            bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
-            p="10px"
-            borderRadius="10px"
-            w="100%"
-          >
-            <Text variant="xxs-text" margin="auto" textAlign="center">
-              24H Volume
-            </Text>
-            <Text variant="h-5" textAlign="center">
-              $
-              {numberFormater(
-                marketCapData[0]?.total_volumes[
-                  marketCapData[0]?.total_volumes.length - 1
-                ][1]
-              )}
-            </Text>
-          </Box>
-          <Box
-            minW="120px"
-            border={
-              colorMode === "light"
-                ? " 1px solid #dddfe1"
-                : " 1px solid #051329"
-            }
-            bg={colorMode === "light" ? "#f5f6fa" : "#051329"}
-            p="10px"
-            borderRadius="10px"
-            w="100%"
-          >
-            <Text variant="xxs-text" margin="auto" textAlign="center">
-              Market Cap
-            </Text>
-            <Text variant="h-5" textAlign="center">
-              $
-              {numberFormater(
-                marketCapData[0]?.stats[marketCapData[0]?.stats?.length - 1][1]
-              )}
-            </Text>
-          </Box>
+          
+   
           <Box
             minW="120px"
             border={

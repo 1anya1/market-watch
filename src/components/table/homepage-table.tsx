@@ -53,9 +53,8 @@ const PercentChange = (props: any) => {
 };
 
 const HomepageTable = (props: any) => {
-  const { numCoins } = props;
+  const { numCoins, tableData } = props;
   const lastPageX = Math.ceil(Number(numCoins) / 100);
-  const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const { colorMode } = useColorMode();
   const [liked, setLiked] = useState<any[] | []>([]);
@@ -95,31 +94,13 @@ const HomepageTable = (props: any) => {
     getLiked();
   }, [user]);
 
-  useEffect(() => {
-    if (page && numCoins) {
-      fetch(
-        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=${page}&sparkline=true&price_change_percentage=1h%2C24h%2C7d`
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Something went wrong");
-        })
-        .then((data) => {
-          setData(data);
-          setError(null);
-        })
-        .catch((error) => {
-          if (error.message === "Failed to fetch") {
-            setError(
-              "Exceeded the Rate Limit. Please wait a few minutes and refresh the page"
-            );
-          }
-        });
-    }
-  }, [numCoins, page]);
-
+  const data = Object.keys(tableData)
+    .filter((key) => !isNaN(Number(key))) // Ensure the key is numeric
+    .map((key) => {
+      const { timestamp, ...rest } = tableData[key];
+      return rest;
+    });
+  console.log(data);
   const pagination = (page: number, lastPage: number) => {
     if (page + 1 <= lastPageX && page < 3) {
       const arr = [];

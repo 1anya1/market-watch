@@ -28,10 +28,11 @@ const CoinSearch = (props: any) => {
   const [sortedCoins, setSortedCoins] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   useEffect(() => {
-    fetch("https://api.coingecko.com/api/v3/search?locale=en")
+    fetch(`https://api.coingecko.com/api/v3/search?query=${searchVal}`)
       .then((res) => res.json())
       .then((data) => setData(data));
-  }, []);
+  }, [searchVal]);
+  console.log(data);
 
   useEffect(() => {
     if (!inSearch) {

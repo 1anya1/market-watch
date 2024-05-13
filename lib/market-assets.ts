@@ -1,6 +1,7 @@
 import { getJsonFile, uploadJsonFile } from "./s3";
 
 const fs = require("fs");
+const useS3: boolean = false;
 
 export async function updateCards(key: any) {
   try {
@@ -48,3 +49,92 @@ export async function marketMovers() {
         });
     });
 }
+
+
+ //Helper function to log errors
+function logError(message: string, error: any) {
+  console.error(`${message}:`, error);
+}
+
+// Helper function to read JSON from a file
+async function readJsonFromFile(filePath: string): Promise<any> {
+  try {
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch (error) {
+    logError("Error reading JSON from file", error);
+    throw error; // Rethrow to handle this error in the calling code
+  }
+}
+
+// Helper function to fetch global metrics from the API
+async function fetchData(url:string): Promise<any> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP status ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    logError("Error fetching global metrics from the API", error);
+    throw error; // Rethrow to handle this error in the calling code
+  }
+}
+
+// Function to upload JSON file with timestamp
+async function uploadJsonFileWithTimestamp(data: any, key: string) {
+  try {
+    const now = new Date();
+    uploadJsonFile({ ...data, timestamp: now.getTime() }, key);
+    // return globalMetrics;
+  } catch (error) {
+    logError("Error uploading JSON file with timestamp", error);
+    throw error; // Rethrow to handle this error in the calling code
+  }
+}
+
+export async function getData(key: string, url:string): Promise<any> {
+  if (!useS3) {
+    const filePath = `./data/${key}.json`;
+
+    try {
+      console.log('in here getting data from json file')
+      const marketData = await readJsonFromFile(filePath);
+      const stats = fs.statSync(filePath);
+      const now = new Date();
+      const lastModified = new Date(stats.mtime);
+      const minutesDiff =
+        (now.getTime() - lastModified.getTime()) / (1000 * 60);
+
+      if (minutesDiff < 1) {
+        console.log('the time stamp has not been completed')
+        return marketData;
+      } else {
+        console.log("Cache is stale, need to revalidate.");
+      }
+    } catch (e) {
+      logError(
+        "Error getting global data from local storage, fetching from API",
+        e
+      );
+    }
+
+    // Fetch from the API if the local data is stale or not present
+    try {
+      console.log("grabbing updated data cache is stale");
+      const globalMetrics = await fetchData(url);
+
+      await uploadJsonFileWithTimestamp(globalMetrics, key);
+      return globalMetrics;
+    } catch (error) {
+      logError(
+        "Failed to fetch new data from the API, returning stale data if available",
+        error
+      );
+      return readJsonFromFile(filePath).catch(() => ({})); // Return an empty object if all else fails
+    }
+  }
+
+  return {};
+}
+
