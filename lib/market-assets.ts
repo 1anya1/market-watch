@@ -1,35 +1,35 @@
-import { getJsonFile, uploadJsonFile } from "./s3";
+import { AWSError } from "aws-sdk";
+import { getJsonFile, uploadJsonFile, uploadS3File } from "./s3";
 
 const fs = require("fs");
-const useS3: boolean = false;
+const useS3: boolean = process.env.NODE_ENV==='production';
 
-export async function updateCards(key: any) {
-  try {
-    const getData = await getJsonFile("news", "feed");
-    return await getData;
-  } catch (e) {
-    const data = await fetch(
-      `https://newsapi.org/v2/everything?q=crypto&from=2022-11-08&sortBy=popularity&apiKey=${key}&language=en`
-    )
-      .then((response) => response.json())
-      .then((data) => data);
 
-    if ((await data.status) === "ok") {
-      uploadJsonFile(await data, "news", "feed");
-      return true;
-    }
-    return false;
-  }
-}
+// export async function updateCards(key: any) {
+//   try {
+//     const getData = await getJsonFile("news", "feed");
+//     return await getData;
+//   } catch (e) {
+//     const data = await fetch(
+//       `https://newsapi.org/v2/everything?q=crypto&from=2022-11-08&sortBy=popularity&apiKey=${key}&language=en`
+//     )
+//       .then((response) => response.json())
+//       .then((data) => data);
+
+//     if ((await data.status) === "ok") {
+//       uploadJsonFile(await data, "news", "feed");
+//       return true;
+//     }
+//     return false;
+//   }
+// }
 
 export async function marketMovers() {
-  fetch(
-    "https://price-api.crypto.com/price/v1/top-movers?depth=10"
-  )
+  fetch("https://price-api.crypto.com/price/v1/top-movers?depth=10")
     .then(async (resMovers) => {
-      console.log(await resMovers.text())
+      console.log(await resMovers.text());
       const movers = await resMovers.json();
-      console.log(movers)
+      console.log(movers);
 
       return movers;
     })
@@ -50,8 +50,7 @@ export async function marketMovers() {
     });
 }
 
-
- //Helper function to log errors
+//Helper function to log errors
 function logError(message: string, error: any) {
   console.error(`${message}:`, error);
 }
@@ -68,7 +67,7 @@ async function readJsonFromFile(filePath: string): Promise<any> {
 }
 
 // Helper function to fetch global metrics from the API
-async function fetchData(url:string): Promise<any> {
+async function fetchData(url: string): Promise<any> {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -93,12 +92,12 @@ async function uploadJsonFileWithTimestamp(data: any, key: string) {
   }
 }
 
-export async function getData(key: string, url:string): Promise<any> {
+export async function getData(key: string, url: string): Promise<any> {
   if (!useS3) {
     const filePath = `./data/${key}.json`;
 
     try {
-      console.log('in here getting data from json file')
+      console.log("in here getting data from json file");
       const marketData = await readJsonFromFile(filePath);
       const stats = fs.statSync(filePath);
       const now = new Date();
@@ -107,7 +106,7 @@ export async function getData(key: string, url:string): Promise<any> {
         (now.getTime() - lastModified.getTime()) / (1000 * 60);
 
       if (minutesDiff < 1) {
-        console.log('the time stamp has not been completed')
+        console.log("the time stamp has not been completed");
         return marketData;
       } else {
         console.log("Cache is stale, need to revalidate.");
@@ -133,8 +132,26 @@ export async function getData(key: string, url:string): Promise<any> {
       );
       return readJsonFromFile(filePath).catch(() => ({})); // Return an empty object if all else fails
     }
+  } else {
+    try {
+      const jsonData = await getJsonFile(key);
+      return jsonData;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error processing file:", error);
+        const errorType =
+          (error as AWSError)?.statusCode ??
+          (error as Error)?.message ??
+          "Unknown error";
+        console.log(errorType);
+        if (errorType === 404) {
+          const globalMetrics = await fetchData(url);
+          await uploadS3File(globalMetrics, key);
+          return globalMetrics;
+        }
+      }
+    }
   }
 
   return {};
 }
-

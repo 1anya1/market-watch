@@ -53,14 +53,15 @@ const renderActiveShape = (props: any) => {
     endAngle,
     fill,
     value,
-    topTen,
+    dataTopTen,
     name,
   } = props;
+  console.log()
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const mx = cx + (outerRadius + 30) * cos;
   const my = cy + (outerRadius + 30) * sin;
-  const idx = topTen.findIndex(
+  const idx = dataTopTen.findIndex(
     (el: { symbol: any }) => el.symbol === name.split("-")[0]
   );
 
@@ -74,7 +75,7 @@ const renderActiveShape = (props: any) => {
         width="100px"
       >
         <Link
-          href={`${window.location.origin}/coins/${topTen[idx].id}`}
+          href={`${window.location.origin}/coins/${dataTopTen[idx].id}`}
           passHref
           scroll
         >
@@ -87,10 +88,10 @@ const renderActiveShape = (props: any) => {
               w={{ xxs: "40px", md: "50px" }}
               position="relative"
             >
-              <Image src={topTen[idx].image} alt="coin logo" layout="fill" />
+              <Image src={dataTopTen[idx].image} alt="coin logo" layout="fill" />
             </Box>
             <Text textTransform="capitalize" variant="h-5">
-              {topTen[idx].symbol.toUpperCase()}
+              {dataTopTen[idx].symbol.toUpperCase()}
             </Text>
             <Text textTransform="capitalize" variant="h-5">
               {value.toFixed(2)}%
@@ -184,6 +185,12 @@ const CustomLegend = (props: any) => {
 const DoughnutChart = (props: any) => {
   const { global, topTen } = props;
 
+  const dataTopTen = Object.keys(topTen)
+  .filter(key => !isNaN(Number(key)))  
+  .map(key => {
+    const { timestamp, ...rest } = topTen[key];
+    return rest;
+  });
 
 
 
@@ -264,7 +271,7 @@ const DoughnutChart = (props: any) => {
                 paddingAngle={3}
                 dataKey="value"
                 activeIndex={activeIndexMarketCap}
-                activeShape={(props) => renderActiveShape({ ...props, topTen })}
+                activeShape={(props) => renderActiveShape({ ...props, dataTopTen })}
                 onClick={onPieEnter}
               >
                 {marketCapData.map((entry, index) => (
@@ -281,7 +288,7 @@ const DoughnutChart = (props: any) => {
                     id="market-cap"
                     arrVal={marketCap}
                     setActiveIndexMarketCap={setActiveIndexMarketCap}
-                    topTen={topTen}
+                    dataTopTen={dataTopTen}
                     //   renderTokenData={renderTokenData}
                   />
                 }
@@ -301,54 +308,54 @@ const DoughnutChart = (props: any) => {
             <Image
               height="30px"
               width="30px"
-              src={topTen[activeIndexMarketCap]?.image}
+              src={dataTopTen[activeIndexMarketCap]?.image}
               alt="coin logo"
             />
             <Text variant="h-3" pb="none" textTransform="capitalize">
-              {topTen[activeIndexMarketCap]?.id}
+              {dataTopTen[activeIndexMarketCap]?.id}
             </Text>
-            <Link href={`/coins/${topTen[activeIndexMarketCap]?.id}`} passHref>
+            <Link href={`/coins/${dataTopTen[activeIndexMarketCap]?.id}`} passHref>
               <Button variant="medium">View More</Button>
             </Link>
           </HStack>
 
           {activeIndexMarketCap !== undefined && (
-            <Chart data={topTen[activeIndexMarketCap]?.sparkline_in_7d?.price} />
+            <Chart data={dataTopTen[activeIndexMarketCap]?.sparkline_in_7d?.price} />
           )}
           <Stack pb="20px">
             {renderStats(
               "Market Cap",
-              topTen[activeIndexMarketCap]?.market_cap,
+              dataTopTen[activeIndexMarketCap]?.market_cap,
               "$",
               false
             )}
             {renderStats(
               "Circulating Supply",
-              topTen[activeIndexMarketCap]?.circulating_supply,
+              dataTopTen[activeIndexMarketCap]?.circulating_supply,
               "",
               false
             )}
             {renderStats(
               "Total Volume",
-              topTen[activeIndexMarketCap]?.total_volume,
+              dataTopTen[activeIndexMarketCap]?.total_volume,
               "$",
               false
             )}
             {renderStats(
               "Current Price",
-              topTen[activeIndexMarketCap]?.current_price,
+              dataTopTen[activeIndexMarketCap]?.current_price,
               "$",
               false
             )}
             {renderStats(
               "24H High",
-              topTen[activeIndexMarketCap]?.high_24h,
+              dataTopTen[activeIndexMarketCap]?.high_24h,
               "$",
               false
             )}
             {renderStats(
               "24H Low",
-              topTen[activeIndexMarketCap]?.low_24h,
+              dataTopTen[activeIndexMarketCap]?.low_24h,
               "$",
               true
             )}

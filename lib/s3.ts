@@ -1,6 +1,6 @@
-
 import AWS from "aws-sdk";
 import { Readable } from "stream";
+
 
 const fs = require("fs");
 
@@ -8,7 +8,8 @@ const bucketName: string = "cryptonewsfeed";
 const region: string = "us-west-1";
 const accessKeyId: string = process.env.ACCESS_KEY_ID_AWS || "";
 const secretAccessKey: string = process.env.ACCESS_KEY_SECRET_AWS || "";
-const useS3: boolean = false;
+const useS3: boolean = process.env.NODE_ENV==='production';
+
 
 AWS.config.update({ region });
 const s3 = new AWS.S3({
@@ -42,7 +43,10 @@ export function uploadJsonFile(json: any, key: string) {
     }
     return;
   }
+}
 
+//upload file to s3
+export function uploadS3File(json: any, key: string) {
   const uploadParams = {
     Bucket: bucketName,
     Body: JSON.stringify(json),
@@ -60,26 +64,44 @@ export function uploadJsonFile(json: any, key: string) {
   });
 }
 
-// download a file from S3
-export async function getJsonFile(key: string, type: string = "cards") {
-  console.log(key, type);
-  const downloadParams = {
-    Key: `${key}-${type}`,
-    Bucket: bucketName,
-  };
-  async function streamToString(stream: Readable): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const chunks: Uint8Array[] = [];
-      stream.on("data", (chunk) => chunks.push(chunk));
-      stream.on("erro", reject);
-      stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")));
+ // Helper function to convert stream to string
+ async function streamToString(stream: Readable): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Uint8Array[] = [];
+    stream.on('data', (chunk) => chunks.push(chunk));
+    stream.on('error', (error) => {
+      console.error('Error in stream processing:', error);
+      reject(error);  // Properly reject the promise on a stream error
     });
-  }
-
-  const body = await s3.getObject(downloadParams).createReadStream();
-
-  const bodyContents = await streamToString(body as Readable);
-
-  return JSON.parse(bodyContents);
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+  });
 }
 
+
+export async function getJsonFile(key: string) {
+  const downloadParams = {
+    Key: key,
+    Bucket: bucketName,
+  };
+
+  try {
+    // Attempt to get the object from S3
+    const metadata = await s3.headObject(downloadParams).promise();
+    const lastModified = metadata.LastModified;
+    const s3Response = await s3.getObject(downloadParams).createReadStream()
+
+    if (s3Response && lastModified) {
+      const now = new Date();
+      const minutesDiff = (now.getTime() - lastModified.getTime()) / (1000 * 60);
+      const bodyContents = await streamToString(s3Response as Readable);
+     
+      return JSON.parse(bodyContents);
+    } else {
+      throw new Error('Empty response body from S3');
+    }
+  } catch (error) {
+    // Log and rethrow the error to be handled by the caller
+    console.error('Failed to get or parse S3 object:', error);
+    throw error;
+  }
+}
