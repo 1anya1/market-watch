@@ -2,7 +2,6 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { MdNavigateNext } from "react-icons/md";
 
 const BreadCrums = (props: any) => {
-  console.log({ props });
   const { breadcrums } = props;
   return (
     <Breadcrumb

@@ -27,7 +27,6 @@ const TableChartComponent = dynamic(
 
 const SwiperAutoplayComponent = (props: any) => {
   const { topMovers } = props;
-  console.log({topMovers})
   const [width, setWidth] = useState(0);
   const [slides, setSlides] = useState(1.25);
   const { colorMode } = useColorMode();
@@ -66,11 +65,11 @@ const SwiperAutoplayComponent = (props: any) => {
     }
   };
   const data = Object.keys(topMovers)
-  .filter(key => !isNaN(Number(key)))  // Ensure the key is numeric using Number
-  .map(key => {
-    const { timestamp, ...rest } = topMovers[key];
-    return rest;
-  });
+    .filter((key) => !isNaN(Number(key))) // Ensure the key is numeric using Number
+    .map((key) => {
+      const { timestamp, ...rest } = topMovers[key];
+      return rest;
+    });
   return (
     <Box>
       <Swiper

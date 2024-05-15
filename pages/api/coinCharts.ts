@@ -31,11 +31,10 @@ export default async function handler(
       ohlcResponse.json(),
       coinDataResponse.json(),
     ]);
-    console.log('SUCCESS')
+   
     res.status(200).json({ ohlcData, coinData });
   } catch (e) {
-    console.log(e);
-    console.log({timeframe}, {idx})
+
     res.status(500).json({ error: "Failed to fetch data" });
   }
 }

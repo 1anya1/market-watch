@@ -32,7 +32,6 @@ const CoinSearch = (props: any) => {
       .then((res) => res.json())
       .then((data) => setData(data));
   }, [searchVal]);
-  console.log(data);
 
   useEffect(() => {
     if (!inSearch) {
@@ -47,7 +46,7 @@ const CoinSearch = (props: any) => {
   };
 
   const search = (arr: any, val: string) => {
-    console.log("in here");
+
     if (val.length < 1) {
       setSortedCoins([]);
     } else {
@@ -69,9 +68,6 @@ const CoinSearch = (props: any) => {
       }
     }
   }, [data, searchVal]);
-  useEffect(() => {
-    console.log(searchVal);
-  }, [searchVal]);
 
   return (
     <HStack

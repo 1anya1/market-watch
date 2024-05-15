@@ -26,11 +26,7 @@ const Chart = dynamic(() => import("../../src/components/charts/mini-chart"), {
 const GlobalData = (props: any) => {
   const { topTen, globalMetrics } = props;
   const { colorMode } = useColorMode();
-
-  console.log({ globalMetrics });
-
   const [marketCapChartData, setMarketCapChartData] = useState<any>(null);
-
   const [timeSelect, setDays] = useState(1);
   const timeFrameOptions = [
     { query: 1, name: "24 Hrs" },

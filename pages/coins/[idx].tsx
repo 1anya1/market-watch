@@ -8,7 +8,6 @@ const CryptoCoinItem = (props: any) => {
   const { ohlcData, coinData, error, news } = props;
   const router = useRouter();
   const coinId = router.query.idx;
-  console.log(ohlcData);
 
   return (
     <IndividualCoin
@@ -81,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       };
     } catch (e) {
-      console.log(e);
+   
       return {
         props: {
           ohlcData: null,
@@ -98,6 +97,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       coinData: null,
       news: null,
       error: "Failed to fetch data",
-    }}
-    
+    },
+  };
 };

@@ -2,8 +2,7 @@ import { AWSError } from "aws-sdk";
 import { getJsonFile, uploadJsonFile, uploadS3File } from "./s3";
 
 const fs = require("fs");
-const useS3: boolean = process.env.NODE_ENV==='production';
-
+const useS3: boolean = process.env.NODE_ENV === "production";
 
 // export async function updateCards(key: any) {
 //   try {
@@ -27,9 +26,7 @@ const useS3: boolean = process.env.NODE_ENV==='production';
 export async function marketMovers() {
   fetch("https://price-api.crypto.com/price/v1/top-movers?depth=10")
     .then(async (resMovers) => {
-      console.log(await resMovers.text());
       const movers = await resMovers.json();
-      console.log(movers);
 
       return movers;
     })

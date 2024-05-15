@@ -13,7 +13,7 @@ import {
 
 const DeleteModal = (props: any) => {
   const { isOpen, onClose, delteteFunction, text } = props;
-  console.log({isOpen})
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="lg">

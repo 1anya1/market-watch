@@ -56,7 +56,7 @@ const renderActiveShape = (props: any) => {
     dataTopTen,
     name,
   } = props;
-  console.log()
+
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const mx = cx + (outerRadius + 30) * cos;
@@ -88,7 +88,11 @@ const renderActiveShape = (props: any) => {
               w={{ xxs: "40px", md: "50px" }}
               position="relative"
             >
-              <Image src={dataTopTen[idx].image} alt="coin logo" layout="fill" />
+              <Image
+                src={dataTopTen[idx].image}
+                alt="coin logo"
+                layout="fill"
+              />
             </Box>
             <Text textTransform="capitalize" variant="h-5">
               {dataTopTen[idx].symbol.toUpperCase()}
@@ -125,7 +129,6 @@ const CustomLegend = (props: any) => {
   const { colorMode } = useColorMode();
 
   const { payload, id, arrVal, setActiveIndexMarketCap } = props;
- 
 
   const handleClick = (idDisplay: string) => {
     const idx = arrVal.findIndex((el: string[]) => el[0] === idDisplay);
@@ -144,7 +147,6 @@ const CustomLegend = (props: any) => {
       >
         {payload.map((entry: { value: string }, index: string | number) => {
           const idDisplay = entry.value.split("-")[0];
-     
 
           return (
             <HStack
@@ -186,16 +188,14 @@ const DoughnutChart = (props: any) => {
   const { global, topTen } = props;
 
   const dataTopTen = Object.keys(topTen)
-  .filter(key => !isNaN(Number(key)))  
-  .map(key => {
-    const { timestamp, ...rest } = topTen[key];
-    return rest;
-  });
+    .filter((key) => !isNaN(Number(key)))
+    .map((key) => {
+      const { timestamp, ...rest } = topTen[key];
+      return rest;
+    });
 
-
-
-  const marketCap = Object.entries(global?.market_cap_percentage)
-  const totalVolume =  Object.entries(global?.total_volume)
+  const marketCap = Object.entries(global?.market_cap_percentage);
+  const totalVolume = Object.entries(global?.total_volume);
   const { colorMode } = useColorMode();
 
   const marketCapData: any[] = [];
@@ -271,7 +271,9 @@ const DoughnutChart = (props: any) => {
                 paddingAngle={3}
                 dataKey="value"
                 activeIndex={activeIndexMarketCap}
-                activeShape={(props) => renderActiveShape({ ...props, dataTopTen })}
+                activeShape={(props) =>
+                  renderActiveShape({ ...props, dataTopTen })
+                }
                 onClick={onPieEnter}
               >
                 {marketCapData.map((entry, index) => (
@@ -314,13 +316,18 @@ const DoughnutChart = (props: any) => {
             <Text variant="h-3" pb="none" textTransform="capitalize">
               {dataTopTen[activeIndexMarketCap]?.id}
             </Text>
-            <Link href={`/coins/${dataTopTen[activeIndexMarketCap]?.id}`} passHref>
+            <Link
+              href={`/coins/${dataTopTen[activeIndexMarketCap]?.id}`}
+              passHref
+            >
               <Button variant="medium">View More</Button>
             </Link>
           </HStack>
 
           {activeIndexMarketCap !== undefined && (
-            <Chart data={dataTopTen[activeIndexMarketCap]?.sparkline_in_7d?.price} />
+            <Chart
+              data={dataTopTen[activeIndexMarketCap]?.sparkline_in_7d?.price}
+            />
           )}
           <Stack pb="20px">
             {renderStats(
