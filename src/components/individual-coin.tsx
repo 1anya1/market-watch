@@ -242,7 +242,7 @@ const IndividualCoin = (props: any) => {
           pathname: `/coins/${router.query.idx}`,
           query: { timeframe: val.query.toString() },
         },
-        "/coins/bitcoin",
+        `/coins/${router.query.idx}`,
         { shallow: true }
       );
       if (typeof window !== "undefined") {
