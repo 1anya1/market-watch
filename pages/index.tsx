@@ -44,7 +44,6 @@ const Home = (props: any) => {
         </Text>
       </HStack>
       <HomepageTable
-        numCoins={props?.globalMetrics?.data?.active_cryptocurrencies}
         tableData={tableData}
       />
     </Box>

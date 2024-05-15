@@ -11,6 +11,7 @@ import BuySellModal from "./modals/buy-sell-modal";
 import { database } from "../../context/clientApp";
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "next/router";
 
 import {
   Box,
@@ -50,7 +51,7 @@ const MainChart = dynamic(() => import("./charts/main-chart"), {
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
-  const { coinId, individualPage } = props;
+  const { coinId, ohlcData, coinData, error, individualPage, news } = props;
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
@@ -60,13 +61,11 @@ const IndividualCoin = (props: any) => {
   const [viewAllCoin, setViewAllCoin] = useState(false);
   const [initalPricePoint, setInitialPricePoint] = useState(0);
   const [initialPercent, setInitialPercent] = useState(0);
-  const [news, setNews] = useState<any>({
-    articles: [],
-    page: 0,
-    size: 0,
-    videos: [],
-    total: 0,
-  });
+  const [graph, setGraph] = useState(ohlcData);
+  const [data, setCoinData] = useState(coinData);
+     // const graph = ohlcData;
+      // const data = coinData;
+
   const [stats, setStats] = useState({
     circulatingSupply: 0,
     totalSupply: 0,
@@ -136,105 +135,94 @@ const IndividualCoin = (props: any) => {
       let crypto: any[] = [];
       let low = Infinity;
       let high = 0;
+      // const graph = ohlcData;
+      // const data = coinData;
+      console.log(error);
 
-      Promise.all([
-        await fetch(
-          `https://api.coingecko.com/api/v3/coins/${coinId}/ohlc?vs_currency=usd&days=${timeFrame}`
-        ),
-        await fetch(
-          `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-        ),
-      ])
-        .then(async ([respOne, respTwo]) => [
-          await respOne.json(),
-          await respTwo.json(),
-        ])
-        .then(([graph, data]) => {
-          const totalNew = graph.length > 0 ? graph[graph.length - 1][1] : 0;
-          graph.forEach((el: any) => {
-            const frame = {
-              value: el[1],
-              time: el[0] / 1000,
-              open: el[1],
-              close: el[4],
-              high: el[2],
-              low: el[3],
-            };
-            low = Math.min(low, el[3]);
-            high = Math.max(high, el[2]);
-            crypto.push(frame);
-          });
-          const startingVal = crypto.length > 0 ? crypto[0].value : 0;
-          const endValue =
-            crypto.length > 0 ? crypto[crypto.length - 1].value : 0;
-          const percentChange =
-            (Number(endValue) * 100) / Number(startingVal) - 100;
-          const coinInfo = {
-            name: data?.name,
-            description: data?.description?.en,
-            url: data?.links?.homepage[0],
-            reddit: data?.links?.subreddit_url,
-            twitter: data?.links?.twitter_screen_name,
-            facebook: data?.links?.facebook_username,
-            github: data?.links?.repos_url?.github[0],
-            currentPrice: data.market_data.current_price,
-            image: data?.image?.small,
-            score: data?.community_score,
-            symbol: data?.symbol,
-            rank: data.coingecko_rank,
-          };
+      console.log({ graph });
+      const totalNew = graph.length > 0 ? graph[graph.length - 1][1] : 0;
+      graph.forEach((el: any) => {
+        const frame = {
+          value: el[1],
+          time: el[0] / 1000,
+          open: el[1],
+          close: el[4],
+          high: el[2],
+          low: el[3],
+        };
+        low = Math.min(low, el[3]);
+        high = Math.max(high, el[2]);
+        crypto.push(frame);
+      });
+      const startingVal = crypto.length > 0 ? crypto[0].value : 0;
+      const endValue = crypto.length > 0 ? crypto[crypto.length - 1].value : 0;
+      const percentChange =
+        (Number(endValue) * 100) / Number(startingVal) - 100;
+      const coinInfo = {
+        name: data?.name,
+        description: data?.description?.en,
+        url: data?.links?.homepage[0],
+        reddit: data?.links?.subreddit_url,
+        twitter: data?.links?.twitter_screen_name,
+        facebook: data?.links?.facebook_username,
+        github: data?.links?.repos_url?.github[0],
+        currentPrice: data.market_data.current_price,
+        image: data?.image?.small,
+        score: data?.community_score,
+        symbol: data?.symbol,
+        rank: data.coingecko_rank,
+      };
 
-          setStats({
-            totalSupply: data.market_data.total_supply,
-            circulatingSupply: data.market_data.circulating_supply,
-            marketCap: data.market_data.market_cap.usd,
-            low_24: data.market_data.low_24h.usd,
-            high_24: data.market_data.high_24h.usd,
-            rank: data.market_cap_rank,
-            volume: data.market_data.total_volume.usd,
-          });
-          setInitialPercent(percentChange);
-          setMovingAverage(totalNew);
-          setCoinInfo(coinInfo);
-          setData(crypto);
-          setTimeFrameMax(high);
-          setTimeFrameLow(low);
-          setInitialPricePoint(data.market_data.current_price.usd);
-          setCurrencyExchange(data.market_data.current_price.usd);
-        });
+      setStats({
+        totalSupply: data.market_data.total_supply,
+        circulatingSupply: data.market_data.circulating_supply,
+        marketCap: data.market_data.market_cap.usd,
+        low_24: data.market_data.low_24h.usd,
+        high_24: data.market_data.high_24h.usd,
+        rank: data.market_cap_rank,
+        volume: data.market_data.total_volume.usd,
+      });
+      setInitialPercent(percentChange);
+      setMovingAverage(totalNew);
+      setCoinInfo(coinInfo);
+      setData(crypto);
+      setTimeFrameMax(high);
+      setTimeFrameLow(low);
+      setInitialPricePoint(data.market_data.current_price.usd);
+      setCurrencyExchange(data.market_data.current_price.usd);
     };
     getData();
     setDataRetrieved(true);
   }, [coinId, timeFrame]);
 
-  useEffect(() => {
-    if (coinInfo.symbol && individualPage) {
-      fetch(`https://price-api.crypto.com/meta/v1/all-tokens`)
-        .then((res) => res.json())
-        .then((data) => {
-          const findId = data.data.find(
-            (el: { symbol: string }) =>
-              el.symbol.toLowerCase() === coinInfo.symbol
-          );
-          setCryptoId(findId?.id);
-        });
-    }
-  }, [coinId, coinInfo, individualPage]);
+  // useEffect(() => {
+  //   if (coinInfo.symbol && individualPage) {
+  //     fetch(`https://price-api.crypto.com/meta/v1/all-tokens`)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         const findId = data.data.find(
+  //           (el: { symbol: string }) =>
+  //             el.symbol.toLowerCase() === coinInfo.symbol
+  //         );
+  //         setCryptoId(findId?.id);
+  //       });
+  //   }
+  // }, [coinId, coinInfo, individualPage]);
   const handleChangeExchange = (event: any) => {
     const value = Number(event.target.value.split(",").join(""));
     setCurrencyExchange(value);
     setCryptoExchange(value / coinInfo.currentPrice.usd);
   };
 
-  useEffect(() => {
-    if (cryptoId > 0 && individualPage) {
-      fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
-        .then((res) => res.json())
-        .then((data) => {
-          setNews(data);
-        });
-    }
-  }, [cryptoId, individualPage]);
+  // useEffect(() => {
+  //   if (cryptoId > 0 && individualPage) {
+  //     fetch(`https://price-api.crypto.com/market/v2/token/${cryptoId}/news`)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setNews(data);
+  //       });
+  //   }
+  // }, [cryptoId, individualPage]);
 
   const timeFrames = [
     { query: 1, value: "D", name: "24H" },
@@ -243,20 +231,45 @@ const IndividualCoin = (props: any) => {
     { query: 90, value: "3M", name: "90 Days" },
     { query: 180, value: "6M", name: "6 Months" },
     { query: 365, value: "Y", name: "1 Year" },
-    { query: "max", value: "All", name: "All Time" },
+    // { query: "max", value: "All", name: "All Time" },
   ];
   const dateParse = (date: string) => {
     const frame = date.slice(0, 10).split("-");
     return `${frame[1]}/${frame[2]}/${frame[0]}`;
   };
+  const router = useRouter();
+  useEffect(() => {
+    console.log('in the useEffect to change the values')
+    const val = timeFrames.find((el) => el.query === timeFrame);
+    if (val) {
+      router.push(
+        {
+          pathname: "/coins/bitcoin",
+          query: { timeframe: val.query.toString() },
+        },
+        "/coins/bitcoin",
+        { shallow: true }
+      );
+      fetch(`http://localhost:3000/api/coinCharts?timeframe=${val.query}&idx=${router.query.idx}`)
+        .then((response) => response.json())
+        .then((fetchedData) => {
+          setGraph(fetchedData.ohlcData);
+          setCoinData(fetchedData.coinData);
+          // setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          // setIsLoading(false);
+        });
+    }
+  }, [timeFrame]);
 
   const renderRange = useCallback(() => {
-    const val = timeFrames.map((el) => {
-      if (el.query === timeFrame) return el.name;
-    });
+    const val = timeFrames.find((el) => el.query === timeFrame);
+
     return (
       <VStack gap="11px" w="100%" alignItems="flex-start" pb="20px" spacing="0">
-        <Text variant="body-gray-bold">{val} High / Low</Text>
+        <Text variant="body-gray-bold">{val?.name} High / Low</Text>
         <HStack
           position="relative"
           w="100%"
@@ -343,7 +356,7 @@ const IndividualCoin = (props: any) => {
                   height={{ base: "28px", md: "34px" }}
                 />
               </Box>
-              <Text variant="h-1" pb="0" whiteSpace='nowrap'>
+              <Text variant="h-1" pb="0" whiteSpace="nowrap">
                 {coinInfo.name}
               </Text>
             </HStack>
@@ -368,16 +381,15 @@ const IndividualCoin = (props: any) => {
             spacing="0"
           >
             <VStack gap="20px" width={{ base: "100%", lg: "55%" }} spacing="0">
-            
-                <MainChart
-                  cryptoData={cryptoData}
-                  timeFrame={timeFrame}
-                  setTimeFrame={setTimeFrame}
-                  initalPricePoint={initalPricePoint}
-                  initialPercent={initialPercent}
-                  timeFrames={timeFrames}
-                />
-        
+              <MainChart
+                cryptoData={cryptoData}
+                timeFrame={timeFrame}
+                setTimeFrame={setTimeFrame}
+                initalPricePoint={initalPricePoint}
+                initialPercent={initialPercent}
+                timeFrames={timeFrames}
+              />
+
               {dataRetrieved && coinInfo.symbol && (
                 <Container variant="box-component" h="max-content" w="100%">
                   {/* <Text variant="h-3">{coinInfo.symbol.toUpperCase()} Stats</Text> */}
