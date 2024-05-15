@@ -33,25 +33,22 @@ const SignIn = (props: any) => {
   const { logIn, user } = useAuth();
   const onSubmit = handleSubmit(async (data) => {
     try {
-     const res = await logIn(data.email, data.password);
-      console.log(res)
+      const res = await logIn(data.email, data.password);
+
       if (res) {
-        onClose()
+        onClose();
       }
     } catch (error: any) {
       const val = error.message;
-      console.log(val);
       if (val.indexOf("password") || val.indexOd("email")) {
         setError("The email and/or password you entered do not match.");
       }
-    } 
+    }
   });
   const [show, setShow] = useState(false);
   const handleClick = () => {
     setShow(!show);
   };
-
-
 
   return (
     <form onSubmit={onSubmit} style={{ zIndex: "100" }}>

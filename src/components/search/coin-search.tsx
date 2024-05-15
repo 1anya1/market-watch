@@ -28,10 +28,10 @@ const CoinSearch = (props: any) => {
   const [sortedCoins, setSortedCoins] = useState<any>([]);
   const [data, setData] = useState<any>([]);
   useEffect(() => {
-    fetch("https://api.coingecko.com/api/v3/search?locale=en")
+    fetch(`https://api.coingecko.com/api/v3/search?query=${searchVal}`)
       .then((res) => res.json())
       .then((data) => setData(data));
-  }, []);
+  }, [searchVal]);
 
   useEffect(() => {
     if (!inSearch) {
@@ -46,7 +46,7 @@ const CoinSearch = (props: any) => {
   };
 
   const search = (arr: any, val: string) => {
-    console.log("in here");
+
     if (val.length < 1) {
       setSortedCoins([]);
     } else {
@@ -68,9 +68,6 @@ const CoinSearch = (props: any) => {
       }
     }
   }, [data, searchVal]);
-  useEffect(() => {
-    console.log(searchVal);
-  }, [searchVal]);
 
   return (
     <HStack
