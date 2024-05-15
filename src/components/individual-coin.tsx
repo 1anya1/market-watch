@@ -235,12 +235,11 @@ const IndividualCoin = (props: any) => {
   };
   const router = useRouter();
   useEffect(() => {
- 
     const val = timeFrames.find((el) => el.query === timeFrame);
     if (val) {
       router.push(
         {
-          pathname: "/coins/bitcoin",
+          pathname: `/coins/${router.query.idx}`,
           query: { timeframe: val.query.toString() },
         },
         "/coins/bitcoin",
