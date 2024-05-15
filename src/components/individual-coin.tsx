@@ -63,8 +63,8 @@ const IndividualCoin = (props: any) => {
   const [initialPercent, setInitialPercent] = useState(0);
   const [graph, setGraph] = useState(ohlcData);
   const [data, setCoinData] = useState(coinData);
-     // const graph = ohlcData;
-      // const data = coinData;
+  // const graph = ohlcData;
+  // const data = coinData;
 
   const [stats, setStats] = useState({
     circulatingSupply: 0,
@@ -135,11 +135,7 @@ const IndividualCoin = (props: any) => {
       let crypto: any[] = [];
       let low = Infinity;
       let high = 0;
-      // const graph = ohlcData;
-      // const data = coinData;
-      console.log(error);
 
-      console.log({ graph });
       const totalNew = graph.length > 0 ? graph[graph.length - 1][1] : 0;
       graph.forEach((el: any) => {
         const frame = {
@@ -239,7 +235,7 @@ const IndividualCoin = (props: any) => {
   };
   const router = useRouter();
   useEffect(() => {
-    console.log('in the useEffect to change the values')
+ 
     const val = timeFrames.find((el) => el.query === timeFrame);
     if (val) {
       router.push(
@@ -250,17 +246,23 @@ const IndividualCoin = (props: any) => {
         "/coins/bitcoin",
         { shallow: true }
       );
-      fetch(`http://localhost:3000/api/coinCharts?timeframe=${val.query}&idx=${router.query.idx}`)
-        .then((response) => response.json())
-        .then((fetchedData) => {
-          setGraph(fetchedData.ohlcData);
-          setCoinData(fetchedData.coinData);
-          // setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          // setIsLoading(false);
-        });
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+
+        fetch(
+          `${url.origin}/api/coinCharts?timeframe=${val.query}&idx=${router.query.idx}`
+        )
+          .then((response) => response.json())
+          .then((fetchedData) => {
+            setGraph(fetchedData.ohlcData);
+            setCoinData(fetchedData.coinData);
+            // setIsLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            // setIsLoading(false);
+          });
+      }
     }
   }, [timeFrame]);
 
