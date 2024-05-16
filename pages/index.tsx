@@ -7,7 +7,13 @@ import Link from "next/link";
 import { getData } from "../lib/market-assets";
 
 const Home = (props: any) => {
-  const { globalMetrics, tableData , topMovers} = props;
+  const {
+    tableData,
+    topMovers,
+    marketCap,
+    percentageChange,
+    activeCryptoCurrencies,
+  } = props;
 
   return (
     <Box className="main-page">
@@ -24,64 +30,96 @@ const Home = (props: any) => {
           <Link href="/global" passHref>
             <span
               style={{ fontWeight: "bold", cursor: "pointer" }}
-            >{`$${numberFormater(
-              globalMetrics?.data?.total_market_cap?.usd
-            )}`}</span>
+            >{`$${numberFormater(marketCap)}`}</span>
           </Link>{" "}
           a{" "}
           <Link href="/global" passHref>
             <span style={{ fontWeight: "bold", cursor: "pointer" }}>
-              {globalMetrics?.data.market_cap_change_percentage_24h_usd?.toFixed(
-                2
-              )}
-              %
+              {percentageChange?.toFixed(2)}%
             </span>
           </Link>{" "}
-          {globalMetrics?.data.market_cap_change_percentage_24h_usd > 0
-            ? "increase"
-            : "decrease"}{" "}
-          over the last 24 hrs.
+          {percentageChange > 0 ? "increase" : "decrease"} over the last 24 hrs.
         </Text>
       </HStack>
       <HomepageTable
         tableData={tableData}
+        activeCryptoCurrencies={activeCryptoCurrencies}
       />
     </Box>
   );
 };
 
-// here we are getting server side rendering of the page
 export const getStaticProps: GetStaticProps = async () => {
-  const globalMetrics = await getData(
-    "Global-Metrics",
-    "https://api.coingecko.com/api/v3/global"
-  );
-  const tableData = await getData(
-    "Table-Data",
-    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d"
-  );
-  const strTopMovers = await fetch(
-    "https://price-api.crypto.com/price/v1/top-movers?depth=10&tradable_on=EXCHANGE-OR-APP"
-  ).then(async (res) => {
-    const movers = await res.json();
-    const arr: string[] = [];
-    movers.forEach((el: { name: string }) =>
-      arr.push(el.name.replace(/[\. ,:-]+/g, "-").toLowerCase())
-    );
-    const str = arr.join("%2C");
-    return str
-  });
-
-  const topMovers = await getData("Top-Movers",  `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${strTopMovers}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`)
-
- 
-  return {
-    props: {
-      globalMetrics,
-      tableData,
-      topMovers
-    },
+  const apiKey = process.env.COINBASE_API;
+  const headers = {
+    "x-cg-demo-api-key": apiKey ?? "",
   };
+
+  try {
+    const globalMetrics = await getData(
+      "Global-Metrics",
+      "https://api.coingecko.com/api/v3/global"
+    );
+
+    const marketCap = globalMetrics.data.total_market_cap?.usd;
+    const percentageChange =
+      globalMetrics.data.market_cap_change_percentage_24h_usd;
+    const activeCryptoCurrencies = globalMetrics.data.active_cryptocurrencies;
+
+    const tableData = await fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=25&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`,
+      { headers }
+    )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`An error occurred: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .catch((e) => {
+        console.error("Failed to fetch crypto data:", e);
+        return [];
+      });
+
+    const strTopMovers = await fetch(
+      "https://price-api.crypto.com/price/v1/top-movers?depth=10&tradable_on=EXCHANGE-OR-APP"
+    ).then(async (res) => {
+      if (!res.ok) {
+        throw new Error(`An error occurred: ${res.statusText}`);
+      }
+      const movers = await res.json();
+      const arr: string[] = movers.map((el: { name: string }) =>
+        el.name.replace(/[\. ,:-]+/g, "-").toLowerCase()
+      );
+      return arr.join("%2C");
+    });
+
+    const topMovers = await getData(
+      "Top-Movers",
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${strTopMovers}&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`
+    );
+
+    return {
+      props: {
+        tableData,
+        topMovers,
+        marketCap,
+        percentageChange,
+        activeCryptoCurrencies,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return {
+      props: {
+        tableData: [],
+        topMovers: [],
+        marketCap: null,
+        percentageChange: null,
+        activeCryptoCurrencies: null,
+      },
+    };
+  }
 };
 
 export default Home;
