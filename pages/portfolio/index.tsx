@@ -26,7 +26,7 @@ import Favorite from "../../src/components/table/nameColumn";
 import EmptyState from "../../src/components/empty-state";
 import BuySellModal from "../../src/components/modals/buy-sell-modal";
 import { setLogLevel } from "firebase/app";
-import { Head } from "next/document";
+
 const Chart = dynamic(
   () => import("../../src/components/charts/simple-chart"),
   {
