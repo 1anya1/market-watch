@@ -12,7 +12,6 @@ import {
   PopoverContent,
   Button,
   useDisclosure,
-  Stack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -26,8 +25,6 @@ import dynamic from "next/dynamic";
 import DataTable from "../../src/components/table/table";
 import Favorite from "../../src/components/table/nameColumn";
 import BuySellModal from "../../src/components/modals/buy-sell-modal";
-
-import Image from "next/image";
 import EmptyState from "../../src/components/empty-state";
 const TableChartComponent = dynamic(
   () => import("../../src/components/charts/table-chart"),
@@ -205,14 +202,14 @@ const LikedItems = () => {
             />
             <Popover placement="bottom-start">
               <PopoverTrigger>
-                <Box>
+                <Box aria-label="More options">
                   <BiDotsVerticalRounded size={20} />
                 </Box>
               </PopoverTrigger>
               <div className="chakra-portal chart-popover">
                 <PopoverContent
                   width="max-content"
-                  // _focusVisible={{ boxShadow: "unset" }}
+                  aria-labelledby="popover-heading"
                 >
                   <PopoverArrow />
                   <PopoverBody p=" 10px 20px">
