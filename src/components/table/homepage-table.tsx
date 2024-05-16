@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { Key, useCallback, useEffect, useState } from "react";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import FormattedNumber from "../number-formatter";
@@ -25,6 +25,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useAuth } from "../../../context/AuthContext";
 import { database } from "../../../context/clientApp";
 import BuySellModal from "../modals/buy-sell-modal";
+import { useRouter } from "next/router";
 
 const TableChartComponent = dynamic(() => import("../charts/table-chart"), {
   ssr: false,
@@ -53,20 +54,15 @@ const PercentChange = (props: any) => {
 };
 
 const HomepageTable = (props: any) => {
-  const { tableData } = props;
-  const data = Object.keys(tableData)
-    .filter((key) => !isNaN(Number(key))) // Ensure the key is numeric
-    .map((key) => {
-      const { timestamp, ...rest } = tableData[key];
-      return rest;
-    });
-  const numCoins = data.length;
-
+  const router = useRouter();
+  const { tableData, activeCryptoCurrencies } = props;
+  const numCoins = activeCryptoCurrencies;
   const lastPageX = Math.ceil(Number(numCoins) / 25);
   const [page, setPage] = useState(1);
   const { colorMode } = useColorMode();
   const [liked, setLiked] = useState<any[] | []>([]);
   const { user } = useAuth();
+  const [data, setData] = useState(tableData);
 
   const BuySell = (props: any) => {
     const { coinId } = props;
@@ -126,6 +122,26 @@ const HomepageTable = (props: any) => {
     }
   };
 
+  useEffect(() => {
+    router.push(
+      {
+        pathname: "/",
+        query: { page: page },
+      },
+      "/",
+      { shallow: true }
+    );
+
+    fetch(`/api/table-data?page=${page}`)
+      .then((response) => response.json())
+      .then((fetchedData) => {
+        setData(fetchedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [page]);
+
   const tableColumnNames = [
     "Name",
     "",
@@ -142,98 +158,112 @@ const HomepageTable = (props: any) => {
 
   // this renders all the data, it changes based on colormode, and liked
   const renderData = useCallback(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE;
-    return data.slice(start, end).map((coin) => (
-      <Tr key={coin.id} borderTop="unset" h="54px">
-        <Td
-          position="sticky"
-          left="-1"
-          zIndex="2"
-          bg={
-            colorMode === "light"
-              ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
-              : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgb(3 12 25) 14%);"
-          }
-          padding="5px 30px 5px 10px"
-        >
-          <Favorite coin={coin} liked={liked} setLiked={setLiked} />
-        </Td>
-        <Td>
-          <BuySell coinId={coin.id} />
-        </Td>
-        <Td padding="5px 10px">
-          <FormattedNumber
-            value={coin.current_price}
-            prefix="$"
-            className="table-cell"
-          />
-        </Td>
-        <Td padding="5px 10px">
-          <PercentChange value={coin.price_change_percentage_1h_in_currency} />
-        </Td>
-        <Td padding="5px 10px">
-          <PercentChange value={coin.price_change_percentage_24h} />
-        </Td>
-        <Td padding="5px 10px">
-          <PercentChange value={coin.price_change_percentage_7d_in_currency} />
-        </Td>
-        <Td padding="5px 10px">
-          <FormattedNumber
-            value={coin.total_volume}
-            prefix="$"
-            className="table-cell"
-          />
-        </Td>
-        <Td padding="5px 10px">
-          <FormattedNumber
-            value={coin.market_cap}
-            prefix="$"
-            className="table-cell"
-          />
-        </Td>
-        <Td padding="5px 10px">
-          <FormattedNumber
-            value={coin?.circulating_supply?.toFixed() || null}
-            prefix=""
-            className="table-cell"
-          />
-        </Td>
-        <Td padding="5px 10px" width="110px">
-          <HStack spacing="0" gap="20px" width="100%">
-            <TableChartComponent
-              id={coin.id}
-              change={coin.price_change_percentage_7d_in_currency}
-              data={coin.sparkline_in_7d?.price}
+    return data.map(
+      (coin: {
+        id: Key | null | undefined;
+        current_price: any;
+        price_change_percentage_1h_in_currency: any;
+        price_change_percentage_24h: any;
+        price_change_percentage_7d_in_currency: any;
+        total_volume: any;
+        market_cap: any;
+        circulating_supply: number;
+        sparkline_in_7d: { price: any };
+      }) => (
+        <Tr key={coin.id} borderTop="unset" h="54px">
+          <Td
+            position="sticky"
+            left="-1"
+            zIndex="2"
+            bg={
+              colorMode === "light"
+                ? "linear-gradient(to left , rgba(245,255,255, 0) 3%, rgba(255,255,255, 1) 14%)"
+                : "linear-gradient(to left , rgba(8,28,59, 0) 3%, rgb(3 12 25) 14%);"
+            }
+            padding="5px 30px 5px 10px"
+          >
+            <Favorite coin={coin} liked={liked} setLiked={setLiked} />
+          </Td>
+          <Td>
+            <BuySell coinId={coin.id} />
+          </Td>
+          <Td padding="5px 10px">
+            <FormattedNumber
+              value={coin.current_price}
+              prefix="$"
+              className="table-cell"
             />
+          </Td>
+          <Td padding="5px 10px">
+            <PercentChange
+              value={coin.price_change_percentage_1h_in_currency}
+            />
+          </Td>
+          <Td padding="5px 10px">
+            <PercentChange value={coin.price_change_percentage_24h} />
+          </Td>
+          <Td padding="5px 10px">
+            <PercentChange
+              value={coin.price_change_percentage_7d_in_currency}
+            />
+          </Td>
+          <Td padding="5px 10px">
+            <FormattedNumber
+              value={coin.total_volume}
+              prefix="$"
+              className="table-cell"
+            />
+          </Td>
+          <Td padding="5px 10px">
+            <FormattedNumber
+              value={coin.market_cap}
+              prefix="$"
+              className="table-cell"
+            />
+          </Td>
+          <Td padding="5px 10px">
+            <FormattedNumber
+              value={coin?.circulating_supply?.toFixed() || null}
+              prefix=""
+              className="table-cell"
+            />
+          </Td>
+          <Td padding="5px 10px" width="110px">
+            <HStack spacing="0" gap="20px" width="100%">
+              <TableChartComponent
+                id={coin.id}
+                change={coin.price_change_percentage_7d_in_currency}
+                data={coin.sparkline_in_7d?.price}
+              />
 
-            <Popover placement="bottom-start">
-              <PopoverTrigger>
-                <Box>
-                  <BiDotsVerticalRounded size={20} />
-                </Box>
-              </PopoverTrigger>
-              <div className="chakra-portal chart-popover">
-                <PopoverContent
-                  width="max-content"
-                  // _focusVisible={{ boxShadow: "unset" }}
-                >
-                  <PopoverArrow />
-                  <PopoverBody p=" 10px 20px">
-                    <Link passHref href={`/coins/${coin.id}`}>
-                      <Text cursor="pointer">View Charts</Text>
-                    </Link>
-                    <Link passHref href={`/historic-data/${coin.id}`}>
-                      <Text cursor="pointer">Historic Data</Text>
-                    </Link>
-                  </PopoverBody>
-                </PopoverContent>
-              </div>
-            </Popover>
-          </HStack>
-        </Td>
-      </Tr>
-    ));
+              <Popover placement="bottom-start">
+                <PopoverTrigger>
+                  <Box>
+                    <BiDotsVerticalRounded size={20} />
+                  </Box>
+                </PopoverTrigger>
+                <div className="chakra-portal chart-popover">
+                  <PopoverContent
+                    width="max-content"
+                    // _focusVisible={{ boxShadow: "unset" }}
+                  >
+                    <PopoverArrow />
+                    <PopoverBody p=" 10px 20px">
+                      <Link passHref href={`/coins/${coin.id}`}>
+                        <Text cursor="pointer">View Charts</Text>
+                      </Link>
+                      <Link passHref href={`/historic-data/${coin.id}`}>
+                        <Text cursor="pointer">Historic Data</Text>
+                      </Link>
+                    </PopoverBody>
+                  </PopoverContent>
+                </div>
+              </Popover>
+            </HStack>
+          </Td>
+        </Tr>
+      )
+    );
   }, [colorMode, data, liked]);
   if (data.length > 0) {
     return (
