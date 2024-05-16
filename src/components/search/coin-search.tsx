@@ -98,12 +98,14 @@ const CoinSearch = (props: any) => {
               variant="medium-hollow"
               margin="0 auto"
               visibility="hidden"
+              aria-label="Open search"
             >
               <BiSearch />
               <Text>Seach</Text>
             </Button>
           </PopoverTrigger>
-          <PopoverContent top="-50px" width={{ base: "94vw", md: "100%" }}>
+          <PopoverContent top="-50px" width={{ base: "94vw", md: "100%" }}  aria-labelledby="search-heading">
+            
             <InputGroup w={{ sm: "100%", md: "247px" }} maxW="94vw">
               <InputLeftElement
                 pointerEvents="none"
@@ -155,7 +157,7 @@ const CoinSearch = (props: any) => {
                           setSearchVal("");
                         }}
                       >
-                        <Box position="relative" h="20px" w="20px">
+                        <Box position="relative" h="20px" w="20px"  as="button">
                           {el.thumb !== "missing_thumb.png" ? (
                             <Image
                               src={el?.thumb}

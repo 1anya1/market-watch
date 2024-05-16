@@ -238,14 +238,14 @@ const HomepageTable = (props: any) => {
 
               <Popover placement="bottom-start">
                 <PopoverTrigger>
-                  <Box>
+                  <Box aria-label="More options" as="button">
                     <BiDotsVerticalRounded size={20} />
                   </Box>
                 </PopoverTrigger>
                 <div className="chakra-portal chart-popover">
                   <PopoverContent
                     width="max-content"
-                    // _focusVisible={{ boxShadow: "unset" }}
+                    aria-labelledby="popover-heading"
                   >
                     <PopoverArrow />
                     <PopoverBody p=" 10px 20px">

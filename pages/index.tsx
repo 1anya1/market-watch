@@ -16,6 +16,7 @@ const Home = (props: any) => {
   } = props;
 
   return (
+    
     <Box className="main-page">
       <Text variant="h-3" pb="10px">
         Trending Coins
