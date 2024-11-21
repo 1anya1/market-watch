@@ -18,7 +18,7 @@ module.exports = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   },
   images: {
-    domains: ['assets.coingecko.com'],
+    domains: ['assets.coingecko.com','coin-images.coingecko.com'],
     minimumCacheTTL: 60,
 },
 };
