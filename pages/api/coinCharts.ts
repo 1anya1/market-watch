@@ -54,6 +54,6 @@ export default async function handler(
       .then((data) => data);
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "Failed to fetch data" });
+    res.status(500).json({ error: `Failed to fetch data :${e}` });
   }
 }
