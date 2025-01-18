@@ -35,23 +35,23 @@ export default async function handler(
     ]);
     res.status(200).json({ ohlcData, coinData });
 
-    const { symbol } = coinData;
-    const cryptoId = await fetch(
-      `https://price-api.crypto.com/meta/v1/all-tokens`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const findId = data.data.find(
-          (el: any) => el.symbol.toLowerCase() === symbol
-        );
-        return findId?.id;
-      });
+    // const { symbol } = coinData;
+    // const cryptoId = await fetch(
+    //   `https://price-api.crypto.com/meta/v1/all-tokens`
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     const findId = data.data.find(
+    //       (el: any) => el.symbol.toLowerCase() === symbol
+    //     );
+    //     return findId?.id;
+    //   });
 
-    const news = await fetch(
-      `https://price-api.crypto.com/market/v2/token/${cryptoId}/news`
-    )
-      .then((res) => res.json())
-      .then((data) => data);
+    // const news = await fetch(
+    //   `https://price-api.crypto.com/market/v2/token/${cryptoId}/news`
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => data);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: `Failed to fetch data :${e}` });
