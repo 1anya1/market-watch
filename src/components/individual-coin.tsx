@@ -59,7 +59,7 @@ const IndividualCoin = (props: any) => {
   const [initialPercent, setInitialPercent] = useState(0);
   const [graph, setGraph]= useState<any>(undefined);
   const [data, setCoinData] = useState<any>(undefined);
-  const [news, setNews] = useState<any>(undefined);
+  // const [news, setNews] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -233,7 +233,7 @@ const IndividualCoin = (props: any) => {
           .then((fetchedData) => {
             setGraph(fetchedData.ohlcData);
             setCoinData(fetchedData.coinData);
-            setNews(fetchedData.news);
+            // setNews(fetchedData.news);
             setIsLoading(false);
           })
           .catch((error) => {
@@ -782,7 +782,7 @@ const IndividualCoin = (props: any) => {
                 </VStack>
               </Stack>
 
-              <Container
+              {/* <Container
                 variant="box-component"
                 width="100%"
                 h="max-content"
@@ -939,7 +939,7 @@ const IndividualCoin = (props: any) => {
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
-              </Container>
+              </Container> */}
             </Box>
           ) : null}
         </>
