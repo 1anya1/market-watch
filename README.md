@@ -1,34 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Crypto-XChange
 
-## Getting Started
+Crypto-XChange is a cryptocurrency market application that enables users to view real-time market data, explore historical price trends, and interact with a rich set of analytics per digital coin. The app also allows users to create accounts, favorite coins, and simulate transactions to track potential investment performance. All market data is sourced from the CoinGecko API.
 
-First, run the development server:
+- **[Live Demo](#)**  
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features and Functionality
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### 🔐 Authentication
+- Secure sign-ups and logins using Firebase Authentication.
+- Personalized dashboards with email/password access.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### 📊 Data Visualization
+- Interactive charts via Lightweight Charts and TradingView.
+- Trends, market analytics, and historical performance visualization.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### 📱 Responsive Design
+- Chakra UI ensures a consistent and accessible experience across devices.
+- Mobile-first design with adaptive layouts.
 
-## Learn More
+### ⚡ Performance Optimization
+- Built with Next.js for SSR (Server-Side Rendering) and SSG (Static Site Generation).
+- Code splitting, lazy loading, and dynamic imports for faster load times and improved SEO.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧩 Key Components
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### 🪙 Coin Profile
+- Individual coin pages with aggregated data from CoinGecko.
+- Includes price charts, statistics, news, external resources, and user actions (watchlist, simulated trades).
 
-## Deploy on Vercel
+### 🎨 Theming
+- Light and dark mode via Chakra UI.
+- Global theming across UI components with instant theme switching on load.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 📈 Charts
+- Line Charts for 7-day trend overview.
+- TradingView charts with interactive tooltips and multiple timeframe support.
+- Detailed technical analysis features.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## 🏗️ Architecture
+
+### 🔧 Frontend
+
+- **Framework**: [Next.js](https://nextjs.org/) for SSR & SSG
+- **UI Library**: [Chakra UI](https://chakra-ui.com/)
+- **Charting Libraries**:
+  - [Chart.js](https://www.chartjs.org/) – Global visualizations like pie charts.
+  - [TradingView](https://www.tradingview.com/widget/) – Interactive coin-level analytics.
+- **State Management**: React Context API (`AuthContext.tsx`) for global auth and portfolio state.
+
+### 🛠 Backend & Services
+
+- **Data Source**: CoinGecko API for real-time market data and coin-specific metrics.
+- **Authentication & Database**: Firebase Authentication + Firestore
+  - OAuth & email/password login.
+  - Real-time syncing of watchlists and transactions.
+- **Caching & Storage**: AWS S3
+  - Historical and global data cached to reduce API load.
+  - Static JSON storage for rarely updated data.
+
+---
+
+## 📂 Tech Stack Summary
+
+- **Frontend**: Next.js, React, TypeScript, Chakra UI
+- **Charts**: Chart.js, Lightweight Charts, TradingView
+- **Authentication**: Firebase
+- **Database**: Firebase Firestore
+- **APIs**: CoinGecko
+- **Cloud Storage**: AWS S3
+
+---
+
+## 📌 Notes
+
+- The app is designed with scalability and performance in mind.
+- Emphasis on real-time data accuracy and user experience.
+- Modular code structure with reusable components and centralized theming.
+
+---
+
+## 📎 License
+
+MIT License. See `LICENSE` file for details.
+
+
+
