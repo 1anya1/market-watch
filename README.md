@@ -2,7 +2,7 @@
 
 Crypto-XChange is a cryptocurrency market application that enables users to view real-time market data, explore historical price trends, and interact with a rich set of analytics per digital coin. The app also allows users to create accounts, favorite coins, and simulate transactions to track potential investment performance. All market data is sourced from the CoinGecko API.
 
-- **[Live Demo](#)**  
+- **[Live Demo](https://crypto-xchange.netlify.app/)**  
 
 ---
 
@@ -85,7 +85,72 @@ Crypto-XChange is a cryptocurrency market application that enables users to view
 
 ---
 
-## 📎 License
+## 🧪 Getting Started (Local Development)
+
+This project is a [Next.js](https://nextjs.org/) app bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+##🔧 Step1: Clone the Repository
+```bash
+git clone https://github.com/your-username/crypto-xchange.git
+cd crypto-xchange
+```
+##📦 Step 2: Install Dependencies
+```bash
+npm install
+# or
+yarn
+```
+## 🔐 Step 3: Environment Variables
+
+Create a `.env.local` file in the root of your project and add the following keys. These are required to run Crypto-XChange locally.
+
+---
+
+### 🔥 Firebase (Authentication & Firestore)
+
+| Key                        | Description                                   |
+|---------------------------|-----------------------------------------------|
+| `FIREBASE_API_KEY`        | Firebase API key for client-side SDKs         |
+| `FIREBASE_AUTH_DOMAIN`    | Auth domain, usually in the format `*.firebaseapp.com` |
+| `FIREBASE_PROJECT_ID`     | Your Firebase project ID                      |
+| `FIREBASE_STORAGE_BUCKET` | Cloud storage bucket for Firebase             |
+| `FIREBASE_MESSAGING_SENDER_ID` | Firebase Cloud Messaging sender ID       |
+| `FIREBASE_APP_ID`         | Unique Firebase app identifier                |
+
+---
+
+### ☁️ AWS S3 (Data Caching & Static Storage)
+
+| Key                     | Description                            |
+|------------------------|----------------------------------------|
+| `ACCESS_KEY_ID_AWS`    | AWS access key for S3                  |
+| `ACCESS_KEY_SECRET_AWS`| AWS secret key for S3                  |
+
+---
+
+### 💰 CoinGecko / Coinbase (Crypto Market Data)
+
+| Key            | Description                            |
+|----------------|----------------------------------------|
+| `COINBASE_API` | API key for Coinbase or other crypto provider |
+
+---
+
+### 📰 News API (Crypto News Feed)
+
+| Key        | Description                        |
+|------------|------------------------------------|
+| `NEWS_KEY` | API key for accessing crypto news  |
+
+---
+
+> 🛑 **Important:**  
+> Do not commit your `.env.local` file to source control. It should be listed in your `.gitignore` file to protect sensitive information.
+##▶️ Step 4: Run the Development Server
+```bash
+npm run dev
+# or
+yarn dev
+```
 
 MIT License. See `LICENSE` file for details.
 
