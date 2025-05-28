@@ -59,7 +59,8 @@ const IndividualCoin = (props: any) => {
   const [initialPercent, setInitialPercent] = useState(0);
   const [graph, setGraph]= useState<any>(undefined);
   const [data, setCoinData] = useState<any>(undefined);
-  // const [news, setNews] = useState<any>(undefined);
+  const [articles, setArticles] = useState<any>(undefined);
+  const [videos, setVideos] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -164,7 +165,7 @@ const IndividualCoin = (props: any) => {
           image: data?.image?.small,
           score: data?.community_score,
           symbol: data?.symbol,
-          rank: data.coingecko_rank,
+          rank: data?.market_cap_rank
         };
 
         setStats({
@@ -233,7 +234,8 @@ const IndividualCoin = (props: any) => {
           .then((fetchedData) => {
             setGraph(fetchedData.ohlcData);
             setCoinData(fetchedData.coinData);
-            // setNews(fetchedData.news);
+            setArticles(fetchedData.articles);
+            setVideos(fetchedData.videos);
             setIsLoading(false);
           })
           .catch((error) => {
@@ -267,8 +269,8 @@ const IndividualCoin = (props: any) => {
             w="100%"
             bg={
               colorMode === "light"
-                ? "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
-                : "linear-gradient(90deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+                ? "linear-gradient(270deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
+                : "linear-gradient(270deg, hsla(0, 100%, 50%, 1) 0%, hsla(60, 100%, 50%, 1) 50%, hsla(120, 100%, 50%, 1) 100%)"
             }
           />
           <Box
@@ -690,9 +692,7 @@ const IndividualCoin = (props: any) => {
                         This is not real time data. To use for approximation
                         only*
                       </Text>
-                      <Button variant="large" width="100%" mt="10px">
                         <BuySell coinId={coinId} />
-                      </Button>
                     </Container>
                   )}
                   <Container
@@ -782,7 +782,7 @@ const IndividualCoin = (props: any) => {
                 </VStack>
               </Stack>
 
-              {/* <Container
+              <Container
                 variant="box-component"
                 width="100%"
                 h="max-content"
@@ -794,7 +794,7 @@ const IndividualCoin = (props: any) => {
                     pb="20px"
                     gap={{ base: "20px", md: "28px" }}
                   >
-                    {news?.articles.length > 0 ? (
+                    {articles.length > 0 ? (
                       <Tab
                         fontSize={{ base: "24px", sm: "26px" }}
                         fontWeight="700"
@@ -804,7 +804,7 @@ const IndividualCoin = (props: any) => {
                         News
                       </Tab>
                     ) : null}
-                    {news?.videos.length > 0 ? (
+                    {videos.length > 0 ? (
                       <Tab
                         fontSize={{ base: "24px", sm: "26px" }}
                         fontWeight="700"
@@ -817,7 +817,7 @@ const IndividualCoin = (props: any) => {
                   </TabList>
                   <TabPanels padding="0">
                     <TabPanel padding="0">
-                      {news?.articles?.length > 0 && individualPage && (
+                      {articles?.length > 0 && individualPage && (
                         <Box overflow="scroll" className="container">
                           <HStack
                             columnGap="20px"
@@ -825,7 +825,7 @@ const IndividualCoin = (props: any) => {
                             width="max-content"
                             alignItems="flex-start"
                           >
-                            {news.articles.map((el: any, idx: number) => (
+                            {articles.map((el: any, idx: number) => (
                               <Stack
                                 flexDir={{ base: "column" }}
                                 // gap="20px"
@@ -901,7 +901,7 @@ const IndividualCoin = (props: any) => {
                       )}
                     </TabPanel>
                     <TabPanel padding="0">
-                      {news?.videos?.length > 0 && individualPage && (
+                      {videos.length > 0 && individualPage && (
                         <Box overflow="scroll" className="container">
                           <HStack
                             gap="20px"
@@ -909,7 +909,7 @@ const IndividualCoin = (props: any) => {
                             width="max-content"
                             alignItems="flex-start"
                           >
-                            {news.videos.map((el: any, idx: number) => (
+                            {videos.map((el: any, idx: number) => (
                               <VStack
                                 key={`${el.id}-${idx}`}
                                 width={{
@@ -939,7 +939,7 @@ const IndividualCoin = (props: any) => {
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
-              </Container> */}
+              </Container> 
             </Box>
           ) : null}
         </>
