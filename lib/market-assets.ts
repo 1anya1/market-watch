@@ -94,7 +94,6 @@ export async function getData(key: string, url: string): Promise<any> {
     const filePath = `./data/${key}.json`;
 
     try {
-      console.log("in here getting data from json file");
       const marketData = await readJsonFromFile(filePath);
       const stats = fs.statSync(filePath);
       const now = new Date();
@@ -103,7 +102,6 @@ export async function getData(key: string, url: string): Promise<any> {
         (now.getTime() - lastModified.getTime()) / (1000 * 60);
 
       if (minutesDiff < 1) {
-        console.log("the time stamp has not been completed");
         return marketData;
       } else {
         console.log("Cache is stale, need to revalidate.");
@@ -117,7 +115,7 @@ export async function getData(key: string, url: string): Promise<any> {
 
     // Fetch from the API if the local data is stale or not present
     try {
-      console.log("grabbing updated data cache is stale");
+
       const globalMetrics = await fetchData(url);
 
       await uploadJsonFileWithTimestamp(globalMetrics, key);
@@ -140,7 +138,6 @@ export async function getData(key: string, url: string): Promise<any> {
           (error as AWSError)?.statusCode ??
           (error as Error)?.message ??
           "Unknown error";
-        console.log(errorType);
         if (errorType === 404) {
           const globalMetrics = await fetchData(url);
           await uploadS3File(globalMetrics, key);

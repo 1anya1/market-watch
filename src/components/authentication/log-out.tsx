@@ -9,7 +9,6 @@ const SignOut = () => {
     try {
       await logOut();
     } catch (error: any) {
-      console.log(error.message);
     }
   };
   return (
