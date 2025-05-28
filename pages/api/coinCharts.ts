@@ -15,7 +15,9 @@ export default async function handler(
     // Fetch OHLC and Coin Data from CoinGecko
     const [ohlcResponse, coinDataResponse] = await Promise.all([
       fetch(
-        `https://api.coingecko.com/api/v3/coins/${idx}/ohlc?vs_currency=usd&days=${timeframe || 1}`,
+        `https://api.coingecko.com/api/v3/coins/${idx}/ohlc?vs_currency=usd&days=${
+          timeframe || 1
+        }`,
         { headers }
       ),
       fetch(
@@ -38,7 +40,15 @@ export default async function handler(
     let articles: any[] = [];
 
     try {
-      const tokensResponse = await fetch(`https://price-api.crypto.com/meta/v1/all-tokens`);
+      const tokensResponse = await fetch(
+        `https://price-api.crypto.com/meta/v1/all-tokens`,
+        {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (compatible; CryptoXchangeBot/1.0)",
+            Accept: "application/json",
+          },
+        }
+      );
       const tokensData = await tokensResponse.json();
 
       const cryptoToken = tokensData.data.find(
@@ -49,7 +59,13 @@ export default async function handler(
 
       if (cryptoId) {
         const newsResponse = await fetch(
-          `https://price-api.crypto.com/market/v1/token/${cryptoId}/news`
+          `https://price-api.crypto.com/market/v1/token/${cryptoId}/news`,
+          {
+            headers: {
+              "User-Agent": "Mozilla/5.0 (compatible; CryptoXchangeBot/1.0)",
+              Accept: "application/json",
+            },
+          }
         );
         if (newsResponse.ok) {
           const newsData = await newsResponse.json();
