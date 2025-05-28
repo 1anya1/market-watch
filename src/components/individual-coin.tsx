@@ -6,7 +6,6 @@ import { BsFacebook } from "react-icons/bs";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import { TbWorld } from "react-icons/tb";
 import BuySellModal from "./modals/buy-sell-modal";
-
 import { database } from "../../context/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
@@ -48,7 +47,7 @@ const MainChart = dynamic(() => import("./charts/main-chart"), {
 
 const IndividualCoin = (props: any) => {
   const { user } = useAuth();
-  const { coinId, individualPage } = props;
+  const { coinId, individualPage, coinSymbol, articles, videos } = props;
   const [dataRetrieved, setDataRetrieved] = useState(false);
   const [cryptoData, setData] = useState<any[]>([]);
   const [timeFrame, setTimeFrame] = useState<number | string>(1);
@@ -57,13 +56,10 @@ const IndividualCoin = (props: any) => {
   const [viewAllCoin, setViewAllCoin] = useState(false);
   const [initalPricePoint, setInitialPricePoint] = useState(0);
   const [initialPercent, setInitialPercent] = useState(0);
-  const [graph, setGraph]= useState<any>(undefined);
+  const [graph, setGraph] = useState<any>(undefined);
   const [data, setCoinData] = useState<any>(undefined);
-  const [articles, setArticles] = useState<any>(undefined);
-  const [videos, setVideos] = useState<any>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [stats, setStats] = useState({
     circulatingSupply: 0,
     totalSupply: 0,
@@ -165,7 +161,7 @@ const IndividualCoin = (props: any) => {
           image: data?.image?.small,
           score: data?.community_score,
           symbol: data?.symbol,
-          rank: data?.market_cap_rank
+          rank: data?.market_cap_rank,
         };
 
         setStats({
@@ -234,8 +230,8 @@ const IndividualCoin = (props: any) => {
           .then((fetchedData) => {
             setGraph(fetchedData.ohlcData);
             setCoinData(fetchedData.coinData);
-            setArticles(fetchedData.articles);
-            setVideos(fetchedData.videos);
+            // setArticles(fetchedData.articles);
+            // setVideos(fetchedData.videos);
             setIsLoading(false);
           })
           .catch((error) => {
@@ -692,7 +688,7 @@ const IndividualCoin = (props: any) => {
                         This is not real time data. To use for approximation
                         only*
                       </Text>
-                        <BuySell coinId={coinId} />
+                      <BuySell coinId={coinId} />
                     </Container>
                   )}
                   <Container
@@ -939,7 +935,7 @@ const IndividualCoin = (props: any) => {
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
-              </Container> 
+              </Container>
             </Box>
           ) : null}
         </>
@@ -949,4 +945,3 @@ const IndividualCoin = (props: any) => {
 };
 
 export default IndividualCoin;
-
