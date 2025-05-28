@@ -109,7 +109,7 @@ const GlobalData = (props: any) => {
             w="100%"
           >
             <Text variant="xxs-text" margin="auto" textAlign="center">
-              Total Market Cap
+              Market Cap Change 24 HRS
             </Text>
             <Text variant="h-5" textAlign="center">
               {globalMetrics?.data?.market_cap_change_percentage_24h_usd.toFixed(

@@ -39,9 +39,9 @@ const MiniChart = (props: any) => {
 
   const [currWidth, setWidth] = useState(0);
   // const currTimeFrameSelection = useCallback(() => {
-  //   console.log(data, renderTimeSelection);
+  //   (data, renderTimeSelection);
   //   const time = timeFrames.filter((el: any) => el.query === timeFrame);
-  //   console.log({ time });
+  //   ({ time });
   //   return time[0].name;
   // }, [timeFrame, timeFrames]);
 
@@ -97,7 +97,7 @@ const MiniChart = (props: any) => {
       };
 
       // const handleResize =()=>{
-      //   console.log('inhere')
+      //   ('inhere')
       // }
       const end = data[data.length - 1]?.value;
       const start = data[0]?.value;
